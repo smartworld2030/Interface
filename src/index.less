@@ -1,0 +1,105 @@
+@import '~antd/dist/antd.less';
+body {
+  overflow-x: hidden;
+}
+
+svg {
+  user-select: none;
+  -webkit-user-select: none;
+  & > g {
+    cursor: pointer;
+  }
+}
+text {
+  filter: drop-shadow(0 0 0.4px rgb(9, 63, 38));
+}
+.ant-table {
+  background: transparent;
+}
+.ant-table-cell {
+  background: transparent !important;
+  text-align: center !important;
+}
+.ant-table-cell-scrollbar {
+  box-shadow: none;
+}
+.ant-table-thead > tr > th {
+  padding: 7px 0;
+}
+.ant-pagination-options {
+  display: none;
+}
+.activeanimation {
+  animation: logglow 1.25s ease infinite alternate;
+}
+.ant-notification-notice {
+  width: auto;
+}
+.ant-statistic-title {
+  font-size: 11px;
+}
+.ant-statistic-content {
+  font-size: 13px;
+}
+.withdraw-button {
+  pointer-events: bounding-box;
+  opacity: 0;
+}
+.withdraw-button:hover {
+  stroke: rgb(24, 154, 93);
+  opacity: 1;
+}
+.withdraw-button:focus {
+  stroke: rgb(26, 226, 133);
+  outline: 0;
+  filter: drop-shadow(0 0 2px rgb(24, 154, 93));
+  opacity: 1;
+}
+.loadingDeposit {
+  stroke-dasharray: 250;
+  stroke-dashoffset: 250;
+  animation: svg-loading-base 1s ease infinite;
+}
+
+.doneSplash {
+  transform: scale(1);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: crescendo 0.5s alternate infinite ease-in;
+}
+
+@keyframes crescendo {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.8);
+  }
+}
+
+@keyframes svg-loading-base {
+  to {
+    stroke-dashoffset: 0;
+    opacity: 0.1;
+  }
+}
+
+@keyframes logglow {
+  100% {
+    box-shadow: 0 0 8px 4px red;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d3e53;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d3e53;
+}
