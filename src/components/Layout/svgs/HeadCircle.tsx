@@ -27,7 +27,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           cx={positionX}
           cy={positionY - size}
           r={size}
-          stroke={active ? Colors.text : Colors.background}
+          stroke={active ? Colors.text : Colors.secondText}
           strokeWidth="1"
           fill={Colors.background}
         />
@@ -38,7 +38,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           alignmentBaseline="central"
           fontSize={size / 2}
           fontWeight="700"
-          fill={active ? Colors.text : Colors.background}
+          fill={active ? Colors.text : Colors.secondText}
         >
           {text}
         </text>

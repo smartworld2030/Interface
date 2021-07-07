@@ -1,30 +1,55 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { bindActionCreators } from 'redux'
 import { Row, Col } from 'react-grid-system'
+import { ThunkDispatch } from 'redux-thunk'
+import { AppActions, AppState } from '../../../../_types'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import { DepositButton } from '../../../Layout/svgs/DepositButton'
+import { connect } from 'react-redux'
+import { tokenPrices } from '../../../../_actions/bank.actions'
+import { investmentDeposit } from '../../../../_actions/invest.actions'
+import { formatToString } from '../../../../_helpers/api'
 
-interface DepositInfoProps {
+interface IProps {
   token: string
   value: number
 }
+type DepositInfoProps = IProps &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
-const DepositInfo: React.FC<DepositInfoProps> = ({ token, value }) => {
-  const [done, setDone] = useState(false)
-  const [loading, setLoading] = useState(false)
-
+const DepositInfo: React.FC<DepositInfoProps> = ({
+  prices,
+  token,
+  dollar,
+  value,
+  loading,
+  account,
+  confirmed,
+  maxPercent,
+  investmentDeposit,
+}) => {
   const depositHandler = () => {
-    if (!loading && !done) {
-      setLoading(true)
-      setDone(false)
-      setTimeout(() => {
-        setLoading(false)
-        setDone(true)
-        setTimeout(() => {
-          setDone(false)
-        }, 2000)
-      }, 5000)
+    if (!loading && !confirmed) {
+      console.log(formatToString(value, token))
+      investmentDeposit(token, formatToString(value, token))
     }
   }
+
+  const calcSatoshi = () => prices[token] * value
+
+  const CalcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
+
+  const calcSTT = () => calcSatoshi() / 2.5 / prices.STT
+
+  const calcPercent = () => {
+    const cal = (calcSatoshi() * maxPercent) / 5000000
+    return cal + account.percent <= maxPercent
+      ? cal
+      : maxPercent - account.percent
+  }
+
+  const disableHandler = () => value <= 0 || calcSatoshi() < 500000
 
   return (
     <Row
@@ -40,12 +65,17 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, value }) => {
     >
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
-          <TokenValue title="Number of tokens:" token={token} value={value} />
+          <TokenValue
+            title="Number of tokens:"
+            precision={token === 'STTS' ? 0 : 4}
+            token={token}
+            value={value}
+          />
           <TokenValue
             title="Price(Satoshi):"
             token="SATS"
             precision={0}
-            value={value * 201.1}
+            value={calcSatoshi()}
           />
         </Row>
       </Col>
@@ -55,9 +85,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, value }) => {
             title="Price(Smart Bits):"
             token="STB"
             precision={1}
-            value={(value * 201.1) / 100}
+            value={calcSatoshi() / 100}
           />
-          <TokenValue title="Price(Dollar):" token="$" value={value} />
+          <TokenValue
+            title="Price(Dollar):"
+            precision={2}
+            token="$"
+            value={CalcDollar()}
+          />
         </Row>
       </Col>
       <Col xs={12} width="100%">
@@ -65,23 +100,25 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, value }) => {
           <DepositButton
             width={90}
             onClick={depositHandler}
-            done={done}
+            done={confirmed}
             loading={loading}
+            disable={disableHandler()}
           />
         </Row>
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
           <TokenValue
-            value={value * 3.122}
-            precision={2}
+            value={calcSTT()}
+            precision={0}
             title="Invetment Reward:"
           />
           <TokenValue
-            value={value / 10}
+            value={account.percent / 100}
             precision={2}
             token="%"
             title="Referral percent:"
+            double={calcPercent() / 100}
           />
         </Row>
       </Col>
@@ -89,4 +126,24 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, value }) => {
   )
 }
 
-export default DepositInfo
+const mapStateToProps = (state: AppState) => {
+  const { loggedIn } = state.account
+  const { prices, dollar } = state.bank
+  const { investLoading, confirmed, account, maxPercent } = state.invest
+  return {
+    prices,
+    dollar,
+    account,
+    loggedIn,
+    confirmed,
+    maxPercent,
+    loading: investLoading,
+  }
+}
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
+  tokenPrice: bindActionCreators(tokenPrices, dispatch),
+  investmentDeposit: bindActionCreators(investmentDeposit, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DepositInfo)

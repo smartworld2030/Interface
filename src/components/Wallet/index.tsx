@@ -4,13 +4,9 @@ import ProtectedRoute from '../../router/ProtectedRoute'
 
 interface ContentProps {
   isMobile: boolean
+  height: number
 }
 
-export const Wallet: React.FC<ContentProps> = ({ isMobile }) => {
-  return (
-    <ProtectedRoute
-      isMobile={isMobile}
-      component={<AppRouter isMobile={isMobile} />}
-    />
-  )
+export const Wallet: React.FC<ContentProps> = (props) => {
+  return <ProtectedRoute {...props} component={<AppRouter {...props} />} />
 }

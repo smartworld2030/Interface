@@ -1,19 +1,33 @@
 import React from 'react'
 import Input from 'antd/lib/input'
+import { Row } from 'react-grid-system'
+import Text from 'antd/lib/typography/Text'
 import { CircleInput } from './CircleInput'
+import Colors from '../../../Theme/Colors'
+import { AppState } from '../../../_types'
+import { connect } from 'react-redux'
 
-interface DepositCircleProps {
+interface IProps {
   width: number
   value: number
   token: string
-  setValue: (arg: number) => void
+  error?: string
+  percent: number
+  percentHandler: (arg: number) => void
+  inputHandler: (arg: any) => void
 }
+
+type DepositCircleProps = IProps & ReturnType<typeof mapStateToProps>
 
 const DepositCircle: React.FC<DepositCircleProps> = ({
   width,
+  error,
   value,
+  percent,
   token,
-  setValue,
+  tokens,
+  inputHandler,
+  percentHandler,
 }) => {
   const roundSlideTune = (event) => {
     const x = event.pageX || event.touches[0]?.clientX
@@ -45,15 +59,15 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
     dY = Math.round((dY / 150) * 100)
 
     if (0 <= dX && dX < 50 && dY === 0) {
-      setValue(100 - Math.round(((50 - dX) / 50) * 12.5))
+      percentHandler(100 - Math.round(((50 - dX) / 50) * 12.5))
     } else if (dX === 0 && 0 <= dY && dY <= 100) {
-      setValue(100 - Math.round(12.5 + (dY / 100) * 25))
+      percentHandler(100 - Math.round(12.5 + (dY / 100) * 25))
     } else if (0 <= dX && dX <= 100 && dY === 100) {
-      setValue(100 - Math.round(37.5 + (dX / 100) * 25))
+      percentHandler(100 - Math.round(37.5 + (dX / 100) * 25))
     } else if (dX === 100 && 0 <= dY && dY <= 100) {
-      setValue(100 - Math.round(62.5 + ((100 - dY) / 100) * 25))
+      percentHandler(100 - Math.round(62.5 + ((100 - dY) / 100) * 25))
     } else if (50 <= dX && dX <= 100 && dY === 0) {
-      setValue(100 - Math.round(87.5 + ((100 - dX) / 50) * 12.5))
+      percentHandler(100 - Math.round(87.5 + ((100 - dX) / 50) * 12.5))
     }
   }
 
@@ -64,42 +78,71 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
   }
 
   const maxButtonHandler = () => {
-    setValue(100)
-  }
-
-  const inputHandler = (e) => {
-    const value = e.currentTarget?.valueAsNumber
-    setValue(value < 0 ? 100 : value)
+    percentHandler(100)
   }
 
   return (
-    <div style={{ position: 'relative', width, height: width }}>
-      <Input
+    <Row
+      justify="center"
+      direction="column"
+      style={{
+        position: 'relative',
+        touchAction: 'none',
+        width,
+        height: width,
+      }}
+    >
+      <Row
+        justify="around"
+        direction="column"
+        onTouchMove={roundSlideTune}
+        onMouseMove={circleSlider}
         style={{
-          position: 'absolute',
+          width: width * 0.65,
+          height: width / 2,
+          color: error ? Colors.red : '',
+          fontSize: 10,
+          fontWeight: 'bold',
+          margin: 'auto',
           zIndex: 20,
-          top: '42%',
-          left: '20%',
-          width: width * 0.6,
         }}
-        placeholder="100%"
-        type="number"
-        size="large"
-        value={value}
-        onChange={inputHandler}
-      />
+      >
+        {tokens[token] === 0 ? (
+          <Text type="danger">Zero balance!</Text>
+        ) : (
+          error && <Text type="danger">{error}</Text>
+        )}
+        <Input
+          style={{
+            borderColor: error ? Colors.red : '',
+          }}
+          placeholder="0.00"
+          type="number"
+          size="large"
+          min={0}
+          step={token === 'STTS' ? 1 : 0.01}
+          value={value}
+          onChange={inputHandler}
+        />
+      </Row>
       <CircleInput
-        value={value}
+        percent={percent}
         width={width}
         token={token}
         onClick={roundSlideTune}
+        onMax={maxButtonHandler}
         onTouchEnd={roundSlideTune}
         onTouchMove={roundSlideTune}
         onMouseMove={circleSlider}
-        onMax={maxButtonHandler}
       />
-    </div>
+    </Row>
   )
 }
-
-export default DepositCircle
+const mapStateToProps = (state: AppState) => {
+  const { error, tokens } = state.account
+  return {
+    error,
+    tokens,
+  }
+}
+export default connect(mapStateToProps)(DepositCircle)

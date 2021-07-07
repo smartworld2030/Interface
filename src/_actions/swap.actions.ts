@@ -1,5 +1,5 @@
 import { ThunkDispatch } from 'redux-thunk'
-import { AppState, FAILURE, REQUEST, SAVE, SUCCESS } from '../_types'
+import { AppState, FAILURE, REQUEST, SUCCESS } from '../_types'
 import { requestFreeze } from './freeze.actions'
 import { AppActions } from '../_types'
 // import { errorHandler } from '../components/Layout/SnackBar/alert'

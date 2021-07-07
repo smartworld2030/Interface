@@ -1,6 +1,5 @@
 import React from 'react'
 import Investment from '../components/Wallet/Investment'
-import { Freeze } from '../components/Wallet/Tabs/Freeze'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
 import { AbsoluteBody } from '../components/Layout/divs/Divs'
@@ -26,7 +25,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile }) => {
             <Investment isMobile={isMobile} />
           </Route>
           <Route exact path="/freeze">
-            <Freeze isMobile={isMobile} />
+            <Test />
           </Route>
           <Route exact path="/stts">
             <Test />

@@ -38,18 +38,32 @@ interface TokenValueProps extends StatisticProps {
   value: number | string
   token?: string
   tokenColor?: string
+  double?: number
 }
 
 export const TokenValue: React.FC<TokenValueProps> = (props) => {
-  const { color, token, tokenColor, value, title, ...rest } = props
+  const { color, token, tokenColor, value, double, title, ...rest } = props
   return (
     <Statistic
-      valueStyle={{ color: color ?? 'white' }}
       title={title}
       suffix={
-        <TokenP color={tokenColor ? tokenColor : Colors.green}>
-          {token ? token : 'STT'}
-        </TokenP>
+        double ? (
+          <Statistic
+            valueStyle={{ color: Colors.green }}
+            precision={2}
+            suffix={
+              <TokenP color={tokenColor ? tokenColor : Colors.green}>
+                {token ? token : 'STT'}
+              </TokenP>
+            }
+            prefix="+"
+            value={double}
+          />
+        ) : (
+          <TokenP color={tokenColor ? tokenColor : Colors.green}>
+            {token ? token : 'STT'}
+          </TokenP>
+        )
       }
       value={value}
       {...rest}

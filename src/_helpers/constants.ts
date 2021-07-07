@@ -1,5 +1,3 @@
-import { LoginResponse } from '../_types/account.types'
-
 export const messages = {
   available:
     '🦊 Please click Connect button for connection to Binance Smart Chain using Metamask!',
@@ -10,11 +8,6 @@ export const messages = {
 
 export const supportedChain = (chainId?: number) =>
   chainId === 56 || chainId === 97
-
-export const getUserLocal = (key: string): LoginResponse => {
-  const item = localStorage.getItem(key)
-  return item !== null ? JSON.parse(item) : undefined
-}
 
 export const getTheTime = (minutes: number = 0): number => {
   var d = new Date()
@@ -31,7 +24,7 @@ export const shorter = (str: any) =>
   str?.length > 8 ? str.slice(0, 10) + '...' + str.slice(-4) : str
 
 export const tooShorter = (str: any) =>
-  str?.length > 8 ? str.slice(0, 5) + '...' + str.slice(-4) : str
+  str?.length > 8 ? str.slice(0, 2) + '...' + str.slice(-4) : str
 
 export const sizeCalculator = (width: number) => {
   const half = width / 2

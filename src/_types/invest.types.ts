@@ -1,61 +1,101 @@
-import { FAILURE, REQUEST, SUCCESS } from './'
+import { Transaction } from 'ethers'
 
-export interface DefaultInvestBankState {
-  data: IInvest[]
-  error: string
-  loading: boolean
-  nextLoad: number
-}
+export const INVEST_RESET = 'INVEST_RESET'
+export const INVEST_METHOD_REQUEST = 'INVEST_METHOD_REQUEST'
+export const INVEST_METHOD_SUCCESS = 'INVEST_METHOD_SUCCESS'
+export const INVEST_METHOD_FAILURE = 'INVEST_METHOD_FAILURE'
+
+export const INVEST_ACCOUNT_REQUEST = 'INVEST_ACCOUNT_REQUEST'
+export const INVEST_ACCOUNT_SUCCESS = 'INVEST_ACCOUNT_SUCCESS'
+export const INVEST_ACCOUNT_FAILURE = 'INVEST_ACCOUNT_FAILURE'
+
+export const INVEST_TRANSACTION_MINED = 'INVEST_TRANSACTION_MINED'
+export const INVEST_TRANSACTION_READY = 'INVEST_TRANSACTION_READY'
+
+export const INVEST_MESSAGES = 'INVEST_MESSAGES'
+
 export interface DefaultInvestState {
-  data?: IInvest
-  error: string
-  loading: boolean
+  transaction?: Transaction
+  method?: string
+  error?: string
+  account: InvestInfo
+  maxPercent: number
+  confirmed: boolean
+  investLoading: boolean
 }
 
-export interface IInvest {
-  id: number
-  title: string
-  content: string
-  slug: string
-  description: string
-  date: string
-  teacher: string
-  thumbnails: string
-  categories: string[]
-  tags: string[]
+export type InvestInfo = {
+  bnb: number
+  stts: number
+  btcb: number
+  satoshi: number
+  hourly: number
+  percent: number
+  referrer: number
+  referral: number
+  deposits: number
+  latestWithdraw: number
+  depositDetails: DepositDetail[]
 }
 
-export interface RequestInvestBank {
-  type: typeof REQUEST.INVEST_BANK
-}
-export interface SeccessInvestBank {
-  type: typeof SUCCESS.INVEST_BANK
-  payload: {
-    data: IInvest[]
-    nextLoad: number
-  }
-}
-export interface FailureInvestBank {
-  type: typeof FAILURE.INVEST_BANK
-  error: string
+type DepositDetail = {
+  reward: string
+  endTime: number
 }
 
-export interface RequestInvest {
-  type: typeof REQUEST.INVEST
+export interface RequestInvestAction {
+  type: typeof INVEST_METHOD_REQUEST
+  payload: { method: string }
 }
-export interface SeccessInvest {
-  type: typeof SUCCESS.INVEST
-  data: IInvest
+
+export interface SeccessInvestAction {
+  type: typeof INVEST_METHOD_SUCCESS
+  payload: { transaction: Transaction }
 }
-export interface FailureInvest {
-  type: typeof FAILURE.INVEST
-  error: string
+
+export interface MinedInvestAction {
+  type: typeof INVEST_TRANSACTION_MINED
+}
+
+export interface ReadyInvestAction {
+  type: typeof INVEST_TRANSACTION_READY
+}
+
+export interface FailureInvestAction {
+  type: typeof INVEST_METHOD_FAILURE
+  payload: { error: string }
+}
+
+export interface AccountInvestRequestAction {
+  type: typeof INVEST_ACCOUNT_REQUEST
+}
+export interface AccountInvestSuccessAction {
+  type: typeof INVEST_ACCOUNT_SUCCESS
+  payload: { account: InvestInfo; maxPercent: number; error?: string }
+}
+
+export interface AccountInvestFailureAction {
+  type: typeof INVEST_ACCOUNT_FAILURE
+  payload: { error: string }
+}
+
+export interface MessageInvestAction {
+  type: typeof INVEST_MESSAGES
+  payload: { error: string }
+}
+
+export interface ResetInvestAction {
+  type: typeof INVEST_RESET
 }
 
 export type InvestActionTypes =
-  | RequestInvestBank
-  | SeccessInvestBank
-  | FailureInvestBank
-  | RequestInvest
-  | SeccessInvest
-  | FailureInvest
+  | ResetInvestAction
+  | MinedInvestAction
+  | ReadyInvestAction
+  | RequestInvestAction
+  | SeccessInvestAction
+  | FailureInvestAction
+  | MessageInvestAction
+  | AccountInvestRequestAction
+  | AccountInvestSuccessAction
+  | AccountInvestFailureAction

@@ -15,26 +15,41 @@ export const BANK_SATOSHI_BALANCE_SUCCESS = 'BANK_SATOSHI_BALANCE_SUCCESS'
 export const BANK_SATOSHI_BALANCE_FAILURE = 'BANK_SATOSHI_BALANCE_FAILURE'
 
 export interface DefaultBankState {
-  loading: boolean
+  bankLoading: boolean
   address: { [key: number]: string }
   tokens: TokenBalances
+  prices: TokenPrices
+  dollar: DoloarPrices
   satoshi?: TokenBalances
   error?: string
 }
-
-export type TokenBalances = {
-  STT: string
-  STTS: string
-  BTCB: string
-  BNB: string
+export type DoloarPrices = {
+  BTC: number
 }
+export type TokenBalances = {
+  STT: number
+  STTS: number
+  BTCB: number
+  BNB: number
+}
+
+export type TokenPrices = {
+  STT: number
+  STTS: number
+  BTCB: number
+  BNB: number
+}
+
 export type TokenPriceRequestAction = {
   type: typeof TOKEN_PRICE_REQUEST
 }
 
 export type TokenPriceSuccessAction = {
   type: typeof TOKEN_PRICE_SUCCESS
-  payload: string
+  payload: {
+    prices: TokenPrices
+    dollar: DoloarPrices
+  }
 }
 
 export interface TokenPriceFailureAction {
@@ -48,7 +63,7 @@ export type SttPriceRequestAction = {
 
 export type SttPriceSuccessAction = {
   type: typeof STT_PRICE_SUCCESS
-  payload: string
+  payload: number
 }
 
 export interface SttPriceFailureAction {

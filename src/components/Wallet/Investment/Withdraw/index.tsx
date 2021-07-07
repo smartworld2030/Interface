@@ -1,30 +1,34 @@
 import React from 'react'
 import { Row } from 'react-grid-system'
+import { connect } from 'react-redux'
 import Colors from '../../../../Theme/Colors'
+import { formaterNumber, roundDecimals } from '../../../../_helpers/api'
+import { bindActionCreators } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { AppActions, AppState } from '../../../../_types'
+import { withdrawInterest } from '../../../../_actions/invest.actions'
 
-interface WithdrawCircleProps {
+interface IProps {
   width: number
-  hourly: number | string
-  lastWithdraw: number
-  referral: number | string
-  setOpen: () => void
 }
+type WithdrawCircleProps = IProps &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   width,
-  setOpen,
-  lastWithdraw,
+  latestWithdraw,
   referral,
   hourly,
+  withdrawInterest,
 }) => {
   const half = width / 2
   const r = half - 10
   const c = 2 * Math.PI * r
   const period = 3600
-  const secPast = (Date.now() / 1000 - lastWithdraw) % period
+  const secPast = (Date.now() / 1000 - latestWithdraw) % period
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
-  console.log({ secPast, secRemain, pastRadius })
   return (
     <Row
       direction="column"
@@ -80,7 +84,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           y={width * 0.16}
           fontSize="8"
         >
-          HOURLY
+          REWARD
         </text>
         <text
           textAnchor="middle"
@@ -88,7 +92,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           y={width * 0.25}
           fontSize={width / 18}
         >
-          <tspan>{hourly}</tspan>
+          <tspan>{roundDecimals(formaterNumber(hourly, 'STT'), 2)}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
         </text>
         <text
@@ -98,7 +102,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           y={width * 0.78}
           fontSize={width / 18}
         >
-          <tspan>{referral}</tspan>
+          <tspan>{roundDecimals(formaterNumber(referral, 'STT'), 2)}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
         </text>
         <text
@@ -110,7 +114,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
         >
           REFERRAL
         </text>
-        <g onClick={setOpen}>
+        <g onClick={() => withdrawInterest()}>
           <rect
             x={30}
             y={r * 0.87}
@@ -151,4 +155,20 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   )
 }
 
-export default WithdrawSection
+const mapStateToProps = (state: AppState) => {
+  const { error, tokens } = state.account
+  const { hourly, referral, latestWithdraw } = state.invest.account
+  return {
+    error,
+    tokens,
+    hourly,
+    referral,
+    latestWithdraw,
+  }
+}
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
+  withdrawInterest: bindActionCreators(withdrawInterest, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(WithdrawSection)

@@ -1,5 +1,5 @@
 import { ThunkDispatch } from 'redux-thunk'
-import { AppState, SAVE, FAILURE, REQUEST, SUCCESS } from '../_types'
+import { AppState, FAILURE, REQUEST, SUCCESS } from '../_types'
 import { AppActions } from '../_types'
 import { errorHandler } from '../_helpers/alert'
 

@@ -4,10 +4,10 @@ import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
 import { Row, Col } from 'react-grid-system'
-import { accountTokenBalances } from '../../../../_actions/account.actions'
-import { tokenPrice } from '../../../../_actions/bank.actions'
+import { investInformation } from '../../../../_actions/invest.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
+import { notification } from 'antd'
 
 interface IProps {}
 
@@ -15,12 +15,34 @@ type ReferralSectionProps = IProps &
   ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps>
 
-export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
+export const DetailSection: React.FC<ReferralSectionProps> = ({
+  address,
+  pathname,
+  account,
+  tokens,
+}) => {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const link = `${window.location.origin}${pathname}?ref=${address}`
+
   const copyHandler = () => {
     if (!loading && !done) {
+      if (navigator.clipboard) navigator.clipboard.writeText(link)
+      else {
+        var textField = document.createElement('textarea')
+        textField.innerText = link
+        document.body.appendChild(textField)
+        textField.select()
+        document.execCommand('copy')
+        textField.remove()
+      }
+      notification.success({
+        message: 'Reffral Link Copied!',
+        placement: 'bottomRight',
+        duration: 2,
+        closeIcon: <div></div>,
+      })
       setLoading(true)
       setDone(false)
       setTimeout(() => {
@@ -51,21 +73,25 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
             title="Referral percent:"
             precision={2}
             token={'%'}
-            value={1}
+            value={account.referral}
           />
-          <TokenValue value={100} precision={2} title="Hourly reward:" />
+          {/* <TokenValue
+            value={account.hourly}
+            precision={2}
+            title="Hourly reward:"
+          /> */}
         </Row>
       </Col>
       <Col xs={12} width="100%">
-        <Row align="center" justify="around">
-          <TokenValue
-            title="Referral percent:"
+        {/* <Row align="center" justify="around">
+          {/* <TokenValue
+            title="Total mined:"
             precision={2}
-            token={'%'}
-            value={1}
+            token={'STT'}
+            value={1685}
           />
-          <TokenValue value={100} precision={2} title="Hourly reward:" />
-        </Row>
+          <TokenValue value={0} precision={2} title="" />
+        </Row>  */}
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
@@ -79,8 +105,12 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
-          <TokenValue value={100} token={'SATS'} title="Total investment:" />
-          <TokenValue value={100} token={'STT'} title="Total rewards:" />
+          <TokenValue
+            value={account.satoshi}
+            token={'SATS'}
+            title="Total investment:"
+          />
+          <TokenValue value={tokens.STT} token={'STT'} title="Total rewards:" />
         </Row>
       </Col>
     </Row>
@@ -88,17 +118,22 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { tokens, error } = state.account
+  const { address, tokens, error } = state.account
+  const { account } = state.invest
+  const {
+    location: { pathname },
+  } = state.router
   return {
+    pathname,
+    account,
+    address,
     tokens,
     error,
   }
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
-  tokenPrice: bindActionCreators(tokenPrice, dispatch),
-  // requestInvest: bindActionCreators(requestInvest, dispatch),
+  investInformation: bindActionCreators(investInformation, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailSection)

@@ -2,23 +2,24 @@ import React from 'react'
 import Colors from '../../../Theme/Colors'
 
 interface CircleInputProps extends React.HTMLAttributes<SVGElement> {
-  value: number
+  percent: number
   width: number
   token: string
   onMax: () => void
 }
 
 export const CircleInput: React.FC<CircleInputProps> = ({
-  value,
+  percent,
   width,
   onClick,
   onMax,
   token,
   ...rest
 }) => {
-  value = value * 10
-  const strokeCalculate = () => `0,${value % 1000},0,${1000 - (value % 1000)}`
-  console.log(value)
+  percent = percent > 0 ? percent * 10 : 0
+  const strokeCalculate = () =>
+    `0,${percent % 1000},0,${1000 - (percent % 1000)}`
+
   return (
     <svg
       style={{
@@ -36,17 +37,17 @@ export const CircleInput: React.FC<CircleInputProps> = ({
         <circle r="160" cx="180" cy="180" fill={Colors.background} />
         <path
           fill="none"
-          stroke={value <= 1000 ? Colors.green : Colors.red}
+          stroke={percent <= 1000 ? Colors.green : Colors.red}
           strokeWidth="12"
           strokeLinecap="round"
-          strokeDasharray={`${value},1000`}
+          strokeDasharray={`${percent},1000`}
           d="M 180 20 
           a 160 160 0 0 1 0 320 
           a 160 160 0 0 1 0 -320"
         />
         <path
           fill="none"
-          stroke="white"
+          stroke={percent === Infinity ? 'red' : 'white'}
           strokeWidth="25"
           strokeLinecap="round"
           strokeDasharray={strokeCalculate()}

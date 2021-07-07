@@ -2,6 +2,9 @@
 body {
   overflow-x: hidden;
 }
+input {
+  text-align: center;
+}
 
 svg {
   user-select: none;
@@ -12,6 +15,12 @@ svg {
 }
 text {
   filter: drop-shadow(0 0 0.4px rgb(9, 63, 38));
+}
+.ant-btn-danger {
+  background-color: #ff1d4e;
+}
+.ant-typography.ant-typography-danger {
+  color: #ff1d4e;
 }
 .ant-table {
   background: transparent;
@@ -88,6 +97,17 @@ text {
   100% {
     box-shadow: 0 0 8px 4px red;
   }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 ::-webkit-scrollbar {

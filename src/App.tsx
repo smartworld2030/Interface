@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { initialization } from './_actions/wallet.actions'
-import Investment from './components/Wallet/Investment'
 
 let setTime: NodeJS.Timeout
 
@@ -33,20 +32,19 @@ class App extends Component<AppProps, AppStates> {
   updateDimensions = () => {
     clearTimeout(setTime)
     setTime = setTimeout(() => {
-      console.log('object', window.outerHeight)
       this.setState({
         appWidth: window.innerWidth,
-        spacerHeight: window.outerHeight,
+        spacerHeight: window.innerHeight - 10,
       })
     }, 200)
   }
 
   componentDidMount() {
     console.log('initialisation')
-    // this.props.init()
+    this.props.init()
     window.addEventListener('resize', this.updateDimensions)
     this.setState({
-      spacerHeight: window.outerHeight,
+      spacerHeight: window.innerHeight - 10,
     })
   }
 
@@ -57,22 +55,21 @@ class App extends Component<AppProps, AppStates> {
   render() {
     const { appWidth, spacerHeight } = this.state
     const isMobile = appWidth > 768 ? false : true
-
+    const globeHeight = spacerHeight * 0.6
     return (
       <Router>
         <FlexDiv>
-          {/* <Header width={appWidth} />
-          <Globe height={spacerHeight * 0.5} width={appWidth} />
-        <Wallet isMobile={isMobile} /> */}
+          <Header width={appWidth} />
+          <Globe height={globeHeight} width={appWidth} />
+          <Wallet isMobile={isMobile} height={spacerHeight - globeHeight} />
         </FlexDiv>
-        <Investment isMobile={isMobile} />
       </Router>
     )
   }
 }
 
 const mapStateToProps = (state: AppState) => {
-  const {} = state.wallet
+  // const {} = state.wallet
   return {}
 }
 

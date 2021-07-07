@@ -6,6 +6,7 @@ export const ACCOUNT_SATOSHI_BALANCE_REQUEST = 'ACCOUNT_SATOSHI_BALANCE_REQUEST'
 export const ACCOUNT_SATOSHI_BALANCE_SUCCESS = 'ACCOUNT_SATOSHI_BALANCE_SUCCESS'
 export const ACCOUNT_SATOSHI_BALANCE_FAILURE = 'ACCOUNT_SATOSHI_BALANCE_FAILURE'
 
+export const ACCOUNT_LOGGEDIN = 'ACCOUNT_LOGGEDIN'
 export const ACCOUNT_LOGOUT = 'ACCOUNT_LOGOUT'
 
 export const LOST_REQUEST = 'ACCOUNT_LOST_REQUEST'
@@ -19,38 +20,20 @@ export interface DefaultUserState {
   loading: boolean
   address?: string
   tokens: TokenBalances
-  satoshi?: TokenBalances
-  account?: LoginResponse
   error?: string
   theme: 'light' | 'dark'
 }
-export type TokenBalances = {
-  STT: string
-  STTS: string
-  BTCB: string
-  BNB: string
+
+type DepositDetail = {
+  reward: string
+  endTime: number
 }
 
-export type IUser = {
-  accountname: string
-  password: string
-  recaptcha?: boolean
-}
-export type IAccount = {
-  email: string
-  address: string
-  password: string
-  lastname: string
-  firstname: string
-  policy?: boolean
-  recaptcha?: boolean
-}
-export type LoginResponse = {
-  account_display_name: string
-  token: string
-  account_id: string
-  account_email: string
-  account_nicename: string
+export type TokenBalances = {
+  STT: number
+  STTS: number
+  BTCB: number
+  BNB: number
 }
 
 export interface AccountBalanceRequestAction {
@@ -58,14 +41,18 @@ export interface AccountBalanceRequestAction {
 }
 export interface AccountBalanceSuccessAction {
   type: typeof ACCOUNT_BALANCE_SUCCESS
-  payload: { tokens: TokenBalances }
+  payload: { tokens: TokenBalances; error?: string }
 }
 
 export interface AccountBalanceFailureAction {
   type: typeof ACCOUNT_BALANCE_FAILURE
-  error: string
+  payload: { error: string }
 }
 
+export interface LoginAction {
+  type: typeof ACCOUNT_LOGGEDIN
+  payload: { address: string }
+}
 export interface LogoutAction {
   type: typeof ACCOUNT_LOGOUT
 }
@@ -79,7 +66,7 @@ export interface LostSuccessAction {
 }
 export interface LostFailureAction {
   type: typeof LOST_FAILURE
-  error: string
+  payload: { error: string }
 }
 
 export interface ChangeThemeAction {
@@ -95,4 +82,5 @@ export type UserActionTypes =
   | LostSuccessAction
   | LostFailureAction
   | LogoutAction
+  | LoginAction
   | ChangeThemeAction

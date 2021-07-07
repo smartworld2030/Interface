@@ -3,9 +3,9 @@ import { Row, Col } from 'react-grid-system'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
+import { removeError } from '../../../../_actions/invest.actions'
 import { AppActions, AppState } from '../../../../_types'
-import { accountTokenBalances } from '../../../../_actions/account.actions'
-import { tokenPrice } from '../../../../_actions/bank.actions'
+import { percentToValue, valueToPercent } from '../../../../_helpers/api'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
 import TokenCircle from '../../../Layout/svgs/TokenCircle'
 import DepositInfo from './DepositInfo'
@@ -14,23 +14,40 @@ interface IProps {
   isMobile: boolean
 }
 type DepositSectionProps = IProps &
-  ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
+
+export const tokenNames = ['STTS', 'BNB', 'BTCB']
 
 export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
-  accountTokenBalances,
-  tokenPrice,
+  tokens,
+  investError,
+  address,
+  removeError,
 }) => {
   const [token, setToken] = useState<string>('STTS')
-  const [value, setValue] = useState(100)
+  const [balance, setBalance] = useState(0)
+  const [value, setValue] = useState(0)
 
   useEffect(() => {
-    // accountTokenBalances(['STT', 'STTS', 'BTCB'])
-    tokenPrice(['btc', 'bnb', 'stts'])
-    // @ts-ignore
-    // requestInvest('BTCB')
-  }, [])
+    const b = Number(tokens[token])
+    setBalance(b > 0 ? b : 0)
+    setValue(b > 0 ? b : 0)
+  }, [address, tokens, token])
+
+  const percentHandler = (per: number) => {
+    if (investError) removeError()
+    setValue(percentToValue(balance, per))
+  }
+
+  const inputHandler = (e) => {
+    if (investError) removeError()
+    const val = e.currentTarget?.valueAsNumber
+    if (val) {
+      setValue(val < 0 ? 0 : val)
+    } else setValue(0)
+  }
 
   return (
     <Row direction="row" style={{ height: '100%' }}>
@@ -41,24 +58,15 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
           align="center"
           style={{ height: '100%' }}
         >
-          <TokenCircle
-            width={70}
-            onClick={setToken}
-            token={'STTS'}
-            active={token === 'STTS'}
-          />
-          <TokenCircle
-            width={70}
-            onClick={setToken}
-            token={'BNB'}
-            active={token === 'BNB'}
-          />
-          <TokenCircle
-            width={70}
-            onClick={setToken}
-            token={'BTC'}
-            active={token === 'BTC'}
-          />
+          {tokenNames.map((t) => (
+            <TokenCircle
+              key={t}
+              width={70}
+              onClick={setToken}
+              token={t}
+              active={token === t}
+            />
+          ))}
         </Row>
       </Col>
       <Col md={4}>
@@ -67,7 +75,9 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
             width={210}
             token={token}
             value={value}
-            setValue={setValue}
+            percent={valueToPercent(value, balance)}
+            inputHandler={inputHandler}
+            percentHandler={percentHandler}
           />
         </Row>
       </Col>
@@ -78,16 +88,17 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   )
 }
 const mapStateToProps = (state: AppState) => {
-  const { tokens, error } = state.account
+  const { tokens, address, error, loggedIn } = state.account
+  const { error: investError } = state.invest
   return {
+    address,
+    loggedIn,
     tokens,
-    error,
+    investError,
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
-  tokenPrice: bindActionCreators(tokenPrice, dispatch),
-  // requestInvest: bindActionCreators(requestInvest, dispatch),
+  removeError: bindActionCreators(removeError, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepositSection)

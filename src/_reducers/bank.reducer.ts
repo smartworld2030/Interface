@@ -12,9 +12,15 @@ import {
   BANK_SATOSHI_BALANCE_FAILURE,
 } from '../_types/bank.types'
 
+const balances = { BTCB: 0, STT: 0, STTS: 0, BNB: 0 }
+const prices = { BTCB: 0, STT: 0, STTS: 0, BNB: 0 }
+const dollar = { BTC: 0 }
+
 const initialState: DefaultBankState = {
-  loading: false,
-  tokens: { BTCB: '0.0', STT: '0.0', STTS: '0.0', BNB: '0.0' },
+  bankLoading: false,
+  tokens: balances,
+  prices,
+  dollar,
   address: {
     56: '0xbBe476b50D857BF41bBd1EB02F777cb9084C1564',
     97: '0x6DFcd84CD2DF9fC3663056c3CbE9F6b5C2Ca6855',
@@ -27,35 +33,36 @@ export function bankReducer(
 ): DefaultBankState {
   switch (action.type) {
     case BANK_TOKEN_BALANCE_REQUEST:
-      return { ...state, loading: true }
+      return { ...state, bankLoading: true }
     case BANK_TOKEN_BALANCE_SUCCESS:
       return {
         ...state,
-        loading: false,
-        tokens: { ...state.tokens, ...action.payload.tokens },
+        bankLoading: false,
+        tokens: { ...balances, ...action.payload.tokens },
       }
     case BANK_TOKEN_BALANCE_FAILURE:
-      return { ...state, loading: false }
+      return { ...state, bankLoading: false }
     case BANK_SATOSHI_BALANCE_REQUEST:
-      return { ...state, loading: true }
+      return { ...state, bankLoading: true }
     case BANK_SATOSHI_BALANCE_SUCCESS:
       return {
         ...state,
-        loading: false,
+        bankLoading: false,
         satoshi: { ...state.satoshi, ...action.payload.satoshi },
       }
     case BANK_SATOSHI_BALANCE_FAILURE:
-      return { ...state, loading: false }
+      return { ...state, bankLoading: false }
     case TOKEN_PRICE_REQUEST:
-      return { ...state, loading: true }
+      return { ...state, bankLoading: true }
     case TOKEN_PRICE_SUCCESS:
       return {
         ...state,
-        loading: false,
-        // satoshi: { ...state.satoshi, ...action.payload },
+        bankLoading: false,
+        prices: { ...state.prices, ...action.payload.prices },
+        dollar: { ...state.dollar, ...action.payload.dollar },
       }
     case TOKEN_PRICE_FAILURE:
-      return { ...state, loading: false }
+      return { ...state, bankLoading: false }
     default:
       return state
   }

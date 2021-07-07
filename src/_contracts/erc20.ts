@@ -29,6 +29,8 @@ export default {
     'function totalSupply() view returns (uint)',
     'function balanceOf(address) view returns (uint)',
     'function transfer(address to, uint amount)',
+    'function approve(address spender, uint256 amount)',
+    'function allowance(address owner, address spender) public view returns (uint256)',
     'event Transfer(address indexed from, address indexed to, uint amount)',
   ],
 }

@@ -20,32 +20,53 @@ import { Listener, Provider } from '@ethersproject/providers'
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi'
 import { TypedEventFilter, TypedEvent, TypedListener } from './commons'
 
-export type SmartInvestMethod = {
-  'BTCB()': FunctionFragment
-  'STTS()': FunctionFragment
-  'calculateInterest(address)': FunctionFragment
-  'calculatePercent(address,uint256)': FunctionFragment
-  'hourlyReward(uint256)': FunctionFragment
-  'investBnb(address)': FunctionFragment
-  'investBtcb(address,uint256)': FunctionFragment
-  'investStts(address,uint256)': FunctionFragment
-  'maxPercent()': FunctionFragment
-  'totalReward(uint256)': FunctionFragment
-  'updateBnb()': FunctionFragment
-  'updateBtcb(uint256)': FunctionFragment
-  'updateStts(uint256)': FunctionFragment
-  'userBalances(address)': FunctionFragment
-  'userDepositDetails(address,uint256)': FunctionFragment
-  'userDepositNumber(address)': FunctionFragment
-  'userExpireTime(address)': FunctionFragment
-  'userExpired(address)': FunctionFragment
-  'userID()': FunctionFragment
-  'users(address)': FunctionFragment
-  'withdrawInterest()': FunctionFragment
-}
+export type SmartInvestMethod =
+  | 'BTCB'
+  | 'STTS'
+  | 'calculateInterest'
+  | 'calculatePercent'
+  | 'hourlyReward'
+  | 'investBnb'
+  | 'investBtcb'
+  | 'investStts'
+  | 'maxPercent'
+  | 'totalReward'
+  | 'updateBnb'
+  | 'updateBtcb'
+  | 'updateStts'
+  | 'userBalances'
+  | 'userDepositDetails'
+  | 'userDepositNumber'
+  | 'userExpireTime'
+  | 'userExpired'
+  | 'userID'
+  | 'users'
+  | 'withdrawInterest'
 
 interface SmartInvestInterface extends ethers.utils.Interface {
-  functions: SmartInvestMethod
+  functions: {
+    'BTCB()': FunctionFragment
+    'STTS()': FunctionFragment
+    'calculateInterest(address)': FunctionFragment
+    'calculatePercent(address,uint256)': FunctionFragment
+    'hourlyReward(uint256)': FunctionFragment
+    'investBnb(address)': FunctionFragment
+    'investBtcb(address,uint256)': FunctionFragment
+    'investStts(address,uint256)': FunctionFragment
+    'maxPercent()': FunctionFragment
+    'totalReward(uint256)': FunctionFragment
+    'updateBnb()': FunctionFragment
+    'updateBtcb(uint256)': FunctionFragment
+    'updateStts(uint256)': FunctionFragment
+    'userBalances(address)': FunctionFragment
+    'userDepositDetails(address,uint256)': FunctionFragment
+    'userDepositNumber(address)': FunctionFragment
+    'userExpireTime(address)': FunctionFragment
+    'userExpired(address)': FunctionFragment
+    'userID()': FunctionFragment
+    'users(address)': FunctionFragment
+    'withdrawInterest()': FunctionFragment
+  }
 
   encodeFunctionData(functionFragment: 'BTCB', values?: undefined): string
   encodeFunctionData(functionFragment: 'STTS', values?: undefined): string

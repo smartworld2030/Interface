@@ -1,8 +1,7 @@
 import { Dispatch } from 'react'
-import { supportedChain } from '../_helpers/constants'
 import { AppActions, AppState } from '../_types'
 import { errorHandler } from '../_helpers/alert'
-import { formater } from '../_helpers/api'
+import { bytesFormater, formaterNumber } from '../_helpers/api'
 import {
   BANK_TOKEN_BALANCE_REQUEST,
   BANK_TOKEN_BALANCE_SUCCESS,
@@ -18,10 +17,10 @@ import {
   TOKEN_PRICE_FAILURE,
 } from '../_types/bank.types'
 import { ContractNames } from '../_types/wallet.types'
-import { bankContract, investContract, tokenContract } from './wallet.actions'
-import { ISmartWorld, SmartWorldMethod } from '../_types/ISmartWorld'
-import { SmartInvestMethod } from '../_types/SmartInvest'
+import { bankContract, priceContract, tokenContract } from './wallet.actions'
+import { SmartWorldMethod } from '../_types/ISmartWorld'
 import { TokenBalances } from '../_types/account.types'
+import erc20 from '../_contracts/erc20'
 
 export const requestBank = async (
   method: SmartWorldMethod,
@@ -47,7 +46,9 @@ export const bankTokenBalances = (tokens: ContractNames[]) => (
         new Promise((resolve) =>
           tokenContract[token]
             .balanceOf(address[chainId])
-            .then((res) => resolve({ token, balance: formater(res, token) }))
+            .then((res) =>
+              resolve({ token, balance: formaterNumber(res, token) })
+            )
         )
     )
   )
@@ -75,7 +76,7 @@ export const bankTotalSatoshi = () => (dispatch: Dispatch<AppActions>) => {
     .then((res) => {
       const data = {} as TokenBalances
       Object.keys(res).map((key) => {
-        if (key.length > 1) data[key] = formater(res[key])
+        if (key.length > 1) data[key] = formaterNumber(res[key])
       })
       dispatch({
         type: BANK_SATOSHI_BALANCE_SUCCESS,
@@ -91,73 +92,56 @@ export const sttPrice = () => (dispatch: Dispatch<AppActions>) => {
     .then((res) => {
       dispatch({
         type: STT_PRICE_SUCCESS,
-        payload: formater(res),
+        payload: formaterNumber(res),
       })
     })
     .catch((err) => errorHandler(err, STT_PRICE_FAILURE))
 }
 
-export const tokenPrice = (tokens: ['btc', 'bnb', 'stts']) => (
-  dispatch: Dispatch<AppActions>
-) => {
+export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: TOKEN_PRICE_REQUEST })
-  // Promise.all(
-  tokens.map(
-    (token) =>
-      // new Promise((resolve) =>
-      requestBank(`${token}ToSatoshi`)
-        .then(
-          (res) => console.log(res)
-          // resolve({ token, price: formater(res, token) })
-          // )
+  const tokens = ['BTC', 'BNB', 'STTS', 'STT']
+  Promise.all(
+    tokens.map((token) => {
+      if (token === 'STT') {
+        return new Promise((resolve) =>
+          requestBank('sttPrice').then((res) =>
+            resolve({ token, price: bytesFormater(res) })
+          )
         )
-        .then((data: any) => {
-          console.log(data)
-          // dispatch({
-          //   type: TOKEN_PRICE_SUCCESS,
-          //   payload: {
-          //     tokens: data.reduce(
-          //       (items, item) => ({
-          //         ...items,
-          //         [item.token]: item.balance,
-          //       }),
-          //       {}
-          //     ),
-          //   },
-          // })
-        })
-        .catch((err) => errorHandler(err, TOKEN_PRICE_FAILURE))
-
-    // tokens.forEach((token) => {
-    //   requestBank(`${token}ToSatoshi`)
-    //     .then((res) => {
-    //       dispatch({
-    //         type: TOKEN_PRICE_SUCCESS,
-    //         payload: formater(res),
-    //       })
-    //     })
-    //     .catch((err) => errorHandler(err, TOKEN_PRICE_FAILURE))
-    // })
+      }
+      const decimals = (10 ** erc20.decimals[token]).toString()
+      return new Promise((resolve) =>
+        // @ts-ignore
+        requestBank(`${token.toLowerCase()}ToSatoshi`, decimals).then((res) =>
+          resolve({ token, price: formaterNumber(res) })
+        )
+      )
+    })
   )
-  // )
+    .then(async (data: any) => {
+      const prices = data.reduce((items, item) => {
+        if (item.token === 'BTC' || item.token === 'BTCB')
+          return {
+            ...items,
+            BTC: item.price,
+            BTCB: item.price,
+          }
+        else
+          return {
+            ...items,
+            [item.token]: item.price,
+          }
+      }, {})
+      const latestPrice = await priceContract.latestAnswer()
+      const BTC = formaterNumber(latestPrice, 8)
+      dispatch({
+        type: TOKEN_PRICE_SUCCESS,
+        payload: {
+          prices,
+          dollar: { BTC },
+        },
+      })
+    })
+    .catch((err) => errorHandler(err, TOKEN_PRICE_FAILURE))
 }
-
-// export const requestInvest = (method: keyof SmartInvestMethod, args?: any) => (
-//   dispatch: Dispatch<AppActions>,
-//   getState: () => AppState
-// ) => {
-//   const { chainId, address } = getState().wallet
-
-//   dispatch({ type: BALANCE_REQUEST })
-//   if (investContract && supportedChain(chainId)) {
-//     investContract['userExpireTime'](args)
-//       .then((res) => {
-//         console.log(formater(res.hourly, 'stt'))
-//         // dispatch({
-//         //   type: BALANCE_SUCCESS,
-//         //   payload: { balance: { ['satoshi']: formater(res.satoshi, 'btcb') } },
-//         // })
-//       })
-//       .catch((err) => errorHandler(err, BALANCE_FAILURE))
-//   }
-// }

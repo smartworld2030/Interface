@@ -7,15 +7,17 @@ import {
   ADDRESS_CHANGE_REQUEST,
   ADDRESS_CHANGE_SUCCESS,
   ADDRESS_CHANGE_FAILURE,
+  CHAIN_CHANGE_FAILURE,
   CHAIN_CHANGE_SUCCESS,
   ONBOARDING_REQUEST,
+  WALLET_WAITING_MESSAGE,
 } from '../_types/wallet.types'
 
 const initialState: DefaultWalletState = {
-  error: 'available',
+  error: { msg: '', code: 0 },
   chainId: 1,
   active: false,
-  loading: false,
+  waiting: false,
 }
 
 export function walletReducer(
@@ -24,21 +26,21 @@ export function walletReducer(
 ): DefaultWalletState {
   switch (action.type) {
     case WALLET_REQUEST:
-      return { ...state, loading: true }
+      return { ...state, waiting: true }
     case ONBOARDING_REQUEST:
-      return { ...state, loading: true }
+      return { ...state, waiting: true, error: action.payload.error }
     case WALLET_ACTIVATED:
       return {
         ...state,
         active: true,
-        loading: false,
+        waiting: false,
         ...action.payload,
       }
     case WALLET_FAILURE:
       return {
         ...state,
         active: false,
-        loading: false,
+        waiting: false,
         error: action.error,
       }
     case CHAIN_CHANGE_SUCCESS:
@@ -47,18 +49,28 @@ export function walletReducer(
         chainId: action.payload.chainId,
       }
     case ADDRESS_CHANGE_REQUEST:
-      return { ...state, loading: true }
+      return { ...state, waiting: true }
     case ADDRESS_CHANGE_SUCCESS:
       return {
         ...state,
-        loading: false,
+        waiting: false,
         active: true,
-        address: action.payload.address,
+      }
+    case WALLET_WAITING_MESSAGE:
+      return {
+        ...state,
+        error: action.payload.error,
       }
     case ADDRESS_CHANGE_FAILURE:
       return {
         ...state,
-        loading: false,
+        waiting: false,
+        error: action.payload.error,
+      }
+    case CHAIN_CHANGE_FAILURE:
+      return {
+        ...state,
+        waiting: false,
         error: action.payload.error,
       }
     default:

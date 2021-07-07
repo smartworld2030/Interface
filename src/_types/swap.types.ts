@@ -1,4 +1,4 @@
-import { FAILURE, REQUEST, SUCCESS, SAVE } from '.'
+import { FAILURE, REQUEST, SUCCESS } from '.'
 
 export interface DefaultSwapBankState {
   error: string
@@ -10,40 +10,17 @@ export interface DefaultSwapState {
   loading: boolean
 }
 
-export interface RequestSwapBank {
-  type: typeof REQUEST.SWAP_BANK
-}
-export interface SeccessSwapBank {
-  type: typeof SUCCESS.SWAP_BANK
-  payload: {
-    nextLoad: number
-  }
-}
-export interface FailureSwapBank {
-  type: typeof FAILURE.SWAP_BANK
-  error: string
-}
-
-export interface SaveGuides {
-  type: typeof SAVE.SWAP_BANK
-}
-
 export interface RequestSwap {
   type: typeof REQUEST.SWAP
 }
+
 export interface SeccessSwap {
   type: typeof SUCCESS.SWAP
 }
+
 export interface FailureSwap {
   type: typeof FAILURE.SWAP
   error: string
 }
 
-export type SwapActionTypes =
-  | RequestSwapBank
-  | SeccessSwapBank
-  | FailureSwapBank
-  | RequestSwap
-  | SeccessSwap
-  | FailureSwap
-  | SaveGuides
+export type SwapActionTypes = RequestSwap | SeccessSwap | FailureSwap

@@ -5,23 +5,18 @@ import { connectRouter } from 'connected-react-router'
 import { walletReducer } from './wallet.reducer'
 import { accountReducer } from './account.reducer'
 import { bankReducer } from './bank.reducer'
-import { swapReducer, swapBankReducer } from './swap.reducer'
-import { investReducer, investBankReducer } from './invest.reducer'
-import { freezeReducer, freezeBankReducer } from './freeze.reducer'
+import { swapReducer } from './swap.reducer'
+import { investReducer } from './invest.reducer'
+import { freezeReducer } from './freeze.reducer'
 
 const rootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
-    account: combineReducers({
-      balances: accountReducer,
-      invest: investReducer,
-      freeze: freezeReducer,
-      swap: swapReducer,
-    }),
+    account: accountReducer,
     bank: bankReducer,
-    invest: investBankReducer,
-    freeze: freezeBankReducer,
-    swap: swapBankReducer,
+    invest: investReducer,
+    freeze: freezeReducer,
+    swap: swapReducer,
     wallet: walletReducer,
   })
 

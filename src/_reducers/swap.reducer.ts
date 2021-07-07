@@ -1,37 +1,9 @@
-import { FAILURE, REQUEST, SAVE, SUCCESS } from '../_types'
+import { FAILURE, REQUEST, SUCCESS } from '../_types'
 import {
   SwapActionTypes,
   DefaultSwapState,
   DefaultSwapBankState,
 } from '../_types/swap.types'
-
-const swapBankReducerDefaultState: DefaultSwapBankState = {
-  loading: true,
-  error: 'Not Found',
-}
-
-export const swapBankReducer = (
-  state = swapBankReducerDefaultState,
-  action: SwapActionTypes
-): DefaultSwapBankState => {
-  switch (action.type) {
-    case REQUEST.SWAP_BANK:
-      return state
-    case SUCCESS.SWAP_BANK:
-      return {
-        ...state,
-        ...action.payload,
-        loading: false,
-      }
-    case FAILURE.SWAP_BANK:
-      return {
-        error: action.error,
-        loading: false,
-      }
-    default:
-      return state
-  }
-}
 
 const swapReducerDefaultState: DefaultSwapState = {
   loading: true,
@@ -53,7 +25,7 @@ export const swapReducer = (
     case FAILURE.SWAP:
       return {
         ...state,
-        error: action.error,
+        // error: action.error,
         loading: false,
       }
     default:

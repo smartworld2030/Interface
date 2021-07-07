@@ -1,4 +1,4 @@
-import { FAILURE, REQUEST, SUCCESS, SAVE } from './'
+import { FAILURE, REQUEST, SUCCESS } from './'
 
 export interface DefaultFreezeBankState {
   error: string
@@ -7,22 +7,6 @@ export interface DefaultFreezeBankState {
 export interface DefaultFreezeState {
   error: string
   loading: boolean
-}
-
-export interface RequestFreezeBank {
-  type: typeof REQUEST.FREEZE_BANK
-}
-export interface SeccessFreezeBank {
-  type: typeof SUCCESS.FREEZE_BANK
-}
-
-export interface SaveFreezeBank {
-  type: typeof SAVE.FREEZE_BANK
-}
-
-export interface FailureFreezeBank {
-  type: typeof FAILURE.FREEZE_BANK
-  error: string
 }
 
 export interface RequestFreeze {
@@ -36,11 +20,4 @@ export interface FailureFreeze {
   error: string
 }
 
-export type FreezeActionTypes =
-  | RequestFreezeBank
-  | SeccessFreezeBank
-  | FailureFreezeBank
-  | SaveFreezeBank
-  | RequestFreeze
-  | SeccessFreeze
-  | FailureFreeze
+export type FreezeActionTypes = RequestFreeze | SeccessFreeze | FailureFreeze

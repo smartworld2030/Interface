@@ -2,7 +2,8 @@ import { Contract } from 'ethers'
 import { ISmartWorld } from './ISmartWorld'
 import { SmartInvest } from './SmartInvest'
 
-export const ONBOARDING_REQUEST = 'WALLET_REQUEST'
+export const ONBOARDING_REQUEST = 'ONBOARDING_REQUEST'
+export const WALLET_WAITING_MESSAGE = 'WALLET_WAITING_MESSAGE'
 
 export const WALLET_REQUEST = 'WALLET_REQUEST'
 export const WALLET_ACTIVATED = 'WALLET_ACTIVATED'
@@ -18,17 +19,18 @@ export const ADDRESS_CHANGE_FAILURE = 'ADDRESS_CHANGE_FAILURE'
 
 export type BankContract = ISmartWorld | Contract
 export type InvestContract = SmartInvest | Contract
+export type PriceContract = { latestAnswer: any } | Contract
 
 export interface DefaultWalletState {
   active: boolean
-  loading: boolean
-  error: string
+  waiting: boolean
+  error: ErrorObject
   chainId: number
-  address?: string
 }
 
-export interface OnBoardingRequestAction {
-  type: typeof WALLET_REQUEST
+export interface ErrorObject {
+  msg: string
+  code: number
 }
 
 export interface RegisterRequestAction {
@@ -38,7 +40,6 @@ export interface RegisterSuccessAction {
   type: typeof WALLET_ACTIVATED
   payload: {
     chainId: number
-    address: string
   }
 }
 export type ContractNames = 'STT' | 'STTS' | 'BTCB'
@@ -48,7 +49,7 @@ export type ContractObject = {
 }
 export interface RegisterFailureAction {
   type: typeof WALLET_FAILURE
-  error: string
+  error: ErrorObject
 }
 
 export interface ChainChangeRequestAction {
@@ -63,23 +64,36 @@ export interface ChainChangeSuccessAction {
 export interface ChainChangeFailureAction {
   type: typeof CHAIN_CHANGE_FAILURE
   payload: {
-    error: string
+    error: ErrorObject
+  }
+}
+
+export interface WalletWaitingAction {
+  type: typeof WALLET_WAITING_MESSAGE
+  payload: {
+    error: ErrorObject
   }
 }
 
 export interface AccountChangeRequestAction {
   type: typeof ADDRESS_CHANGE_REQUEST
 }
+
 export interface AccountChangeSuccessAction {
   type: typeof ADDRESS_CHANGE_SUCCESS
-  payload: {
-    address: string
-  }
 }
+
 export interface AccountChangeFailureAction {
   type: typeof ADDRESS_CHANGE_FAILURE
   payload: {
-    error: string
+    error: ErrorObject
+  }
+}
+
+export interface OnBoardingRequestAction {
+  type: typeof ONBOARDING_REQUEST
+  payload: {
+    error: ErrorObject
   }
 }
 
@@ -89,6 +103,7 @@ export type WalletActionTypes =
   | RegisterRequestAction
   | RegisterSuccessAction
   | RegisterFailureAction
+  | WalletWaitingAction
   | ChainChangeRequestAction
   | ChainChangeSuccessAction
   | ChainChangeFailureAction

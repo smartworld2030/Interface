@@ -1,36 +1,43 @@
-import { Dispatch } from 'react'
+import { Dispatch } from 'redux'
 import {
   WALLET_FAILURE,
   WALLET_REQUEST,
   WALLET_ACTIVATED,
+  WALLET_WAITING_MESSAGE,
   ONBOARDING_REQUEST,
   CHAIN_CHANGE_REQUEST,
   CHAIN_CHANGE_SUCCESS,
-  ADDRESS_CHANGE_REQUEST,
-  ADDRESS_CHANGE_SUCCESS,
-  ADDRESS_CHANGE_FAILURE,
+  CHAIN_CHANGE_FAILURE,
   ContractObject,
   InvestContract,
   BankContract,
+  PriceContract,
 } from '../_types/wallet.types'
 import { AppActions, AppState } from '../_types'
-import { errorHandler, seccessHandler, warningHandler } from '../_helpers/alert'
+import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
 import { supportedChain, tooShorter } from '../_helpers/constants'
 import { ethereum } from '../_helpers/api'
 import chainList from '../_helpers/chainList'
-import { Contract, ethers } from 'ethers'
+import { Contract, providers } from 'ethers'
 import { onBoard } from '../_helpers/api'
 import erc20 from '../_contracts/erc20'
 import bank from '../_contracts/bank'
 import invest from '../_contracts/invest'
+import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
+import { accountTokenBalances } from './account.actions'
+import { INVEST_RESET } from '../_types/invest.types'
+import tokenPrice from '../_contracts/tokenPrice'
+import info from '../_contracts/info'
 
 let timer: NodeJS.Timeout
+let interval: NodeJS.Timeout
 
-export let provider
-export let signer
+export let provider: providers.Web3Provider
+export let signer: providers.JsonRpcSigner
 export let tokenContract: ContractObject
 export let investContract: InvestContract
 export let bankContract: BankContract
+export let priceContract: PriceContract
 
 export const initialization = () => (
   dispatch: Dispatch<AppActions>,
@@ -39,96 +46,129 @@ export const initialization = () => (
   dispatch({ type: WALLET_REQUEST })
   if (!getState().wallet.active) {
     if (ethereum && ethereum.isMetaMask) {
-      provider = new ethers.providers.Web3Provider(ethereum, 'any')
+      provider = new providers.Web3Provider(ethereum, 'any')
       provider.send('eth_requestAccounts', [])
       signer = provider.getSigner()
-
-      provider.on('network', ({ chainId }) => {
-        dispatch({ type: CHAIN_CHANGE_SUCCESS, payload: { chainId } })
-
-        ethereum?._metamask.isUnlocked().then((isUnlocked: boolean) => {
-          if (isUnlocked) {
-            if (supportedChain(chainId)) {
-              tokenContract = {
-                STT: new Contract(
-                  erc20.address[chainId].stt,
-                  erc20.abi,
-                  signer
-                ),
-                STTS: new Contract(
-                  erc20.address[chainId].stts,
-                  erc20.abi,
-                  signer
-                ),
-                BTCB: new Contract(
-                  erc20.address[chainId].btcb,
-                  erc20.abi,
-                  signer
-                ),
-              }
-              investContract = new Contract(
-                invest.address[chainId],
-                invest.abi,
-                signer
-              )
-              bankContract = new Contract(
-                erc20.address[chainId].stt,
-                bank.abi,
-                signer
-              )
-              signer.getAddress().then((address) =>
-                dispatch({
-                  type: WALLET_ACTIVATED,
-                  payload: {
-                    chainId,
-                    address,
-                  },
-                })
-              )
-              seccessHandler('Connected To ' + chainList[chainId]?.name)
-            } else {
-              warningHandler('Please Change to Binance Smart Chain Mainnet!')
-              dispatch({
-                type: ADDRESS_CHANGE_FAILURE,
-                payload: { error: 'available' },
-              })
-            }
-          } else {
-            warningHandler('Please unlock MetaMask!')
-          }
-        })
-      })
 
       ethereum.on('chainChanged', () => {
         window.location.reload()
       })
 
-      ethereum.on('accountsChanged', ([account]) => {
-        dispatch({
-          type: ADDRESS_CHANGE_REQUEST,
-        })
-        clearTimeout(timer)
-        if (account) {
-          timer = setTimeout(() => {
-            signer.getAddress().then((address) => {
-              dispatch({
-                type: ADDRESS_CHANGE_SUCCESS,
-                payload: { address },
-              })
-              seccessHandler(`Account Changed ${tooShorter(address)}`)
-            })
-          }, 1000)
-        } else {
+      ethereum.on('accountsChanged', (accounts) => {
+        accountHandler(accounts[0])
+      })
+
+      provider.on('network', ({ chainId }) => {
+        dispatch({ type: CHAIN_CHANGE_REQUEST, payload: { chainId } })
+        console.log(chainId)
+        if (supportedChain(chainId)) {
+          tokenContract = {
+            STT: new Contract(erc20.address[chainId].stt, erc20.abi, signer),
+            STTS: new Contract(erc20.address[chainId].stts, erc20.abi, signer),
+            BTCB: new Contract(erc20.address[chainId].btcb, erc20.abi, signer),
+          }
+          investContract = new Contract(
+            invest.address[chainId],
+            invest.abi,
+            signer
+          )
+          bankContract = new Contract(
+            erc20.address[chainId].stt,
+            bank.abi,
+            signer
+          )
+          priceContract = new Contract(
+            tokenPrice.address[chainId].btc,
+            tokenPrice.abi,
+            signer
+          )
           dispatch({
-            type: ADDRESS_CHANGE_FAILURE,
-            payload: { error: 'notConnected' },
+            type: WALLET_ACTIVATED,
+            payload: {
+              chainId,
+            },
+          })
+          dispatch({ type: CHAIN_CHANGE_REQUEST, payload: { chainId } })
+          successHandler('Connected To ' + chainList[chainId]?.name)
+        } else {
+          const msg = 'Please Change to Binance Smart Chain Mainnet!'
+          warningHandler(msg)
+          dispatch({
+            type: CHAIN_CHANGE_FAILURE,
+            payload: {
+              error: {
+                code: 301,
+                msg,
+              },
+            },
           })
         }
+        ethereum?._metamask.isUnlocked().then((isUnlocked: boolean) => {
+          if (isUnlocked) {
+            signer.getAddress().then((address) => accountHandler(address))
+          } else {
+            accountHandler()
+          }
+        })
       })
     } else {
-      dispatch({ type: WALLET_FAILURE, error: 'notAvailable' })
-      errorHandler('MetaMask Is not Available!')
+      dispatch({
+        type: WALLET_FAILURE,
+        error: {
+          msg: 'notAvailable',
+          code: 401,
+        },
+      })
+      const msg = 'MetaMask Is not Available!'
+      errorHandler(msg, WALLET_WAITING_MESSAGE)
+      dispatch({
+        type: WALLET_WAITING_MESSAGE,
+        payload: { error: { msg, code: 401 } },
+      })
     }
+  }
+
+  const accountHandler = (account?: string) => {
+    dispatch({
+      type: ACCOUNT_LOGOUT,
+    })
+    dispatch({
+      type: INVEST_RESET,
+    })
+    clearTimeout(timer)
+    if (account) {
+      timer = setTimeout(() => {
+        signer.getAddress().then((address) => {
+          dispatch({
+            type: ACCOUNT_LOGGEDIN,
+            payload: { address },
+          })
+          dispatch(
+            accountTokenBalances(address, ['STT', 'STTS', 'BTCB']) as any
+          )
+          successHandler(`Account Changed ${tooShorter(address)}`)
+        })
+      }, 1000)
+    } else {
+      const msg = 'Please unlock your MetaMask!'
+      warningHandler(msg)
+      dispatch({
+        type: WALLET_WAITING_MESSAGE,
+        payload: {
+          error: {
+            code: 301,
+            msg,
+          },
+        },
+      })
+    }
+
+    clearInterval(interval)
+    interval = setInterval(async () => {
+      const accounts = await ethereum?.request({ method: 'eth_accounts' })
+      if (!account && accounts.length > 0) accountHandler(accounts[0])
+      else if (account && accounts.length === 0) accountHandler()
+    }, 1000)
   }
 }
 
@@ -153,11 +193,48 @@ export const changeToMain = () => (dispatch: Dispatch<AppActions>) => {
     })
     .catch((error) => {
       errorHandler(error.message, WALLET_FAILURE)
-      dispatch({ type: WALLET_FAILURE, error: 'notAvailable' })
+      dispatch({
+        type: WALLET_FAILURE,
+        error: { msg: 'MetaMask Is not Available!', code: 401 },
+      })
+    })
+}
+
+export const addTokenToWallet = (tokens: string[]) => (
+  dispatch: Dispatch<AppActions>,
+  getState: () => AppState
+) => {
+  tokens.forEach(() => {})
+  const addToken = (token: string) =>
+    new Promise((resolve, reject) => {
+      const chainId = getState().wallet.chainId
+      const address = info[chainId][token]
+      const symbol = token
+      const decimals = info.decimals[token]
+      const image = 'http://placekitten.com/200/300'
+      ethereum
+        ?.request({
+          method: 'wallet_watchAsset',
+          params: {
+            // @ts-ignore
+            type: 'ERC20',
+            options: {
+              address,
+              symbol,
+              decimals,
+              image,
+            },
+          },
+        })
+        .then((result) => resolve(result))
+        .catch((err) => {})
     })
 }
 
 export const startOnBoarding = () => (dispatch: Dispatch<AppActions>) => {
-  dispatch({ type: ONBOARDING_REQUEST })
+  dispatch({
+    type: ONBOARDING_REQUEST,
+    payload: { error: { msg: 'Waiting for MetaMask!', code: 304 } },
+  })
   onBoard.startOnboarding()
 }

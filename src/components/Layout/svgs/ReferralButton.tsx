@@ -38,7 +38,7 @@ const ReferralButton: React.FC<ReferralPolygonProps> = ({
           viewBox="0 0 100 100"
           focusable="false"
           data-icon="check"
-          opacity={loading || done ? '1' : '0.4'}
+          opacity={loading || done ? '1' : '0.5'}
           fill={Colors.green}
         >
           {done ? (
@@ -59,7 +59,7 @@ const ReferralButton: React.FC<ReferralPolygonProps> = ({
           fontWeight="bold"
           fontSize="15"
         >
-          {done ? 'Done!' : loading ? 'Waiting...' : 'Copy'}
+          {done ? '' : loading ? '' : ''}
         </text>
       </g>
     </svg>

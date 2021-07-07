@@ -1,5 +1,5 @@
 {
-  "homepage": "http://smartworld.app/",
+  "homepage": "http://smartworld.app",
   "name": "smart-world",
   "version": "0.1.0",
   "private": true,
@@ -17,6 +17,7 @@
     "index-array-by": "^1.3.1",
     "lodash-es": "^4.17.21",
     "react": "^17.0.2",
+    "react-countup": "^4.4.0",
     "react-dom": "^17.0.2",
     "react-globe.gl": "^2.18.7",
     "react-grid-system": "^7.2.0",
