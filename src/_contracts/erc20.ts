@@ -1,4 +1,4 @@
-export default {
+const erc20 = {
   address: {
     56: {
       stt: '0xbBe476b50D857BF41bBd1EB02F777cb9084C1564',
@@ -34,3 +34,5 @@ export default {
     'event Transfer(address indexed from, address indexed to, uint amount)',
   ],
 }
+
+export default erc20

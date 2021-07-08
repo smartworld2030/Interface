@@ -1,4 +1,4 @@
-export default {
+const chainList = {
   '1': {
     name: 'Ethereum Mainnet',
     chainId: 1,
@@ -12,8 +12,8 @@ export default {
       decimals: 18,
     },
     rpc: [
-      'https://mainnet.infura.io/v3/${INFURA_API_KEY}',
-      'wss://mainnet.infura.io/ws/v3/${INFURA_API_KEY}',
+      'https://mainnet.infura.io/v3/',
+      'wss://mainnet.infura.io/ws/v3/',
       'https://api.mycryptoapi.com/eth',
       'https://cloudflare-eth.com',
     ],
@@ -56,11 +56,8 @@ export default {
       symbol: 'ROP',
       decimals: 18,
     },
-    rpc: [
-      'https://ropsten.infura.io/v3/${INFURA_API_KEY}',
-      'wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}',
-    ],
-    faucets: ['https://faucet.ropsten.be?${ADDRESS}'],
+    rpc: ['https://ropsten.infura.io/v3/', 'wss://ropsten.infura.io/ws/v3/'],
+    faucets: ['https://faucet.ropsten.be?'],
     explorers: [],
     infoURL: 'https://github.com/ethereum/ropsten',
   },
@@ -76,10 +73,7 @@ export default {
       symbol: 'RIN',
       decimals: 18,
     },
-    rpc: [
-      'https://rinkeby.infura.io/v3/${INFURA_API_KEY}',
-      'wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}',
-    ],
+    rpc: ['https://rinkeby.infura.io/v3/', 'wss://rinkeby.infura.io/ws/v3/'],
     faucets: ['https://faucet.rinkeby.io'],
     explorers: [
       {
@@ -108,7 +102,7 @@ export default {
       'https://goerli.prylabs.net/',
     ],
     faucets: [
-      'https://goerli-faucet.slock.it/?address=${ADDRESS}',
+      'https://goerli-faucet.slock.it/?address=',
       'https://faucet.goerli.mudit.blog',
     ],
     explorers: [],
@@ -129,8 +123,8 @@ export default {
     rpc: [
       'https://kovan.poa.network',
       'http://kovan.poa.network:8545',
-      'https://kovan.infura.io/v3/${INFURA_API_KEY}',
-      'wss://kovan.infura.io/ws/v3/${INFURA_API_KEY}',
+      'https://kovan.infura.io/v3/',
+      'wss://kovan.infura.io/ws/v3/',
       'ws://kovan.poa.network:8546',
     ],
     faucets: [
@@ -306,3 +300,4 @@ export default {
     infoURL: 'https://forum.poa.network/c/xdai-chain',
   },
 }
+export default chainList

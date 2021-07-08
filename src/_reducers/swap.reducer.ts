@@ -1,9 +1,5 @@
 import { FAILURE, REQUEST, SUCCESS } from '../_types'
-import {
-  SwapActionTypes,
-  DefaultSwapState,
-  DefaultSwapBankState,
-} from '../_types/swap.types'
+import { SwapActionTypes, DefaultSwapState } from '../_types/swap.types'
 
 const swapReducerDefaultState: DefaultSwapState = {
   loading: true,

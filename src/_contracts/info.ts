@@ -1,4 +1,4 @@
-export default {
+const info = {
   address: {
     '0xbbe476b50d857bf41bbd1eb02f777cb9084c1564': { name: 'stt', network: 56 },
     '0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec': { name: 'stts', network: 56 },
@@ -31,3 +31,5 @@ export default {
     BTCB: '0x3c26729bb1Cf37d18EFdF3bb957f5e0de5c2Cb12',
   },
 }
+
+export default info

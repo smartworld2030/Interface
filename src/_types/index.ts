@@ -1,7 +1,7 @@
 import { CallHistoryMethodAction, RouterState } from 'connected-react-router'
 import { DefaultUserState, UserActionTypes } from './account.types'
 import { DefaultBankState, BankActionTypes } from './bank.types'
-import { SnackActionTypes, DefaultSnackState } from './snackbar.types'
+import { SnackActionTypes } from './snackbar.types'
 import { DefaultWalletState, WalletActionTypes } from './wallet.types'
 import { InvestActionTypes, DefaultInvestState } from './invest.types'
 import { FreezeActionTypes, DefaultFreezeState } from './freeze.types'

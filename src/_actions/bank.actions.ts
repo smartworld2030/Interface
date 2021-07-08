@@ -75,7 +75,7 @@ export const bankTotalSatoshi = () => (dispatch: Dispatch<AppActions>) => {
   requestBank('totalSatoshi')
     .then((res) => {
       const data = {} as TokenBalances
-      Object.keys(res).map((key) => {
+      Object.keys(res).forEach((key) => {
         if (key.length > 1) data[key] = formaterNumber(res[key])
       })
       dispatch({

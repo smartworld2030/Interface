@@ -1,4 +1,4 @@
-export default {
+const invest = {
   address: {
     56: '0x8f2974a63C3Df971d1A8ff5FdCebC49ae05948E3',
     97: '0x96Ab5e8812099509Eb62D236aE24D3E0117D3D36',
@@ -27,3 +27,5 @@ export default {
     'function userExpired(address user) public view returns (bool)',
   ],
 }
+
+export default invest

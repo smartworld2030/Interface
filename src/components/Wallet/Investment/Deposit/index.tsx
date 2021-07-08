@@ -22,7 +22,7 @@ export const tokenNames = ['STTS', 'BNB', 'BTCB']
 export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
   tokens,
-  investError,
+  error,
   address,
   removeError,
 }) => {
@@ -37,12 +37,12 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   }, [address, tokens, token])
 
   const percentHandler = (per: number) => {
-    if (investError) removeError()
+    if (error) removeError()
     setValue(percentToValue(balance, per))
   }
 
   const inputHandler = (e) => {
-    if (investError) removeError()
+    if (error) removeError()
     const val = e.currentTarget?.valueAsNumber
     if (val) {
       setValue(val < 0 ? 0 : val)
@@ -88,13 +88,13 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   )
 }
 const mapStateToProps = (state: AppState) => {
-  const { tokens, address, error, loggedIn } = state.account
-  const { error: investError } = state.invest
+  const { tokens, address, loggedIn } = state.account
+  const { error } = state.invest
   return {
     address,
     loggedIn,
     tokens,
-    investError,
+    error,
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({

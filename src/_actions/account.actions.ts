@@ -1,5 +1,5 @@
 import { Dispatch } from 'react'
-import { AppActions, AppState } from '../_types'
+import { AppActions } from '../_types'
 import { errorHandler } from '../_helpers/alert'
 import { formaterNumber } from '../_helpers/api'
 import {

@@ -47,6 +47,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile }) => {
 
 interface tester {}
 
-export const Test: React.FC<tester> = ({}) => {
+export const Test: React.FC<tester> = () => {
   return <div>Not Available Yet!</div>
 }

@@ -42,7 +42,7 @@ const Investment: React.FC<InvestmentProps> = ({
     return () => {
       clearInterval(timer)
     }
-  }, [address])
+  }, [address, investInformation, tokenPrices])
 
   return (
     <Container fluid>

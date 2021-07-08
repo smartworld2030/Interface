@@ -1,4 +1,4 @@
-export default {
+const bank = {
   address: {
     56: '0xbBe476b50D857BF41bBd1EB02F777cb9084C1564',
     97: '0x6DFcd84CD2DF9fC3663056c3CbE9F6b5C2Ca6855',
@@ -25,3 +25,4 @@ export default {
     'function userTokens(address token_, address user_,address contract_) external view returns (uint256)',
   ],
 }
+export default bank

@@ -6,7 +6,6 @@ import {
   WALLET_WAITING_MESSAGE,
   ONBOARDING_REQUEST,
   CHAIN_CHANGE_REQUEST,
-  CHAIN_CHANGE_SUCCESS,
   CHAIN_CHANGE_FAILURE,
   ContractObject,
   InvestContract,
@@ -204,31 +203,32 @@ export const addTokenToWallet = (tokens: string[]) => (
   dispatch: Dispatch<AppActions>,
   getState: () => AppState
 ) => {
-  tokens.forEach(() => {})
-  const addToken = (token: string) =>
-    new Promise((resolve, reject) => {
-      const chainId = getState().wallet.chainId
-      const address = info[chainId][token]
-      const symbol = token
-      const decimals = info.decimals[token]
-      const image = 'http://placekitten.com/200/300'
-      ethereum
-        ?.request({
-          method: 'wallet_watchAsset',
-          params: {
-            // @ts-ignore
-            type: 'ERC20',
-            options: {
-              address,
-              symbol,
-              decimals,
-              image,
+  tokens.forEach(
+    (token: string) =>
+      new Promise((resolve, reject) => {
+        const chainId = getState().wallet.chainId
+        const address = info[chainId][token]
+        const symbol = token
+        const decimals = info.decimals[token]
+        const image = 'http://placekitten.com/200/300'
+        ethereum
+          ?.request({
+            method: 'wallet_watchAsset',
+            params: {
+              // @ts-ignore
+              type: 'ERC20',
+              options: {
+                address,
+                symbol,
+                decimals,
+                image,
+              },
             },
-          },
-        })
-        .then((result) => resolve(result))
-        .catch((err) => {})
-    })
+          })
+          .then((result) => resolve(result))
+          .catch((err) => {})
+      })
+  )
 }
 
 export const startOnBoarding = () => (dispatch: Dispatch<AppActions>) => {
