@@ -24,11 +24,6 @@ export interface DefaultUserState {
   theme: 'light' | 'dark'
 }
 
-type DepositDetail = {
-  reward: string
-  endTime: number
-}
-
 export type TokenBalances = {
   STT: number
   STTS: number

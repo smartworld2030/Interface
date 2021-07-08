@@ -30,13 +30,13 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile }) => {
           <Route exact path="/stts">
             <Test />
           </Route>
-          <Route exact path="/stt">
+          <Route exact path="/info">
             <Test />
           </Route>
           <Route exact path="/swap">
             <Test />
           </Route>
-          <Route exact path="/">
+          <Route path="/">
             <Redirect to="/invest" />
           </Route>
         </Switch>

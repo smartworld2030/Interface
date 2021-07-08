@@ -46,8 +46,8 @@ export const sizeCalculator = (width: number) => {
       positionX: half - quarter,
       positionY: fristHeight - 54,
       size: 15,
-      link: 'stt',
-      text: 'STT',
+      link: 'info',
+      text: 'Info',
     },
     {
       positionX: half - eighth,

@@ -72,8 +72,8 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
           <TokenValue
             title="Referral percent:"
             precision={2}
-            token={'%'}
-            value={account.referral}
+            token="%"
+            value={account.percent / 100}
           />
           {/* <TokenValue
             value={account.hourly}
@@ -106,11 +106,17 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
           <TokenValue
+            token="SATS"
+            precision={0}
             value={account.satoshi}
-            token={'SATS'}
             title="Total investment:"
           />
-          <TokenValue value={tokens.STT} token={'STT'} title="Total rewards:" />
+          <TokenValue
+            value={tokens.STT}
+            token="STT"
+            precision={0}
+            title="Total rewards:"
+          />
         </Row>
       </Col>
     </Row>

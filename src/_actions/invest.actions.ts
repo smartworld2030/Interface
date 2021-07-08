@@ -65,13 +65,12 @@ export const investmentDeposit = (token: string, value: string) => async (
   const chainId = getState().wallet.chainId
   const address = getState().account.address
   const referrer = getState().router.location.query.ref
+  let allowance
 
   const accountInfo: any = await readInvest('users', ['id'], [address])
 
-  const allowance: any = await tokenContract[token].allowance(
-    address,
-    info[chainId].STT
-  )
+  if (token !== 'BNB')
+    allowance = await tokenContract[token].allowance(address, info[chainId].STT)
 
   const requestDeposit = async () => {
     if (accountInfo.id > 0) {
@@ -98,7 +97,7 @@ export const investmentDeposit = (token: string, value: string) => async (
     }
   }
 
-  if (bytesFormater(allowance) === 0) {
+  if (token !== 'BNB' && bytesFormater(allowance) === 0) {
     dispatch({ type: INVEST_METHOD_REQUEST, payload: { method: 'approve' } })
 
     tokenContract[token]

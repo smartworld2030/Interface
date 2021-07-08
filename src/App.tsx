@@ -2,13 +2,14 @@ import { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Globe from './components/Globe/Globe'
 import { Header } from './components/Header'
-import { Wallet } from './components/Wallet'
 import { FlexDiv } from './components/Layout/divs/Divs'
 import { AppActions, AppState } from './_types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { initialization } from './_actions/wallet.actions'
+import ProtectedRoute from './router/ProtectedRoute'
+import { AppRouter } from './router/AppRouter'
 
 let setTime: NodeJS.Timeout
 
@@ -61,7 +62,11 @@ class App extends Component<AppProps, AppStates> {
         <FlexDiv>
           <Header width={appWidth} />
           <Globe height={globeHeight} width={appWidth} />
-          <Wallet isMobile={isMobile} height={spacerHeight - globeHeight} />
+          <ProtectedRoute
+            isMobile={isMobile}
+            height={spacerHeight - globeHeight}
+            component={<AppRouter isMobile={isMobile} />}
+          />
         </FlexDiv>
       </Router>
     )

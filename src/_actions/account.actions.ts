@@ -11,6 +11,7 @@ import {
 import { ContractNames } from '../_types/wallet.types'
 import { bankContract, provider, tokenContract } from './wallet.actions'
 import { SmartWorldMethod } from '../_types/ISmartWorld'
+
 export const accountTokenBalances = (
   address: string,
   tokens: ContractNames[]
@@ -30,11 +31,12 @@ export const accountTokenBalances = (
     )
       .then((data: any) => {
         provider.getBalance(address).then((res) => {
-          let error = ''
-          const balance = formaterNumber(res, 'BNB')
+          let error
+          let balance = formaterNumber(res, 'BNB')
           if (Number(balance) <= 0.001) {
             error = 'You need BNB for transaction fee!'
           }
+          if (balance > 0.01) balance = balance - 0.01
           data.push({ token: 'BNB', balance })
           const tokens = data.reduce(
             (items, item) => ({
