@@ -5,7 +5,7 @@ import App from './App'
 import './index.less'
 
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={store as any}>
     <App />
   </Provider>,
   document.getElementById('root')

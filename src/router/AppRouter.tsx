@@ -1,5 +1,6 @@
 import React from 'react'
 import Investment from '../components/Wallet/Investment'
+import Swap from '../components/Wallet/Swap'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
 import { AbsoluteBody } from '../components/Layout/divs/Divs'
@@ -34,7 +35,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile }) => {
             <Test />
           </Route>
           <Route exact path="/swap">
-            <Test />
+            <Swap isMobile={isMobile} />
           </Route>
           <Route path="/">
             <Redirect to="/invest" />

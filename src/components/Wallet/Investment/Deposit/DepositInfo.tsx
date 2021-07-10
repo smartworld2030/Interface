@@ -43,7 +43,9 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   const calcSTT = () => calcSatoshi() / 2.5 / prices.STT
 
   const calcPercent = () => {
-    const cal = (calcSatoshi() * maxPercent) / 5000000
+    const multiple = token === 'STTS' ? 1.25 : 1
+    const cal = (calcSatoshi() * multiple * maxPercent) / 5000000
+
     return cal + account.percent <= maxPercent
       ? cal
       : maxPercent - account.percent

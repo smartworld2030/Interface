@@ -11,6 +11,7 @@ import {
   InvestContract,
   BankContract,
   PriceContract,
+  SwapContract,
 } from '../_types/wallet.types'
 import { AppActions, AppState } from '../_types'
 import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
@@ -27,6 +28,7 @@ import { accountTokenBalances } from './account.actions'
 import { INVEST_RESET } from '../_types/invest.types'
 import tokenPrice from '../_contracts/tokenPrice'
 import info from '../_contracts/info'
+import swap from '../_contracts/swap'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -37,6 +39,7 @@ export let tokenContract: ContractObject
 export let investContract: InvestContract
 export let bankContract: BankContract
 export let priceContract: PriceContract
+export let swapContract: SwapContract
 
 export const initialization = () => (
   dispatch: Dispatch<AppActions>,
@@ -81,6 +84,7 @@ export const initialization = () => (
             tokenPrice.abi,
             signer
           )
+          swapContract = new Contract(swap.address[chainId], swap.abi, signer)
           dispatch({
             type: WALLET_ACTIVATED,
             payload: {

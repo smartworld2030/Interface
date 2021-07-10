@@ -1,4 +1,6 @@
-import { FAILURE, REQUEST, SUCCESS } from '.'
+export const SWAP_PRICE_REQUEST = 'SWAP_PRICE_REQUEST'
+export const SWAP_PRICE_FAILURE = 'SWAP_PRICE_FAILURE'
+export const SWAP_PRICE_SUCCESS = 'SWAP_PRICE_SUCCESS'
 
 export interface DefaultSwapBankState {
   error: string
@@ -8,19 +10,29 @@ export interface DefaultSwapBankState {
 export interface DefaultSwapState {
   error: string
   loading: boolean
+  input: string
+  output: string
+  independentField: 'input' | 'output'
+  typedValue: number
+  recipient: null
 }
 
-export interface RequestSwap {
-  type: typeof REQUEST.SWAP
+export type SwapToken = 'STT' | 'STTS' | 'BNB'
+
+export interface SwapPriceRequest {
+  type: typeof SWAP_PRICE_REQUEST
 }
 
-export interface SeccessSwap {
-  type: typeof SUCCESS.SWAP
+export interface SwapPriceSeccess {
+  type: typeof SWAP_PRICE_SUCCESS
 }
 
-export interface FailureSwap {
-  type: typeof FAILURE.SWAP
+export interface SwapPriceFailure {
+  type: typeof SWAP_PRICE_FAILURE
   error: string
 }
 
-export type SwapActionTypes = RequestSwap | SeccessSwap | FailureSwap
+export type SwapActionTypes =
+  | SwapPriceRequest
+  | SwapPriceSeccess
+  | SwapPriceFailure

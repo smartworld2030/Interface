@@ -26,7 +26,9 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   const r = half - 10
   const c = 2 * Math.PI * r
   const period = 3600
-  const secPast = (Date.now() / 1000 - latestWithdraw) % period
+  const secPast =
+    latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
+
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
   return (
@@ -62,20 +64,24 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           strokeDashoffset={c * 0.25}
           strokeDasharray={`${pastRadius} ${c - pastRadius}`}
         >
-          <animate
-            id="remains"
-            attributeName="stroke-dasharray"
-            values={`${pastRadius} ${c - pastRadius};${c} 0`}
-            dur={secRemain}
-          />
-          <animate
-            id="hourly"
-            begin="remains.end"
-            attributeName="stroke-dasharray"
-            values={`0 ${c};${c} 0`}
-            dur={period}
-            repeatCount="indefinite"
-          />
+          {latestWithdraw !== 0 && (
+            <>
+              <animate
+                id="remains"
+                attributeName="stroke-dasharray"
+                values={`${pastRadius} ${c - pastRadius};${c} 0`}
+                dur={secRemain}
+              />
+              <animate
+                id="hourly"
+                begin="remains.end"
+                attributeName="stroke-dasharray"
+                values={`0 ${c};${c} 0`}
+                dur={period}
+                repeatCount="indefinite"
+              />
+            </>
+          )}
         </circle>
         <text
           textAnchor="middle"

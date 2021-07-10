@@ -24,22 +24,20 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   waiting,
   loading,
   isMobile,
-}) => {
-  return (
-    <Spin
-      spinning={waiting || loading}
-      tip={error.code === 0 ? 'Loading...' : error.msg}
-    >
-      <RelativeBody height={height}>
-        {active && supportedChain(chainId) ? (
-          component
-        ) : (
-          <ChainWallet isMobile={isMobile} />
-        )}
-      </RelativeBody>
-    </Spin>
-  )
-}
+}) => (
+  <Spin
+    spinning={waiting || loading}
+    tip={error.code === 0 ? 'Loading...' : error.msg}
+  >
+    <RelativeBody height={height}>
+      {active && supportedChain(chainId) ? (
+        component
+      ) : (
+        <ChainWallet isMobile={isMobile} />
+      )}
+    </RelativeBody>
+  </Spin>
+)
 
 const mapStateToProps = (state: AppState) => {
   const { chainId, active, waiting, error } = state.wallet

@@ -19,32 +19,29 @@ const ChangeWallet: React.FC<IChangeWallet> = ({
   error,
   changeToMain,
   startOnBoarding,
-}) => {
-  console.log(error)
-  return (
-    <RowBody>
-      <Col
-        xs={{ span: 22 }}
-        lg={{ span: 7 }}
-        style={{ textAlign: 'center', paddingTop: 50 }}
-      >
-        <Typography style={{ padding: 50 }}>{error.msg}</Typography>
-        {error.code === 401 && (
-          <Button type="primary" onClick={() => startOnBoarding()}>
-            Install MetaMask
+}) => (
+  <RowBody>
+    <Col
+      xs={{ span: 22 }}
+      lg={{ span: 7 }}
+      style={{ textAlign: 'center', paddingTop: 50 }}
+    >
+      <Typography style={{ padding: 50 }}>{error.msg}</Typography>
+      {error.code === 401 && (
+        <Button type="primary" onClick={() => startOnBoarding()}>
+          Install MetaMask
+        </Button>
+      )}
+      {error.code === 301 && (
+        <StyledDiv>
+          <Button type="primary" onClick={() => changeToMain()}>
+            Connect
           </Button>
-        )}
-        {error.code === 301 && (
-          <StyledDiv>
-            <Button type="primary" onClick={() => changeToMain()}>
-              Connect
-            </Button>
-          </StyledDiv>
-        )}
-      </Col>
-    </RowBody>
-  )
-}
+        </StyledDiv>
+      )}
+    </Col>
+  </RowBody>
+)
 
 const mapStateToProps = (state: AppState) => {
   const { error, waiting } = state.wallet

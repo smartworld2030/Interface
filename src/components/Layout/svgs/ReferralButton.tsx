@@ -39,7 +39,7 @@ const ReferralButton: React.FC<ReferralPolygonProps> = ({
           focusable="false"
           data-icon="check"
           opacity={loading || done ? '1' : '0.5'}
-          fill={Colors.green}
+          fill={disable ? 'grey' : Colors.green}
         >
           {done ? (
             <path d="M76.583 29.11h-4.66c-.653 0-1.273.3-1.673.813L42.763 64.743 29.583 48.043a2.133 2.133 0 0 0-1.673-.813H23.25c-.447 0-.693.513-.42.86l18.26 23.133c.853 1.08 2.493 1.08 3.353 0l32.56-41.26c.273-.34.027-.853-.42-.853z" />

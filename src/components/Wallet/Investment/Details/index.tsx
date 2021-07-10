@@ -8,6 +8,7 @@ import { investInformation } from '../../../../_actions/invest.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import { notification } from 'antd'
+import copy from 'copy-to-clipboard'
 
 interface IProps {}
 
@@ -28,15 +29,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 
   const copyHandler = () => {
     if (!loading && !done) {
-      if (navigator.clipboard) navigator.clipboard.writeText(link)
-      else {
-        var textField = document.createElement('textarea')
-        textField.innerText = link
-        document.body.appendChild(textField)
-        textField.select()
-        document.execCommand('copy')
-        textField.remove()
-      }
+      copy(link)
       notification.success({
         message: 'Reffral Link Copied!',
         placement: 'bottomRight',
@@ -100,6 +93,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
             loading={loading}
             onClick={copyHandler}
             done={done}
+            disable={account.satoshi === 0}
           />
         </Row>
       </Col>

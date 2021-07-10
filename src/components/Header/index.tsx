@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { sizeCalculator } from '../../_helpers/constants'
 import { HeadCircle } from '../Layout/svgs/HeadCircle'
 import { ImageLogo } from '../Layout/svgs/ImageLogo'
+import { useLocation } from 'react-router-dom'
 
 const StyledSvg = styled.svg`
   position: absolute;
@@ -16,9 +17,9 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ width }) => {
-  const [active, setActive] = useState(2)
-
   const { half, quarter, height, linkArray } = sizeCalculator(width)
+  const [, setActive] = useState('/invest')
+  const { pathname } = useLocation()
 
   return (
     <StyledSvg height={height + 10} width={width}>
@@ -40,8 +41,8 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
         <HeadCircle
           {...item}
           key={index}
-          active={active === index}
-          onClick={() => setActive(index)}
+          active={item.link === pathname}
+          onClick={() => setActive(item.link)}
         />
       ))}
     </StyledSvg>

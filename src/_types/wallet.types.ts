@@ -20,6 +20,10 @@ export const ADDRESS_CHANGE_FAILURE = 'ADDRESS_CHANGE_FAILURE'
 export type BankContract = ISmartWorld | Contract
 export type InvestContract = SmartInvest | Contract
 export type PriceContract = { latestAnswer: any } | Contract
+export type SwapContract =
+  | { sortTokens: any; getAmountsIn: any; getAmountsOut: any; WETH: any }
+  | any
+  | Contract
 
 export interface DefaultWalletState {
   active: boolean

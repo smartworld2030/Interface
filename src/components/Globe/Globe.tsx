@@ -43,6 +43,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
 
   return (
     <Globe
+      // <svg
       ref={globeEl}
       height={height}
       width={width}
