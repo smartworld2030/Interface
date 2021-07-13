@@ -1,7 +1,7 @@
 const bank = {
   address: {
     56: '0xbBe476b50D857BF41bBd1EB02F777cb9084C1564',
-    97: '0x6DFcd84CD2DF9fC3663056c3CbE9F6b5C2Ca6855',
+    97: '0x75Bea6460fff60FF789F88f7FE005295B8901455',
   },
   abi: [
     'event Activated(address indexed by, address indexed user)',

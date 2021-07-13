@@ -120,6 +120,7 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
     })
   )
     .then(async (data: any) => {
+      console.log(data)
       const prices = data.reduce((items, item) => {
         if (item.token === 'BTC' || item.token === 'BTCB')
           return {

@@ -126,6 +126,7 @@ export const investInformation = (address?: string) => async (
 ) => {
   if (!address) address = getState().account.address
   dispatch({ type: INVEST_ACCOUNT_REQUEST })
+  const maxPercent = await investContract.maxPercent()
   const accountInfo: any = await readInvest('users', ['id'], [address])
   if (accountInfo.id > 0) {
     const items = [
@@ -155,9 +156,8 @@ export const investInformation = (address?: string) => async (
     Promise.all(
       items.map((item) => readInvestItems(item.name, item.tokens, item.args))
     )
-      .then(async (data: any) => {
+      .then((data: any) => {
         const account: any = {}
-        const maxPercent = await investContract.maxPercent()
         data.forEach((its) =>
           its.map((info) => (account[info.item] = info.balance))
         )
@@ -166,7 +166,18 @@ export const investInformation = (address?: string) => async (
           payload: { account, maxPercent: bytesFormater(maxPercent) },
         })
       })
-      .catch((err) => errorHandler(err, INVEST_ACCOUNT_FAILURE))
+      .catch((err) => {
+        errorHandler(err)
+        dispatch({
+          type: INVEST_ACCOUNT_FAILURE,
+          payload: { error: err, maxPercent: bytesFormater(maxPercent) },
+        })
+      })
+  } else {
+    dispatch({
+      type: INVEST_ACCOUNT_FAILURE,
+      payload: { error: '', maxPercent: bytesFormater(maxPercent) },
+    })
   }
 }
 

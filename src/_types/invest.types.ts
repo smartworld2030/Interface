@@ -76,7 +76,7 @@ export interface AccountInvestSuccessAction {
 
 export interface AccountInvestFailureAction {
   type: typeof INVEST_ACCOUNT_FAILURE
-  payload: { error: string }
+  payload: { maxPercent?: number; error: string }
 }
 
 export interface MessageInvestAction {

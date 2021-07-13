@@ -6,7 +6,7 @@ const erc20 = {
       btcb: '0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c',
     },
     97: {
-      stt: '0x6DFcd84CD2DF9fC3663056c3CbE9F6b5C2Ca6855',
+      stt: '0x75Bea6460fff60FF789F88f7FE005295B8901455',
       stts: '0xBFd0Ac6cD15712E0a697bDA40897CDc54b06D7Ef',
       btcb: '0x3c26729bb1Cf37d18EFdF3bb957f5e0de5c2Cb12',
     },

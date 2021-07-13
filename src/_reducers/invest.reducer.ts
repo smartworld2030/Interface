@@ -84,7 +84,7 @@ export const investReducer = (
         error: action.payload.error,
       }
     case INVEST_ACCOUNT_FAILURE:
-      return { ...state }
+      return { ...state, ...action.payload }
     case INVEST_RESET:
       return { ...investReducerDefaultState }
     default:

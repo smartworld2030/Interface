@@ -21,6 +21,8 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
   pathname,
   account,
   tokens,
+  prices,
+  dollar,
 }) => {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -47,6 +49,10 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       }, 1000)
     }
   }
+  const calcSatoshi = () =>
+    ((account.referral + account.hourly) / 10 ** 8) * prices.STT
+
+  const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
 
   return (
     <Row
@@ -76,15 +82,20 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
         </Row>
       </Col>
       <Col xs={12} width="100%">
-        {/* <Row align="center" justify="around">
-          {/* <TokenValue
-            title="Total mined:"
-            precision={2}
-            token={'STT'}
-            value={1685}
+        <Row align="center" justify="around">
+          <TokenValue
+            title="Rewards(Satoshi):"
+            precision={0}
+            token="SATS"
+            value={calcSatoshi()}
           />
-          <TokenValue value={0} precision={2} title="" />
-        </Row>  */}
+          <TokenValue
+            value={calcDollar()}
+            precision={2}
+            title="Rewards(Dollar):"
+            token="$"
+          />
+        </Row>
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
@@ -120,6 +131,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { address, tokens, error } = state.account
   const { account } = state.invest
+  const { prices, dollar } = state.bank
   const {
     location: { pathname },
   } = state.router
@@ -128,6 +140,8 @@ const mapStateToProps = (state: AppState) => {
     account,
     address,
     tokens,
+    prices,
+    dollar,
     error,
   }
 }
