@@ -122,6 +122,7 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
           min={0}
           step={token === 'STTS' ? 1 : 0.01}
           value={value}
+          className="deposit-input"
           onChange={inputHandler}
         />
       </Row>

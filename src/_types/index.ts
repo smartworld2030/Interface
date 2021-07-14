@@ -7,6 +7,10 @@ import { InvestActionTypes, DefaultInvestState } from './invest.types'
 import { FreezeActionTypes, DefaultFreezeState } from './freeze.types'
 import { SwapActionTypes, DefaultSwapState } from './swap.types'
 
+export type ArrayElement<
+  ArrayType extends readonly unknown[]
+> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+
 export const REQUEST = {
   INVEST: 'REQUEST_INVEST',
   FREEZE: 'REQUEST_FREEZE',

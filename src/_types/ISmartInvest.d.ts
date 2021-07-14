@@ -4,7 +4,6 @@
 
 import {
   ethers,
-  EventFilter,
   Signer,
   BigNumber,
   BigNumberish,
@@ -20,33 +19,8 @@ import { Listener, Provider } from '@ethersproject/providers'
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi'
 import { TypedEventFilter, TypedEvent, TypedListener } from './commons'
 
-export type SmartInvestMethod =
-  | 'BTCB'
-  | 'STTS'
-  | 'calculateInterest'
-  | 'calculatePercent'
-  | 'hourlyReward'
-  | 'investBnb'
-  | 'investBtcb'
-  | 'investStts'
-  | 'maxPercent'
-  | 'totalReward'
-  | 'updateBnb'
-  | 'updateBtcb'
-  | 'updateStts'
-  | 'userBalances'
-  | 'userDepositDetails'
-  | 'userDepositNumber'
-  | 'userExpireTime'
-  | 'userExpired'
-  | 'userID'
-  | 'users'
-  | 'withdrawInterest'
-
-interface SmartInvestInterface extends ethers.utils.Interface {
+interface ISmartInvestInterface extends ethers.utils.Interface {
   functions: {
-    'BTCB()': FunctionFragment
-    'STTS()': FunctionFragment
     'calculateInterest(address)': FunctionFragment
     'calculatePercent(address,uint256)': FunctionFragment
     'hourlyReward(uint256)': FunctionFragment
@@ -63,13 +37,9 @@ interface SmartInvestInterface extends ethers.utils.Interface {
     'userDepositNumber(address)': FunctionFragment
     'userExpireTime(address)': FunctionFragment
     'userExpired(address)': FunctionFragment
-    'userID()': FunctionFragment
-    'users(address)': FunctionFragment
     'withdrawInterest()': FunctionFragment
   }
 
-  encodeFunctionData(functionFragment: 'BTCB', values?: undefined): string
-  encodeFunctionData(functionFragment: 'STTS', values?: undefined): string
   encodeFunctionData(
     functionFragment: 'calculateInterest',
     values: [string]
@@ -119,15 +89,11 @@ interface SmartInvestInterface extends ethers.utils.Interface {
     values: [string]
   ): string
   encodeFunctionData(functionFragment: 'userExpired', values: [string]): string
-  encodeFunctionData(functionFragment: 'userID', values?: undefined): string
-  encodeFunctionData(functionFragment: 'users', values: [string]): string
   encodeFunctionData(
     functionFragment: 'withdrawInterest',
     values?: undefined
   ): string
 
-  decodeFunctionResult(functionFragment: 'BTCB', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'STTS', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'calculateInterest',
     data: BytesLike
@@ -165,8 +131,6 @@ interface SmartInvestInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result
   decodeFunctionResult(functionFragment: 'userExpired', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'userID', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'users', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'withdrawInterest',
     data: BytesLike
@@ -183,7 +147,7 @@ interface SmartInvestInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: 'WithdrawInterest'): EventFragment
 }
 
-export class SmartInvest extends Contract {
+export class ISmartInvest extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this
   attach(addressOrName: string): this
   deployed(): Promise<this>
@@ -224,17 +188,9 @@ export class SmartInvest extends Contract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>
 
-  interface: SmartInvestInterface
+  interface: ISmartInvestInterface
 
   functions: {
-    BTCB(overrides?: CallOverrides): Promise<[string]>
-
-    'BTCB()'(overrides?: CallOverrides): Promise<[string]>
-
-    STTS(overrides?: CallOverrides): Promise<[string]>
-
-    'STTS()'(overrides?: CallOverrides): Promise<[string]>
-
     calculateInterest(
       user: string,
       overrides?: CallOverrides
@@ -422,36 +378,6 @@ export class SmartInvest extends Contract {
       overrides?: CallOverrides
     ): Promise<[boolean]>
 
-    userID(overrides?: CallOverrides): Promise<[BigNumber]>
-
-    'userID()'(overrides?: CallOverrides): Promise<[BigNumber]>
-
-    users(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        id: BigNumber
-        refID: BigNumber
-        refAmounts: BigNumber
-        refPercent: BigNumber
-        latestWithdraw: BigNumber
-      }
-    >
-
-    'users(address)'(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        id: BigNumber
-        refID: BigNumber
-        refAmounts: BigNumber
-        refPercent: BigNumber
-        latestWithdraw: BigNumber
-      }
-    >
-
     withdrawInterest(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>
@@ -460,14 +386,6 @@ export class SmartInvest extends Contract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>
   }
-
-  BTCB(overrides?: CallOverrides): Promise<string>
-
-  'BTCB()'(overrides?: CallOverrides): Promise<string>
-
-  STTS(overrides?: CallOverrides): Promise<string>
-
-  'STTS()'(overrides?: CallOverrides): Promise<string>
 
   calculateInterest(
     user: string,
@@ -646,36 +564,6 @@ export class SmartInvest extends Contract {
     overrides?: CallOverrides
   ): Promise<boolean>
 
-  userID(overrides?: CallOverrides): Promise<BigNumber>
-
-  'userID()'(overrides?: CallOverrides): Promise<BigNumber>
-
-  users(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-      id: BigNumber
-      refID: BigNumber
-      refAmounts: BigNumber
-      refPercent: BigNumber
-      latestWithdraw: BigNumber
-    }
-  >
-
-  'users(address)'(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-      id: BigNumber
-      refID: BigNumber
-      refAmounts: BigNumber
-      refPercent: BigNumber
-      latestWithdraw: BigNumber
-    }
-  >
-
   withdrawInterest(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>
@@ -685,14 +573,6 @@ export class SmartInvest extends Contract {
   ): Promise<ContractTransaction>
 
   callStatic: {
-    BTCB(overrides?: CallOverrides): Promise<string>
-
-    'BTCB()'(overrides?: CallOverrides): Promise<string>
-
-    STTS(overrides?: CallOverrides): Promise<string>
-
-    'STTS()'(overrides?: CallOverrides): Promise<string>
-
     calculateInterest(
       user: string,
       overrides?: CallOverrides
@@ -864,36 +744,6 @@ export class SmartInvest extends Contract {
       overrides?: CallOverrides
     ): Promise<boolean>
 
-    userID(overrides?: CallOverrides): Promise<BigNumber>
-
-    'userID()'(overrides?: CallOverrides): Promise<BigNumber>
-
-    users(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        id: BigNumber
-        refID: BigNumber
-        refAmounts: BigNumber
-        refPercent: BigNumber
-        latestWithdraw: BigNumber
-      }
-    >
-
-    'users(address)'(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        id: BigNumber
-        refID: BigNumber
-        refAmounts: BigNumber
-        refPercent: BigNumber
-        latestWithdraw: BigNumber
-      }
-    >
-
     withdrawInterest(overrides?: CallOverrides): Promise<boolean>
 
     'withdrawInterest()'(overrides?: CallOverrides): Promise<boolean>
@@ -925,14 +775,6 @@ export class SmartInvest extends Contract {
   }
 
   estimateGas: {
-    BTCB(overrides?: CallOverrides): Promise<BigNumber>
-
-    'BTCB()'(overrides?: CallOverrides): Promise<BigNumber>
-
-    STTS(overrides?: CallOverrides): Promise<BigNumber>
-
-    'STTS()'(overrides?: CallOverrides): Promise<BigNumber>
-
     calculateInterest(
       user: string,
       overrides?: CallOverrides
@@ -1084,17 +926,6 @@ export class SmartInvest extends Contract {
       overrides?: CallOverrides
     ): Promise<BigNumber>
 
-    userID(overrides?: CallOverrides): Promise<BigNumber>
-
-    'userID()'(overrides?: CallOverrides): Promise<BigNumber>
-
-    users(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
-
-    'users(address)'(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>
-
     withdrawInterest(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>
@@ -1105,14 +936,6 @@ export class SmartInvest extends Contract {
   }
 
   populateTransaction: {
-    BTCB(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    'BTCB()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    STTS(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    'STTS()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
     calculateInterest(
       user: string,
       overrides?: CallOverrides
@@ -1270,20 +1093,6 @@ export class SmartInvest extends Contract {
 
     'userExpired(address)'(
       user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
-
-    userID(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    'userID()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    users(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
-
-    'users(address)'(
-      arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>
 

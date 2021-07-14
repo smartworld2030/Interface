@@ -15,15 +15,25 @@ import {
   TOKEN_PRICE_REQUEST,
   TOKEN_PRICE_SUCCESS,
   TOKEN_PRICE_FAILURE,
+  SatoshiPrice,
 } from '../_types/bank.types'
 import { ContractNames } from '../_types/wallet.types'
 import { bankContract, priceContract, tokenContract } from './wallet.actions'
-import { SmartWorldMethod } from '../_types/ISmartWorld'
 import { TokenBalances } from '../_types/account.types'
 import erc20 from '../_contracts/erc20'
 
 export const requestBank = async (
-  method: SmartWorldMethod,
+  method: any,
+  args: any = null
+): Promise<any> =>
+  new Promise((resolve, reject) => {
+    bankContract[method](args)
+      .then((res) => resolve(res))
+      .catch((err) => reject(err))
+  })
+
+export const requestSatoshi = async (
+  method: SatoshiPrice,
   args: any = null
 ): Promise<any> =>
   new Promise((resolve, reject) => {
@@ -52,8 +62,7 @@ export const bankTokenBalances = (tokens: ContractNames[]) => (
         )
     )
   )
-    .then((data: any) => {
-      console.log(data)
+    .then((data: any) =>
       dispatch({
         type: BANK_TOKEN_BALANCE_SUCCESS,
         payload: {
@@ -66,7 +75,7 @@ export const bankTokenBalances = (tokens: ContractNames[]) => (
           ),
         },
       })
-    })
+    )
     .catch((err) => errorHandler(err, BANK_TOKEN_BALANCE_FAILURE))
 }
 
@@ -110,17 +119,16 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
           )
         )
       }
+      const tokenName = token.toLowerCase() as 'btc' | 'bnb' | 'stts'
       const decimals = (10 ** erc20.decimals[token]).toString()
       return new Promise((resolve) =>
-        // @ts-ignore
-        requestBank(`${token.toLowerCase()}ToSatoshi`, decimals).then((res) =>
+        requestSatoshi(`${tokenName}ToSatoshi`, decimals).then((res) =>
           resolve({ token, price: formaterNumber(res) })
         )
       )
     })
   )
     .then(async (data: any) => {
-      console.log(data)
       const prices = data.reduce((items, item) => {
         if (item.token === 'BTC' || item.token === 'BTCB')
           return {

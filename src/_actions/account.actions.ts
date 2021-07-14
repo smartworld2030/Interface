@@ -9,8 +9,7 @@ import {
   CHANGE_THEME,
 } from '../_types/account.types'
 import { ContractNames } from '../_types/wallet.types'
-import { bankContract, provider, tokenContract } from './wallet.actions'
-import { SmartWorldMethod } from '../_types/ISmartWorld'
+import { provider, tokenContract } from './wallet.actions'
 
 export const accountTokenBalances = (
   address: string,
@@ -57,16 +56,6 @@ export const accountTokenBalances = (
       .catch((err) => errorHandler(err, ACCOUNT_BALANCE_FAILURE))
   }
 }
-
-export const requestBank = async (
-  method: SmartWorldMethod,
-  args: any = null
-): Promise<any> =>
-  new Promise((resolve, reject) => {
-    bankContract[method](args)
-      .then((res) => resolve(res))
-      .catch((err) => reject(err))
-  })
 
 export const changeTheme = (theme: 'light' | 'dark') => (
   dispatch: Dispatch<AppActions>

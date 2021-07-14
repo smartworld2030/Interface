@@ -1,6 +1,5 @@
 import { Contract } from 'ethers'
-import { ISmartWorld } from './ISmartWorld'
-import { SmartInvest } from './SmartInvest'
+import { IERC20 } from './IERC20'
 
 export const ONBOARDING_REQUEST = 'ONBOARDING_REQUEST'
 export const WALLET_WAITING_MESSAGE = 'WALLET_WAITING_MESSAGE'
@@ -17,13 +16,7 @@ export const ADDRESS_CHANGE_REQUEST = 'ADDRESS_CHANGE_REQUEST'
 export const ADDRESS_CHANGE_SUCCESS = 'ADDRESS_CHANGE_SUCCESS'
 export const ADDRESS_CHANGE_FAILURE = 'ADDRESS_CHANGE_FAILURE'
 
-export type BankContract = ISmartWorld | Contract
-export type InvestContract = SmartInvest | Contract
 export type PriceContract = { latestAnswer: any } | Contract
-export type SwapContract =
-  | { sortTokens: any; getAmountsIn: any; getAmountsOut: any; WETH: any }
-  | any
-  | Contract
 
 export interface DefaultWalletState {
   active: boolean
@@ -49,8 +42,9 @@ export interface RegisterSuccessAction {
 export type ContractNames = 'STT' | 'STTS' | 'BTCB'
 
 export type ContractObject = {
-  [key in ContractNames]: Contract
+  [key in ContractNames]: IERC20
 }
+
 export interface RegisterFailureAction {
   type: typeof WALLET_FAILURE
   error: ErrorObject

@@ -4,7 +4,6 @@
 
 import {
   ethers,
-  EventFilter,
   Signer,
   BigNumber,
   BigNumberish,
@@ -19,44 +18,6 @@ import { BytesLike } from '@ethersproject/bytes'
 import { Listener, Provider } from '@ethersproject/providers'
 import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi'
 import { TypedEventFilter, TypedEvent, TypedListener } from './commons'
-
-export type SmartWorldMethod =
-  | 'activation'
-  | 'bnbToSatoshi'
-  | 'btcToBnbPrice'
-  | 'btcToSatoshi'
-  | 'burnWithStt'
-  | 'deposit'
-  | 'depositToken'
-  | 'payWithStt'
-  | 'sttPrice'
-  | 'sttsToBnb'
-  | 'sttsToBnbPrice'
-  | 'sttsToSatoshi'
-  | 'totalBalances'
-  | 'totalSatoshi'
-  | 'userBalances'
-  | 'userTokens'
-  | 'withdraw'
-  | 'withdrawToken'
-  | 'activation'
-  | 'bnbToSatoshi'
-  | 'btcToBnbPrice'
-  | 'btcToSatoshi'
-  | 'burnWithStt'
-  | 'deposit'
-  | 'depositToken'
-  | 'payWithStt'
-  | 'sttPrice'
-  | 'sttsToBnb'
-  | 'sttsToBnbPrice'
-  | 'sttsToSatoshi'
-  | 'totalBalances'
-  | 'totalSatoshi'
-  | 'userBalances'
-  | 'userTokens'
-  | 'withdraw'
-  | 'withdrawToken'
 
 interface ISmartWorldInterface extends ethers.utils.Interface {
   functions: {

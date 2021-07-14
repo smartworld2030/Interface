@@ -2,9 +2,6 @@
 body {
   overflow-x: hidden;
 }
-input {
-  text-align: center;
-}
 
 svg {
   user-select: none;
@@ -15,6 +12,9 @@ svg {
 }
 text {
   filter: drop-shadow(0 0 0.4px rgb(9, 63, 38));
+}
+.deposit-input {
+  text-align: center;
 }
 .ant-btn-danger {
   background-color: #ff1d4e;
@@ -76,7 +76,10 @@ text {
   transform-origin: center;
   animation: crescendo 0.5s alternate infinite ease-in;
 }
-
+.ant-input-group-addon {
+  user-select: none;
+  cursor: pointer;
+}
 @keyframes crescendo {
   0% {
     transform: scale(1);

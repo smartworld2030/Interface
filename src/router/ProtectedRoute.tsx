@@ -1,19 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import ChainWallet from './ChangeWallet'
-import { RouteProps } from 'react-router'
 import { AppState } from '../_types'
 import { supportedChain } from '../_helpers/constants'
 import { RelativeBody } from '../components/Layout/divs/Divs'
 import Spin from 'antd/lib/spin'
 
-interface ParntProps extends RouteProps {
+interface ParentProps {
   component: React.ReactNode
   isMobile: boolean
   height: number
 }
 
-type ProtectedRouteProps = ParntProps & ReturnType<typeof mapStateToProps>
+type ProtectedRouteProps = ParentProps & ReturnType<typeof mapStateToProps>
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component,

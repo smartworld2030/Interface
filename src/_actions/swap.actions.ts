@@ -1,57 +1,72 @@
-import { ThunkDispatch } from 'redux-thunk'
-import { AppState } from '../_types'
+import { Dispatch } from 'react'
 import {
-  SWAP_PRICE_REQUEST,
-  // SWAP_PRICE_FAILURE,
-  // SWAP_PRICE_SUCCESS,
+  SWAP_METHOD_REQUEST,
+  SWAP_METHOD_SUCCESS,
+  SWAP_METHOD_FAILURE,
+  SWAP_METHOD_MINED,
+  SWAP_METHOD_READY,
 } from '../_types/swap.types'
-import { AppActions } from '../_types'
-import { swapContract } from './wallet.actions'
-import { formaterNumber, formatToString } from '../_helpers/api'
+import { AppActions, AppState } from '../_types'
+import { provider, swapContract, tokenContract } from './wallet.actions'
+import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
+import { constants, Transaction } from 'ethers'
+import { bytesFormater, formaterNumber } from '../_helpers/api'
 import swap from '../_contracts/swap'
-// import { errorHandler } from '../components/Layout/SnackBar/alert'
 
-export const requestSwapBnb = () => (
-  dispatch: ThunkDispatch<AppState, undefined, AppActions>,
+export const requestSwap = (method: any, args: any) => async (
+  dispatch: Dispatch<AppActions>,
   getState: () => AppState
 ) => {
-  dispatch({ type: SWAP_PRICE_REQUEST })
+  dispatch({ type: SWAP_METHOD_REQUEST, payload: { method } })
   const chainId = getState().wallet.chainId
   const address = getState().account.address
-  const typedValue = getState().swap.typedValue
 
-  const amountsIn = swapContract.getAmountsIn(
-    formatToString(1, swap.decimals.bnb),
-    swap.pair[chainId].bnb
-  )
-  const min = formaterNumber(amountsIn, 8)
-  swapContract.swapExactETHForTokensSupportingFeeOnTransferTokens(
-    min,
-    swap.pair[chainId].bnb,
-    address,
-    Date.now(),
-    {
-      value: formatToString(typedValue, 18),
-    }
-  )
+  const requester = () => {
+    // @ts-ignore
+    swapContract.functions[method](...args)
+      .then((transaction: Transaction) => {
+        if (transaction.hash) {
+          console.log(transaction)
+          dispatch({
+            type: SWAP_METHOD_SUCCESS,
+            payload: { transaction },
+          })
+          warningHandler('Transaction Pending', null, transaction.hash)
+          provider.once(transaction.hash, () => {
+            dispatch({
+              type: SWAP_METHOD_MINED,
+            })
+            setTimeout(() => {
+              dispatch({
+                type: SWAP_METHOD_READY,
+              })
+            }, 5000)
+            successHandler('Transaction Confirmed', null, transaction.hash)
+          })
+        }
+      })
+      .catch((err) => {
+        dispatch({ type: SWAP_METHOD_FAILURE, payload: { error: err } })
+        errorHandler(err)
+      })
+  }
+  if (address && method === 'safeBnbSwap' && formaterNumber(args[0]) !== 0) {
+    const allowance = await tokenContract.STTS.allowance(
+      address,
+      swap.address[chainId]
+    )
+    if (bytesFormater(allowance) === 0) {
+      dispatch({ type: SWAP_METHOD_REQUEST, payload: { method: 'approve' } })
+      tokenContract.STTS.approve(swap.address[chainId], constants.MaxUint256)
+        .then((transaction) => {
+          provider.once(transaction.hash, (_) => {
+            requester()
+          })
+        })
+        .catch((err) => {
+          dispatch({ type: SWAP_METHOD_FAILURE, payload: err })
+          errorHandler(err)
+        })
+    } else requester()
+  } else requester()
 }
-
-// export const requestSwap = () => (
-//   dispatch: ThunkDispatch<AppState, undefined, AppActions>,
-//   getState: () => AppState
-// ) => {
-//   dispatch({ type: SWAP_PRICE_REQUEST })
-//   const chainId = getState().wallet.chainId
-//   swapContract
-//     .getAmountsIn(
-//       formatToString(1, swap.decimals[pair[0]]),
-//       swap.pair[chainId][pair[0]]
-//     )
-//     .then((result) => {
-//       console.log(formaterNumber(result[0], 8))
-//       // setPrice(formaterNumber(result[0], 8))
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-// }

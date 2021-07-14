@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux'
 import { errorHandler, warningHandler, successHandler } from '../_helpers/alert'
 import { investContract, provider, tokenContract } from './wallet.actions'
-import { SmartInvestMethod } from '../_types/SmartInvest'
 import {
   INVEST_TRANSACTION_MINED,
   INVEST_METHOD_REQUEST,
@@ -14,7 +13,6 @@ import {
   INVEST_TRANSACTION_READY,
 } from '../_types/invest.types'
 import { formaterNumber, bytesFormater } from '../_helpers/api'
-
 import { AppActions, AppState } from '../_types'
 import { constants, Transaction, utils } from 'ethers'
 import info from '../_contracts/info'
@@ -22,7 +20,7 @@ import info from '../_contracts/info'
 export const removeError = () => (dispatch: Dispatch<AppActions>) =>
   dispatch({ type: INVEST_MESSAGES, payload: { error: '' } })
 
-export const requestInvest = (method: SmartInvestMethod, args: any) => (
+export const requestInvest = (method: any, args: any) => (
   dispatch: Dispatch<AppActions>
 ) => {
   dispatch({ type: INVEST_METHOD_REQUEST, payload: { method } })
@@ -92,7 +90,9 @@ export const investmentDeposit = (token: string, value: string) => async (
         } else if (token === 'BNB')
           dispatch(requestInvest('investBnb', [referrer, { value }]) as any)
       } else {
-        errorHandler('No valid referrer found!', INVEST_MESSAGES)
+        const error = 'No valid referrer found!'
+        dispatch({ type: INVEST_MESSAGES, payload: { error } })
+        errorHandler(error)
       }
     }
   }

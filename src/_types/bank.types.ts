@@ -39,6 +39,7 @@ export type TokenPrices = {
   BTCB: number
   BNB: number
 }
+export type SatoshiPrice = 'sttsToSatoshi' | 'bnbToSatoshi' | 'btcToSatoshi'
 
 export type TokenPriceRequestAction = {
   type: typeof TOKEN_PRICE_REQUEST

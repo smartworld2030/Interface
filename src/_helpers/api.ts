@@ -37,3 +37,11 @@ export const percentToValue = (val: number, per: number) => (val * per) / 100
 
 export const valueToPercent = (val: number, max: number) =>
   roundDecimals((val / max) * 100)
+
+export const truncate = (str: string, decimals: number) => {
+  if (str.includes('.')) {
+    const parts = str.split('.')
+    return parts[0] + '.' + parts[1].slice(0, decimals)
+  }
+  return str
+}

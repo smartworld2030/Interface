@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
 import { Row, Col } from 'react-grid-system'
+import { useLocation } from 'react-router-dom'
 import { investInformation } from '../../../../_actions/invest.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
@@ -18,7 +19,6 @@ type ReferralSectionProps = IProps &
 
 export const DetailSection: React.FC<ReferralSectionProps> = ({
   address,
-  pathname,
   account,
   tokens,
   prices,
@@ -26,7 +26,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 }) => {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const { pathname } = useLocation()
   const link = `${window.location.origin}${pathname}?ref=${address}`
 
   const copyHandler = () => {
@@ -132,11 +132,7 @@ const mapStateToProps = (state: AppState) => {
   const { address, tokens, error } = state.account
   const { account } = state.invest
   const { prices, dollar } = state.bank
-  const {
-    location: { pathname },
-  } = state.router
   return {
-    pathname,
     account,
     address,
     tokens,

@@ -8,10 +8,7 @@ import {
   CHAIN_CHANGE_REQUEST,
   CHAIN_CHANGE_FAILURE,
   ContractObject,
-  InvestContract,
-  BankContract,
   PriceContract,
-  SwapContract,
 } from '../_types/wallet.types'
 import { AppActions, AppState } from '../_types'
 import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
@@ -29,6 +26,9 @@ import { INVEST_RESET } from '../_types/invest.types'
 import tokenPrice from '../_contracts/tokenPrice'
 import info from '../_contracts/info'
 import swap from '../_contracts/swap'
+import { ISmartWorld } from '../_types/ISmartWorld'
+import { ISmartInvest } from '../_types/ISmartInvest'
+import { ISmartSwap } from '../_types/ISmartSwap'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -36,10 +36,10 @@ let interval: NodeJS.Timeout
 export let provider: providers.Web3Provider
 export let signer: providers.JsonRpcSigner
 export let tokenContract: ContractObject
-export let investContract: InvestContract
-export let bankContract: BankContract
 export let priceContract: PriceContract
-export let swapContract: SwapContract
+export let investContract: ISmartInvest
+export let bankContract: ISmartWorld
+export let swapContract: ISmartSwap
 
 export const initialization = () => (
   dispatch: Dispatch<AppActions>,
@@ -68,23 +68,27 @@ export const initialization = () => (
             STT: new Contract(erc20.address[chainId].stt, erc20.abi, signer),
             STTS: new Contract(erc20.address[chainId].stts, erc20.abi, signer),
             BTCB: new Contract(erc20.address[chainId].btcb, erc20.abi, signer),
-          }
+          } as ContractObject
           investContract = new Contract(
             invest.address[chainId],
             invest.abi,
             signer
-          )
+          ) as ISmartInvest
           bankContract = new Contract(
             erc20.address[chainId].stt,
             bank.abi,
             signer
-          )
+          ) as ISmartWorld
           priceContract = new Contract(
             tokenPrice.address[chainId].btc,
             tokenPrice.abi,
             signer
           )
-          swapContract = new Contract(swap.address[chainId], swap.abi, signer)
+          swapContract = new Contract(
+            swap.address[chainId],
+            swap.abi,
+            signer
+          ) as ISmartSwap
           dispatch({
             type: WALLET_ACTIVATED,
             payload: {
