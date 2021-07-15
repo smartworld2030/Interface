@@ -14,9 +14,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { requestSwap } from '../../../_actions/swap.actions'
 import Colors from '../../../Theme/Colors'
 
-interface IProps {
-  isMobile: boolean
-}
+interface IProps {}
 
 const params = ['allowed', 'max', 'min', 'slippage']
 
@@ -27,7 +25,7 @@ type BnbSwapProps = IProps &
 let tokenTimer
 let secondTimer
 
-const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
+const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
   const [inputs, setInputs] = useState([
     {
       name: 'BNB',
@@ -50,8 +48,8 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
     decimals: 0,
   })
 
-  const [input1, setInput1] = useState({ value: '0', big: parseUnits('0') })
-  const [input2, setInput2] = useState({ value: '0', big: parseUnits('0') })
+  const [input1, setInput1] = useState({ value: '', big: parseUnits('0') })
+  const [input2, setInput2] = useState({ value: '', big: parseUnits('0') })
 
   useEffect(() => {
     inputHandler(input2.value, 0)
@@ -107,7 +105,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
               ? truncate(formatUnits(bigNumber, inputs[0].decimals), 4)
               : truncate(formatUnits(res.min, inputs[1].decimals), 4)
             bigNumber
-              ? setInput1({ value, big: res.min })
+              ? setInput1({ value, big: bigNumber })
               : setInput2({ value, big: res.min })
           })
           .catch((err) => {
@@ -118,7 +116,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
   }
 
   const inputHandler = (value, index) => {
-    if (value)
+    if (value && value !== '0')
       if (index) {
         fetchInput2(value)
       } else {
@@ -127,6 +125,13 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
     else {
       setInput1({ value: '', big: parseUnits('0') })
       setInput2({ value: '', big: parseUnits('0') })
+      setResult((prev) => ({
+        ...prev,
+        slippage: 0,
+        allowed: '0',
+        max: '0',
+        min: '0',
+      }))
     }
   }
 
@@ -140,7 +145,6 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
   }
 
   const swapButtonHandler = () => {
-    console.log(result.token)
     console.log(result.token, input1.big)
     if (result.token === 'STTS') {
       requestSwap('safeBnbSwap', [
@@ -161,7 +165,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ isMobile, tokens, requestSwap }) => {
     <Row
       direction="column"
       justify="around"
-      style={{ minHeight: isMobile ? 1200 : 300 }}
+      style={{ minHeight: 300 }}
       gutterWidth={4}
     >
       {inputs.map((token, index) => (

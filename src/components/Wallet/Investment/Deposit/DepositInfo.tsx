@@ -87,7 +87,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             title="Price(Smart Bits):"
             token="STB"
             precision={1}
-            value={calcSatoshi() / 100}
+            value={calcSatoshi() / 250}
           />
           <TokenValue
             title="Price(Dollar):"
@@ -116,11 +116,11 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             title="Invetment Reward:"
           />
           <TokenValue
-            value={account.percent / 100}
+            value={account.percent / 250}
             precision={2}
             token="%"
             title="Referral percent:"
-            double={calcPercent() / 100}
+            double={calcPercent() / 250}
           />
         </Row>
       </Col>

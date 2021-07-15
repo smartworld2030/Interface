@@ -13,10 +13,11 @@ import { provider, tokenContract } from './wallet.actions'
 
 export const accountTokenBalances = (
   address: string,
-  tokens: ContractNames[]
+  tokens: ContractNames[],
+  loading: boolean = true
 ) => (dispatch: Dispatch<AppActions>) => {
   if (tokenContract) {
-    dispatch({ type: ACCOUNT_BALANCE_REQUEST })
+    loading && dispatch({ type: ACCOUNT_BALANCE_REQUEST })
     Promise.all(
       tokens.map((token) =>
         new Promise((resolve) =>

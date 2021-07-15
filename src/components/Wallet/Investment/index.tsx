@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { Container, Row, Col } from 'react-grid-system'
+import { Row, Col } from 'react-grid-system'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { investInformation } from '../../../_actions/invest.actions'
 import { AppActions, AppState } from '../../../_types'
-import AccountAddress from '../Global/AccountAddress'
 import WithdrawSection from './Withdraw'
 import DepositSection from './Deposit'
 import DetailSection from './Details'
@@ -45,27 +44,17 @@ const Investment: React.FC<InvestmentProps> = ({
   }, [address, investInformation, tokenPrices])
 
   return (
-    <Container fluid>
-      <Row gutterWidth={10} justify="between" align="center">
-        <Col md={12}>
-          <AccountAddress />
-        </Col>
-      </Row>
-      <Row justify="between" style={{ minHeight: isMobile ? 1200 : 300 }}>
-        <Col md={12} lg={6}>
-          <DepositSection isMobile={isMobile} />
-        </Col>
-        <Col md={6} lg={3}>
-          <WithdrawSection width={230} />
-        </Col>
-        <Col md={6} lg={3}>
-          <DetailSection />
-        </Col>
-      </Row>
-      {/* <Row gutterWidth={10} justify="end">
-        <Footer />
-      </Row> */}
-    </Container>
+    <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
+      <Col md={12} lg={6}>
+        <DepositSection isMobile={isMobile} />
+      </Col>
+      <Col md={6} lg={3}>
+        <WithdrawSection width={230} />
+      </Col>
+      <Col md={6} lg={3}>
+        <DetailSection />
+      </Col>
+    </Row>
   )
 }
 

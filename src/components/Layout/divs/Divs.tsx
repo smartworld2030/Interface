@@ -24,9 +24,12 @@ export const StyledFlexDiv = styled(
   }
 `
 
-export const AbsoluteBody = styled.div`
+export const AbsoluteBody = styled(({ height, ...props }: DivHeightProps) => (
+  <div {...props} />
+))`
+  height: ${({ height }) => height + 'px'};
   text-align: center;
-  width: 100vw;
+  width: 100%;
   position: absolute;
   z-index: 10;
 `

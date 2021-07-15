@@ -72,7 +72,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
             title="Referral percent:"
             precision={2}
             token="%"
-            value={account.percent / 100}
+            value={account.percent / 250}
           />
           {/* <TokenValue
             value={account.hourly}

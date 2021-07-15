@@ -216,7 +216,7 @@ const chainList = {
     explorers: [
       {
         name: 'bscscan',
-        url: 'https://bscscan.com',
+        url: 'https://bscscan.com/',
         standard: 'EIP3091',
       },
     ],
@@ -246,7 +246,7 @@ const chainList = {
     explorers: [
       {
         name: 'bscscan-testnet',
-        url: 'https://testnet.bscscan.com',
+        url: 'https://testnet.bscscan.com/',
         standard: 'EIP3091',
       },
     ],

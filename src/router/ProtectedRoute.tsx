@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ChainWallet from './ChangeWallet'
+import ChangeWallet from './ChangeWallet'
 import { AppState } from '../_types'
 import { supportedChain } from '../_helpers/constants'
-import { RelativeBody } from '../components/Layout/divs/Divs'
 import Spin from 'antd/lib/spin'
+import AccountAddress from '../components/Wallet/Main/AccountAddress'
+import { Container, Row, Col } from 'react-grid-system'
 
 interface ParentProps {
   component: React.ReactNode
@@ -24,18 +25,35 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   loading,
   isMobile,
 }) => (
-  <Spin
-    spinning={waiting || loading}
-    tip={error.code === 0 ? 'Loading...' : error.msg}
+  <Container
+    fluid
+    style={{
+      height: height,
+      width: '100%',
+    }}
   >
-    <RelativeBody height={height}>
+    <Row justify="between" align="start">
+      <Col xs={12}>
+        <AccountAddress />
+      </Col>
+    </Row>
+    <Spin
+      style={{
+        textAlign: 'center',
+        position: 'relative',
+        height: 150,
+        width: '100%',
+      }}
+      spinning={waiting || loading}
+      tip={error.code === 0 ? 'Loading...' : error.msg}
+    >
       {active && supportedChain(chainId) ? (
         component
       ) : (
-        <ChainWallet isMobile={isMobile} />
+        <ChangeWallet isMobile={isMobile} />
       )}
-    </RelativeBody>
-  </Spin>
+    </Spin>
+  </Container>
 )
 
 const mapStateToProps = (state: AppState) => {

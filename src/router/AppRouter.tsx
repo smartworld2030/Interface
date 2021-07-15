@@ -9,6 +9,7 @@ import { useTransition, animated } from 'react-spring'
 import { AbsoluteBody } from '../components/Layout/divs/Divs'
 import { AppActions, AppState } from '../_types'
 import { accountTokenBalances } from '../_actions/account.actions'
+import Info from '../components/Wallet/Info'
 
 interface IProps {
   isMobile: boolean
@@ -27,8 +28,9 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   accountTokenBalances,
 }) => {
   const location = useLocation()
+  const { pathname } = location
   const transitions = useTransition(location, {
-    key: location.pathname,
+    key: pathname,
     from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
@@ -38,13 +40,13 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     clearInterval(timer)
     if (address) {
       timer = setInterval(() => {
-        accountTokenBalances(address, ['STT', 'STTS', 'BTCB'])
+        accountTokenBalances(address, ['STT', 'STTS', 'BTCB'], false)
       }, delay * 1000)
     }
   }, [address, accountTokenBalances])
 
   return transitions((style, item, _, key) => (
-    <AbsoluteBody>
+    <AbsoluteBody height={isMobile ? undefined : 300}>
       <animated.div key={key} style={style}>
         <Switch location={item}>
           <Route exact path="/invest">
@@ -57,7 +59,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
             <Test />
           </Route>
           <Route exact path="/info">
-            <Test />
+            <Info isMobile={isMobile} />
           </Route>
           <Route exact path="/swap">
             <Swap isMobile={isMobile} />

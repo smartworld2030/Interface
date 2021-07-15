@@ -5,6 +5,7 @@ import * as d3 from 'd3'
 import earth from '../../assets/earth.jpg'
 import background from '../../assets/background.png'
 import clouds from '../../assets/clouds.png'
+import SmartWorldAddress from '../Wallet/Main/SmartWorldAddress'
 
 interface GlobeProps {
   height: number
@@ -42,22 +43,27 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
     .domain([0, 1e7])
 
   return (
-    <Globe
-      ref={globeEl}
-      height={height}
-      width={width}
-      globeImageUrl={earth}
-      bumpImageUrl={clouds}
-      backgroundImageUrl={background}
-      hexBinPointsData={popData}
-      hexBinPointWeight="pop"
-      hexAltitude={(d) => d.sumWeight * 6e-8}
-      hexBinResolution={4}
-      hexTopColor={(d) => weightColor(d.sumWeight)}
-      hexSideColor={(d) => weightColor(d.sumWeight)}
-      hexBinMerge={true}
-      enablePointerInteraction={false}
-    />
+    <div style={{ position: 'relative' }}>
+      <Globe
+        ref={globeEl}
+        height={height}
+        width={width}
+        globeImageUrl={earth}
+        bumpImageUrl={clouds}
+        backgroundImageUrl={background}
+        hexBinPointsData={popData}
+        hexBinPointWeight="pop"
+        hexAltitude={(d) => d.sumWeight * 6e-8}
+        hexBinResolution={4}
+        hexTopColor={(d) => weightColor(d.sumWeight)}
+        hexSideColor={(d) => weightColor(d.sumWeight)}
+        hexBinMerge={true}
+        enablePointerInteraction={false}
+      />
+      <div style={{ position: 'absolute', bottom: 5, left: 5 }}>
+        <SmartWorldAddress />
+      </div>
+    </div>
   )
 }
 

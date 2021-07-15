@@ -20,7 +20,7 @@ const AccountAddress: React.FC<IProps> = ({ address, chainId }) => {
     <div
       style={{ textAlign: 'center', fontSize: 13, cursor: 'pointer' }}
       onClick={() =>
-        account.length > 10
+        account?.length > 10
           ? setAccount(tooShorter(address))
           : setAccount(address!)
       }

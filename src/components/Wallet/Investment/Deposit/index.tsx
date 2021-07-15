@@ -72,7 +72,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
       <Col md={4}>
         <Row justify="around" align="center" style={{ height: '100%' }}>
           <DepositCircle
-            width={210}
+            width={isMobile ? 210 : 190}
             token={token}
             value={value}
             percent={valueToPercent(value, balance)}

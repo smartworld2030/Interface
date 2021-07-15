@@ -14,9 +14,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { requestSwap } from '../../../_actions/swap.actions'
 import Colors from '../../../Theme/Colors'
 
-interface IProps {
-  isMobile: boolean
-}
+interface IProps {}
 
 type SttSwapProps = IProps &
   ReturnType<typeof mapStateToProps> &
@@ -27,7 +25,7 @@ let secondTimer
 
 const params = ['allowed', 'max', 'min', 'slippage']
 
-const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
+const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
   const [result, setResult] = useState({
     token: '',
     allowed: '0',
@@ -37,8 +35,8 @@ const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
     decimals: 0,
   })
 
-  const [input1, setInput1] = useState({ value: '0', big: parseUnits('0') })
-  const [input2, setInput2] = useState({ value: '0', big: parseUnits('0') })
+  const [input1, setInput1] = useState({ value: '', big: parseUnits('0') })
+  const [input2, setInput2] = useState({ value: '', big: parseUnits('0') })
 
   const fetchInput2 = (value) => {
     const big = parseUnits(value, 8)
@@ -49,7 +47,6 @@ const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
         swapContract
           .STTStoSTTPrice()
           .then((res) => {
-            console.log(res)
             const price = formatUnits(res, 8)
             const stt = truncate(Number(price) * value + '', 4)
             fetchInput1(stt, parseUnits(stt, 8))
@@ -87,7 +84,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
               ? truncate(formatUnits(bigNumber, 8), 4)
               : truncate(formatUnits(res.allowed, 8), 4)
             bigNumber
-              ? setInput1({ value, big: res.allowed })
+              ? setInput1({ value, big: bigNumber })
               : setInput2({ value, big: res.allowed })
           })
           .catch((err) => {
@@ -107,15 +104,14 @@ const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
     else {
       setInput1({ value: '', big: parseUnits('0') })
       setInput2({ value: '', big: parseUnits('0') })
+      setResult((prev) => ({ ...prev, allowed: '0', max: '0', min: '0' }))
     }
   }
 
   const maxHandler = (token, index) => {
-    console.log(token, index)
     inputHandler(truncate(formatToString(tokens[token]), 4), index)
   }
   const swapButtonHandler = () => {
-    console.log(input1, input2)
     requestSwap('safeSTTSwap', [
       input1.big,
       result.price,
@@ -128,7 +124,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
     <Row
       direction="column"
       justify="around"
-      style={{ minHeight: isMobile ? 1200 : 300 }}
+      style={{ minHeight: 300 }}
       gutterWidth={4}
     >
       <Col xs={12}>
@@ -165,19 +161,19 @@ const SttSwap: React.FC<SttSwapProps> = ({ isMobile, tokens, requestSwap }) => {
         />
       </Col>
       <Col xs={12}>
-        <Row justify="between" gutterWidth={-80}>
+        <Row justify="between" gutterWidth={-20}>
           <Typography>Estimated:</Typography>
           <Typography>
             {result.allowed} {result.token}
           </Typography>
         </Row>
-        <Row justify="between" gutterWidth={-80}>
+        <Row justify="between" gutterWidth={-20}>
           <Typography>Min:</Typography>
           <Typography>
             {result.min} {result.token}
           </Typography>
         </Row>
-        <Row justify="between" gutterWidth={-80}>
+        <Row justify="between" gutterWidth={-20}>
           <Typography>Max:</Typography>
           <Typography>
             {result.max} {result.token}
