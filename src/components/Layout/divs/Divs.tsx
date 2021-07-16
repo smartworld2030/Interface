@@ -23,17 +23,21 @@ export const StyledFlexDiv = styled(
     color: ${({ hoverColor }) => (hoverColor ? hoverColor : Colors.green)};
   }
 `
+interface AbsoluteDivProps {
+  height?: number
+  width: number
+}
 
-export const AbsoluteBody = styled(({ height, ...props }: DivHeightProps) => (
-  <div {...props} />
-))`
+export const AbsoluteBody = styled(
+  ({ height, width, ...props }: AbsoluteDivProps) => <div {...props} />
+)`
   height: ${({ height }) => (height ? height + 'px' : '')};
   text-align: center;
-  width: 100%;
   position: absolute;
+  width: ${({ width }) => width + 'px'};
   z-index: 10;
-  top: 7;
-  left: 0;
+  top: 0;
+  left: 15px;
 `
 
 export const FlexDiv = styled.div`

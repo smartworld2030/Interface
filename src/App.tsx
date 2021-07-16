@@ -61,7 +61,11 @@ class App extends Component<AppProps, AppStates> {
         <FlexDiv>
           <Header width={appWidth} />
           <Globe height={globeHeight} width={appWidth} />
-          <AppRouter isMobile={isMobile} height={spacerHeight - globeHeight} />
+          <AppRouter
+            isMobile={isMobile}
+            width={appWidth}
+            height={spacerHeight - globeHeight}
+          />
         </FlexDiv>
       </Router>
     )

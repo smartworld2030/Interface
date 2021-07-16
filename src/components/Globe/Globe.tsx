@@ -64,7 +64,14 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
       <div style={{ position: 'absolute', bottom: 5, left: 5 }}>
         <SmartWorldAddress />
       </div>
-      <div style={{ position: 'absolute', bottom: 5, right: 5 }}>
+      <div
+        style={{
+          position: 'absolute',
+          textAlign: 'right',
+          bottom: 5,
+          right: 5,
+        }}
+      >
         <ListTokens />
       </div>
     </div>

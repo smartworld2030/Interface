@@ -17,6 +17,7 @@ import AccountAddress from '../components/Wallet/Main/AccountAddress'
 interface IProps {
   isMobile: boolean
   height: number
+  width: number
 }
 
 type AppRouterProps = IProps &
@@ -30,6 +31,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   isMobile,
   address,
   height,
+  width,
   accountTokenBalances,
 }) => {
   const location = useLocation()
@@ -57,50 +59,58 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     <Container
       fluid
       style={{
-        position: 'relative',
-        height: height,
-        width: '100%',
+        width,
+        height,
       }}
     >
       <Row justify="between" align="start">
         <Col xs={12}>
           <AccountAddress />
         </Col>
+        <Col style={{ position: 'relative', height: height - 20 }}>
+          {transitions((style, item, _, key) => (
+            <AbsoluteBody
+              height={isMobile ? undefined : 300}
+              width={width - 30}
+            >
+              <animated.div key={key} style={style}>
+                <Switch location={item}>
+                  <Route exact path="/invest">
+                    <ProtectedRoute
+                      isMobile={isMobile}
+                      height={height}
+                      needLogin
+                    >
+                      <Investment isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path="/freeze">
+                    <ProtectedRoute isMobile={isMobile} height={height}>
+                      <Test isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path="/stts">
+                    <ProtectedRoute isMobile={isMobile} height={height}>
+                      <Test isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path="/info">
+                    <Info isMobile={isMobile} />
+                  </Route>
+                  <Route exact path="/swap">
+                    <ProtectedRoute isMobile={isMobile} height={height}>
+                      <Swap isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route path="/">
+                    <Redirect to="/invest" />
+                  </Route>
+                </Switch>
+              </animated.div>
+            </AbsoluteBody>
+          ))}
+        </Col>
       </Row>
-      {transitions((style, item, _, key) => (
-        <AbsoluteBody height={isMobile ? undefined : 300}>
-          <animated.div key={key} style={style}>
-            <Switch location={item}>
-              <Route exact path="/invest">
-                <ProtectedRoute isMobile={isMobile} height={height} needLogin>
-                  <Investment isMobile={isMobile} />
-                </ProtectedRoute>
-              </Route>
-              <Route exact path="/freeze">
-                <ProtectedRoute isMobile={isMobile} height={height}>
-                  <Test isMobile={isMobile} />
-                </ProtectedRoute>
-              </Route>
-              <Route exact path="/stts">
-                <ProtectedRoute isMobile={isMobile} height={height}>
-                  <Test isMobile={isMobile} />
-                </ProtectedRoute>
-              </Route>
-              <Route exact path="/info">
-                <Info isMobile={isMobile} />
-              </Route>
-              <Route exact path="/swap">
-                <ProtectedRoute isMobile={isMobile} height={height}>
-                  <Swap isMobile={isMobile} />
-                </ProtectedRoute>
-              </Route>
-              <Route path="/">
-                <Redirect to="/invest" />
-              </Route>
-            </Switch>
-          </animated.div>
-        </AbsoluteBody>
-      ))}
     </Container>
   )
 }

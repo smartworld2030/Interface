@@ -10,6 +10,8 @@ import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import { notification } from 'antd'
 import copy from 'copy-to-clipboard'
+import QRCode from 'react-qr-code'
+import Colors from '../../../../Theme/Colors'
 
 interface IProps {}
 
@@ -43,10 +45,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       setTimeout(() => {
         setLoading(false)
         setDone(true)
-        setTimeout(() => {
-          setDone(false)
-        }, 2000)
-      }, 1000)
+      }, 500)
     }
   }
   const calcSatoshi = () =>
@@ -66,64 +65,75 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
         textAlign: 'center',
       }}
     >
-      <Col xs={12} width="100%">
-        <Row align="center" justify="around">
-          <TokenValue
-            title="Referral percent:"
-            precision={2}
-            token="%"
-            value={account.percent / 250}
-          />
-          {/* <TokenValue
+      {done ? (
+        <QRCode
+          value={link}
+          bgColor={Colors.mainBackground}
+          fgColor="white"
+          onClick={() => setDone(false)}
+        />
+      ) : (
+        <>
+          <Col xs={12} width="100%">
+            <Row align="center" justify="around">
+              <TokenValue
+                title="Referral percent:"
+                precision={2}
+                token="%"
+                value={account.percent / 250}
+              />
+              {/* <TokenValue
             value={account.hourly}
             precision={2}
             title="Hourly reward:"
           /> */}
-        </Row>
-      </Col>
-      <Col xs={12} width="100%">
-        <Row align="center" justify="around">
-          <TokenValue
-            title="Rewards(Satoshi):"
-            precision={0}
-            token="SATS"
-            value={calcSatoshi()}
-          />
-          <TokenValue
-            value={calcDollar()}
-            precision={2}
-            title="Rewards(Dollar):"
-            token="$"
-          />
-        </Row>
-      </Col>
-      <Col xs={12} width="100%">
-        <Row align="center" justify="around">
-          <ReferralButton
-            width={90}
-            loading={loading}
-            onClick={copyHandler}
-            done={done}
-            disable={account.satoshi === 0}
-          />
-        </Row>
-      </Col>
-      <Col xs={12} width="100%">
-        <Row align="center" justify="around">
-          <TokenValue
-            token="SATS"
-            precision={0}
-            value={account.satoshi}
-            title="Total investment:"
-          />
-          <TokenValue
-            value={tokens.STT}
-            token="STT"
-            precision={0}
-            title="Total rewards:"
-          />
-        </Row>
-      </Col>
+            </Row>
+          </Col>
+          <Col xs={12} width="100%">
+            <Row align="center" justify="around">
+              <TokenValue
+                title="Rewards(Satoshi):"
+                precision={0}
+                token="SATS"
+                value={calcSatoshi()}
+              />
+              <TokenValue
+                value={calcDollar()}
+                precision={2}
+                title="Rewards(Dollar):"
+                token="$"
+              />
+            </Row>
+          </Col>
+          <Col xs={12} width="100%">
+            <Row align="center" justify="around">
+              <ReferralButton
+                width={90}
+                loading={loading}
+                onClick={copyHandler}
+                done={done}
+                disable={account.satoshi === 0}
+              />
+            </Row>
+          </Col>
+          <Col xs={12} width="100%">
+            <Row align="center" justify="around">
+              <TokenValue
+                token="SATS"
+                precision={0}
+                value={account.satoshi}
+                title="Total investment:"
+              />
+              <TokenValue
+                value={tokens.STT}
+                token="STT"
+                precision={0}
+                title="Total rewards:"
+              />
+            </Row>
+          </Col>
+        </>
+      )}
     </Row>
   )
 }

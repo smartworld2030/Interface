@@ -120,7 +120,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             precision={2}
             token="%"
             title="Referral percent:"
-            double={calcPercent() / 250}
+            double={calcPercent() / 250 < 0.01 ? 0 : calcPercent() / 250}
           />
         </Row>
       </Col>

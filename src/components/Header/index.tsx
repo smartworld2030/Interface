@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { sizeCalculator } from '../../_helpers/constants'
-import { HeadCircle } from '../Layout/svgs/HeadCircle'
+import { sizeCalculator } from './Links'
+import { HeadCircle } from './HeadCircle'
 import { ImageLogo } from '../Layout/svgs/ImageLogo'
 import { useLocation } from 'react-router-dom'
 
@@ -23,6 +23,15 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
 
   return (
     <StyledSvg height={height + 10} width={width}>
+      <filter id="greyscale">
+        <feColorMatrix
+          type="matrix"
+          values=".33 .33 .33 0 0
+           .33 .33 .33 0 0
+           .33 .33 .33 0 0
+           0 0 0 1 0"
+        ></feColorMatrix>
+      </filter>
       <defs>
         <clipPath id="circleView">
           <circle cx={half} cy={10} r="80" />

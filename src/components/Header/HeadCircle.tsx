@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Colors from '../../../Theme/Colors'
+import Colors from '../../Theme/Colors'
 
 interface HeadCircleProps {
   positionX: number
@@ -9,6 +9,7 @@ interface HeadCircleProps {
   link: string
   onClick: () => void
   active: boolean
+  icon: JSX.Element
 }
 
 export const HeadCircle: React.FC<HeadCircleProps> = ({
@@ -19,9 +20,10 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
   active,
   text,
   link,
+  icon,
 }) => {
   return (
-    <g onClick={onClick}>
+    <g onClick={onClick} filter={active ? undefined : 'url(#greyscale)'}>
       <Link to={link}>
         <circle
           cx={positionX}
@@ -29,16 +31,18 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           r={size}
           stroke={active ? Colors.text : Colors.secondText}
           strokeWidth="1"
-          fill={Colors.background}
         />
+        {icon}
         <text
           x={positionX}
           y={positionY - size}
           textAnchor="middle"
           alignmentBaseline="central"
-          fontSize={size / 2}
+          fontSize={size * 0.55}
           fontWeight="700"
-          fill={active ? Colors.text : Colors.secondText}
+          fill={active ? Colors.text : 'white'}
+          stroke={active ? 'rgb(0 0 0 / 90%)' : 'rgb(0 0 0 / 60%)'}
+          strokeWidth={size * 0.025}
         >
           {text}
         </text>

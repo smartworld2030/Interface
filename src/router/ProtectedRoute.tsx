@@ -28,7 +28,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     style={{
       textAlign: 'center',
       height: 150,
-      width: '100%',
     }}
     spinning={waiting || loading}
     tip={error.code === 0 ? 'Loading...' : error.msg}

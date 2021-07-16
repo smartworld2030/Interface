@@ -32,32 +32,46 @@ const ListTokens: React.FC<IProps> = ({ chainId }) => {
           reject(err)
         })
     })
-  const addTokenToWallet = () => {
+  const addSttsToWallet = () => {
+    let address = info[chainId].STTS
+    let symbol = 'STTS'
+    let decimals = info.decimals.STTS
+    let image = 'https://i.postimg.cc/4yxyZ24s/Smart-World-Stock.png'
+    requestAddToken({ address, symbol, decimals, image })
+  }
+  const addSttToWallet = () => {
     let address = info[chainId].STT
     let symbol = 'STT'
     let decimals = info.decimals.STT
     let image = 'https://i.postimg.cc/Ssqj1NwX/Smart-World-Token.png'
-    requestAddToken({ address, symbol, decimals, image }).then(() => {
-      let address = info[chainId].STTS
-      let symbol = 'STTS'
-      let decimals = info.decimals.STTS
-      let image = 'https://i.postimg.cc/4yxyZ24s/Smart-World-Stock.png'
-      requestAddToken({ address, symbol, decimals, image })
-    })
+    requestAddToken({ address, symbol, decimals, image })
   }
 
   return (
-    <div
-      onClick={() => addTokenToWallet()}
-      style={{ fontSize: 9, cursor: 'pointer' }}
-    >
-      <Typography>
-        Add Tokens
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
-          <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
-        </svg>
-      </Typography>
-    </div>
+    <>
+      <div
+        onClick={() => addSttToWallet()}
+        style={{ fontSize: 9, cursor: 'pointer' }}
+      >
+        <Typography>
+          Add STT
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
+            <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
+          </svg>
+        </Typography>
+      </div>
+      <div
+        onClick={() => addSttsToWallet()}
+        style={{ fontSize: 9, cursor: 'pointer' }}
+      >
+        <Typography>
+          Add STTS
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
+            <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
+          </svg>
+        </Typography>
+      </div>
+    </>
   )
 }
 const mapStateToProps = (state: AppState) => {
