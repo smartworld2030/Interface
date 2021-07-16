@@ -6,6 +6,7 @@ import earth from '../../assets/earth.jpg'
 import background from '../../assets/background.png'
 import clouds from '../../assets/clouds.png'
 import SmartWorldAddress from '../Wallet/Main/SmartWorldAddress'
+import ListTokens from '../Wallet/Main/ListTokens'
 
 interface GlobeProps {
   height: number
@@ -62,6 +63,9 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
       />
       <div style={{ position: 'absolute', bottom: 5, left: 5 }}>
         <SmartWorldAddress />
+      </div>
+      <div style={{ position: 'absolute', bottom: 5, right: 5 }}>
+        <ListTokens />
       </div>
     </div>
   )

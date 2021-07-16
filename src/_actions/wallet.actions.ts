@@ -24,7 +24,6 @@ import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
 import { accountTokenBalances } from './account.actions'
 import { INVEST_RESET } from '../_types/invest.types'
 import tokenPrice from '../_contracts/tokenPrice'
-import info from '../_contracts/info'
 import swap from '../_contracts/swap'
 import { ISmartWorld } from '../_types/ISmartWorld'
 import { ISmartInvest } from '../_types/ISmartInvest'
@@ -205,38 +204,6 @@ export const changeToMain = () => (dispatch: Dispatch<AppActions>) => {
         error: { msg: 'MetaMask Is not Available!', code: 401 },
       })
     })
-}
-
-export const addTokenToWallet = (tokens: string[]) => (
-  dispatch: Dispatch<AppActions>,
-  getState: () => AppState
-) => {
-  tokens.forEach(
-    (token: string) =>
-      new Promise((resolve, reject) => {
-        const chainId = getState().wallet.chainId
-        const address = info[chainId][token]
-        const symbol = token
-        const decimals = info.decimals[token]
-        const image = 'http://placekitten.com/200/300'
-        ethereum
-          ?.request({
-            method: 'wallet_watchAsset',
-            params: {
-              // @ts-ignore
-              type: 'ERC20',
-              options: {
-                address,
-                symbol,
-                decimals,
-                image,
-              },
-            },
-          })
-          .then((result) => resolve(result))
-          .catch((err) => {})
-      })
-  )
 }
 
 export const startOnBoarding = () => (dispatch: Dispatch<AppActions>) => {

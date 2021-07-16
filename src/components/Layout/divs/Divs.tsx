@@ -27,11 +27,13 @@ export const StyledFlexDiv = styled(
 export const AbsoluteBody = styled(({ height, ...props }: DivHeightProps) => (
   <div {...props} />
 ))`
-  height: ${({ height }) => height + 'px'};
+  height: ${({ height }) => (height ? height + 'px' : '')};
   text-align: center;
   width: 100%;
   position: absolute;
   z-index: 10;
+  top: 7;
+  left: 0;
 `
 
 export const FlexDiv = styled.div`

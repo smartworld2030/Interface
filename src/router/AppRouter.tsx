@@ -10,9 +10,13 @@ import { AbsoluteBody } from '../components/Layout/divs/Divs'
 import { AppActions, AppState } from '../_types'
 import { accountTokenBalances } from '../_actions/account.actions'
 import Info from '../components/Wallet/Info'
+import ProtectedRoute from './ProtectedRoute'
+import { Container, Row, Col } from 'react-grid-system'
+import AccountAddress from '../components/Wallet/Main/AccountAddress'
 
 interface IProps {
   isMobile: boolean
+  height: number
 }
 
 type AppRouterProps = IProps &
@@ -25,6 +29,7 @@ let timer
 export const AppRouter: React.FC<AppRouterProps> = ({
   isMobile,
   address,
+  height,
   accountTokenBalances,
 }) => {
   const location = useLocation()
@@ -43,40 +48,81 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         accountTokenBalances(address, ['STT', 'STTS', 'BTCB'], false)
       }, delay * 1000)
     }
+    return () => {
+      clearInterval(timer)
+    }
   }, [address, accountTokenBalances])
 
-  return transitions((style, item, _, key) => (
-    <AbsoluteBody height={isMobile ? undefined : 300}>
-      <animated.div key={key} style={style}>
-        <Switch location={item}>
-          <Route exact path="/invest">
-            <Investment isMobile={isMobile} />
-          </Route>
-          <Route exact path="/freeze">
-            <Test />
-          </Route>
-          <Route exact path="/stts">
-            <Test />
-          </Route>
-          <Route exact path="/info">
-            <Info isMobile={isMobile} />
-          </Route>
-          <Route exact path="/swap">
-            <Swap isMobile={isMobile} />
-          </Route>
-          <Route path="/">
-            <Redirect to="/invest" />
-          </Route>
-        </Switch>
-      </animated.div>
-    </AbsoluteBody>
-  ))
+  return (
+    <Container
+      fluid
+      style={{
+        position: 'relative',
+        height: height,
+        width: '100%',
+      }}
+    >
+      <Row justify="between" align="start">
+        <Col xs={12}>
+          <AccountAddress />
+        </Col>
+      </Row>
+      {transitions((style, item, _, key) => (
+        <AbsoluteBody height={isMobile ? undefined : 300}>
+          <animated.div key={key} style={style}>
+            <Switch location={item}>
+              <Route exact path="/invest">
+                <ProtectedRoute isMobile={isMobile} height={height} needLogin>
+                  <Investment isMobile={isMobile} />
+                </ProtectedRoute>
+              </Route>
+              <Route exact path="/freeze">
+                <ProtectedRoute isMobile={isMobile} height={height}>
+                  <Test isMobile={isMobile} />
+                </ProtectedRoute>
+              </Route>
+              <Route exact path="/stts">
+                <ProtectedRoute isMobile={isMobile} height={height}>
+                  <Test isMobile={isMobile} />
+                </ProtectedRoute>
+              </Route>
+              <Route exact path="/info">
+                <Info isMobile={isMobile} />
+              </Route>
+              <Route exact path="/swap">
+                <ProtectedRoute isMobile={isMobile} height={height}>
+                  <Swap isMobile={isMobile} />
+                </ProtectedRoute>
+              </Route>
+              <Route path="/">
+                <Redirect to="/invest" />
+              </Route>
+            </Switch>
+          </animated.div>
+        </AbsoluteBody>
+      ))}
+    </Container>
+  )
 }
 
-interface tester {}
+interface tester {
+  isMobile: boolean
+}
 
-export const Test: React.FC<tester> = () => {
-  return <div>Coming Soon!</div>
+export const Test: React.FC<tester> = ({ isMobile }) => {
+  return (
+    <Row
+      justify="around"
+      align="center"
+      style={{ minHeight: isMobile ? 300 : 300 }}
+    >
+      <Col xs={12} md={3}></Col>
+      <Col xs={12} md={3}>
+        Coming Soon!
+      </Col>
+      <Col xs={12} md={3}></Col>
+    </Row>
+  )
 }
 
 const mapStateToProps = (state: AppState) => {

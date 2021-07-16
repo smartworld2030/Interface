@@ -38,7 +38,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
 
   const calcSatoshi = () => prices[token] * value
 
-  const CalcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
+  const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
 
   const calcSTT = () => calcSatoshi() / 2.5 / prices.STT
 
@@ -87,13 +87,13 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             title="Price(Smart Bits):"
             token="STB"
             precision={1}
-            value={calcSatoshi() / 250}
+            value={calcSatoshi() / 100}
           />
           <TokenValue
             title="Price(Dollar):"
             precision={2}
             token="$"
-            value={CalcDollar()}
+            value={calcDollar()}
           />
         </Row>
       </Col>

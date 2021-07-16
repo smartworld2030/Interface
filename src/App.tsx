@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { initialization } from './_actions/wallet.actions'
-import ProtectedRoute from './router/ProtectedRoute'
 import AppRouter from './router/AppRouter'
 
 let setTime: NodeJS.Timeout
@@ -62,11 +61,7 @@ class App extends Component<AppProps, AppStates> {
         <FlexDiv>
           <Header width={appWidth} />
           <Globe height={globeHeight} width={appWidth} />
-          <ProtectedRoute
-            isMobile={isMobile}
-            height={spacerHeight - globeHeight}
-            component={<AppRouter isMobile={isMobile} />}
-          />
+          <AppRouter isMobile={isMobile} height={spacerHeight - globeHeight} />
         </FlexDiv>
       </Router>
     )

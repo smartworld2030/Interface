@@ -9,16 +9,16 @@ interface SmartWorldAddressProps {}
 
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
-const AccountAddress: React.FC<IProps> = ({ chainId }) => {
+const SmartWorldAddress: React.FC<IProps> = () => {
   return (
     <a
       href={'https://bscscan.com/address/' + bank.address[56]}
       target="_blank"
       rel="noopener noreferrer"
-      style={{ fontSize: 8, cursor: 'pointer' }}
+      style={{ fontSize: 9, cursor: 'pointer' }}
     >
       <Typography>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="8px">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
           <path
             d="M 0.25 0.5 L 1.5 1.25 L 0.25 2 L 0.25 0.5"
             fill={Colors.green}
@@ -35,4 +35,4 @@ const mapStateToProps = (state: AppState) => {
     chainId,
   }
 }
-export default connect(mapStateToProps)(AccountAddress)
+export default connect(mapStateToProps)(SmartWorldAddress)

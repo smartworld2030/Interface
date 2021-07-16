@@ -4,56 +4,43 @@ import ChangeWallet from './ChangeWallet'
 import { AppState } from '../_types'
 import { supportedChain } from '../_helpers/constants'
 import Spin from 'antd/lib/spin'
-import AccountAddress from '../components/Wallet/Main/AccountAddress'
-import { Container, Row, Col } from 'react-grid-system'
 
 interface ParentProps {
-  component: React.ReactNode
+  children: React.ReactNode
   isMobile: boolean
   height: number
+  needLogin?: boolean
 }
 
 type ProtectedRouteProps = ParentProps & ReturnType<typeof mapStateToProps>
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  component,
-  height,
   chainId,
   active,
   error,
+  needLogin,
   waiting,
   loading,
+  children,
   isMobile,
 }) => (
-  <Container
-    fluid
+  <Spin
     style={{
-      height: height,
+      textAlign: 'center',
+      height: 150,
       width: '100%',
     }}
+    spinning={waiting || loading}
+    tip={error.code === 0 ? 'Loading...' : error.msg}
   >
-    <Row justify="between" align="start">
-      <Col xs={12}>
-        <AccountAddress />
-      </Col>
-    </Row>
-    <Spin
-      style={{
-        textAlign: 'center',
-        position: 'relative',
-        height: 150,
-        width: '100%',
-      }}
-      spinning={waiting || loading}
-      tip={error.code === 0 ? 'Loading...' : error.msg}
-    >
-      {active && supportedChain(chainId) ? (
-        component
-      ) : (
-        <ChangeWallet isMobile={isMobile} />
-      )}
-    </Spin>
-  </Container>
+    {active && needLogin && supportedChain(chainId) ? (
+      children
+    ) : supportedChain(chainId) ? (
+      children
+    ) : (
+      <ChangeWallet isMobile={isMobile} />
+    )}
+  </Spin>
 )
 
 const mapStateToProps = (state: AppState) => {
