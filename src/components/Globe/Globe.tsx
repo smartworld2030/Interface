@@ -67,7 +67,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
       <div
         style={{
           position: 'absolute',
-          textAlign: 'right',
+          zIndex: 100,
           bottom: 5,
           right: 5,
         }}

@@ -34,6 +34,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
         />
         {icon}
         <text
+          filter="url(#dropshadow)"
           x={positionX}
           y={positionY - size}
           textAnchor="middle"
@@ -41,8 +42,6 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           fontSize={size * 0.55}
           fontWeight="700"
           fill={active ? Colors.text : 'white'}
-          stroke={active ? 'rgb(0 0 0 / 90%)' : 'rgb(0 0 0 / 60%)'}
-          strokeWidth={size * 0.025}
         >
           {text}
         </text>

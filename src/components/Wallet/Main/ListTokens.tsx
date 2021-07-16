@@ -5,6 +5,8 @@ import Typography from 'antd/lib/typography'
 import { AppState } from '../../../_types'
 import { ethereum } from '../../../_helpers/api'
 import info from '../../../_contracts/info'
+import Button from 'antd/lib/button'
+import { Row } from 'react-grid-system'
 
 interface SmartWorldAddressProps {}
 
@@ -48,8 +50,9 @@ const ListTokens: React.FC<IProps> = ({ chainId }) => {
   }
 
   return (
-    <>
-      <div
+    <Row direction="column" align="end">
+      <Button
+        type="link"
         onClick={() => addSttToWallet()}
         style={{ fontSize: 9, cursor: 'pointer' }}
       >
@@ -59,8 +62,9 @@ const ListTokens: React.FC<IProps> = ({ chainId }) => {
             <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
           </svg>
         </Typography>
-      </div>
-      <div
+      </Button>
+      <Button
+        type="link"
         onClick={() => addSttsToWallet()}
         style={{ fontSize: 9, cursor: 'pointer' }}
       >
@@ -70,8 +74,8 @@ const ListTokens: React.FC<IProps> = ({ chainId }) => {
             <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
           </svg>
         </Typography>
-      </div>
-    </>
+      </Button>
+    </Row>
   )
 }
 const mapStateToProps = (state: AppState) => {
