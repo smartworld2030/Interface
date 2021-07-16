@@ -67,9 +67,10 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
       <div
         style={{
           position: 'absolute',
+          width: width - 32,
           zIndex: 100,
-          bottom: 5,
-          right: 5,
+          bottom: 15,
+          right: 15,
         }}
       >
         <ListTokens />

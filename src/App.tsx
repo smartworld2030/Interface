@@ -2,7 +2,6 @@ import { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Globe from './components/Globe/Globe'
 import { Header } from './components/Header'
-import { FlexDiv } from './components/Layout/divs/Divs'
 import { AppActions, AppState } from './_types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -58,15 +57,13 @@ class App extends Component<AppProps, AppStates> {
     const globeHeight = spacerHeight * 0.6
     return (
       <Router>
-        <FlexDiv>
-          <Header width={appWidth} />
-          <Globe height={globeHeight} width={appWidth} />
-          <AppRouter
-            isMobile={isMobile}
-            width={appWidth}
-            height={spacerHeight - globeHeight}
-          />
-        </FlexDiv>
+        <Header width={appWidth} />
+        <Globe height={globeHeight} width={appWidth} />
+        <AppRouter
+          isMobile={isMobile}
+          width={appWidth}
+          height={spacerHeight - globeHeight}
+        />
       </Router>
     )
   }

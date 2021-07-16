@@ -67,11 +67,18 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         <Col xs={12}>
           <AccountAddress />
         </Col>
-        <Col style={{ position: 'relative', height: height - 20 }}>
+        <Col
+          xs={12}
+          style={{
+            position: 'relative',
+            height: height - 20,
+            padding: 0,
+          }}
+        >
           {transitions((style, item, _, key) => (
             <AbsoluteBody
               height={isMobile ? undefined : 300}
-              width={width - 30}
+              width={width - 32}
             >
               <animated.div key={key} style={style}>
                 <Switch location={item}>
