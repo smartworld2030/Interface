@@ -2,8 +2,9 @@ import styled from '@emotion/styled'
 import React, { useState } from 'react'
 import { sizeCalculator } from './Links'
 import { HeadCircle } from './HeadCircle'
-import { ImageLogo } from '../Layout/svgs/ImageLogo'
 import { useLocation } from 'react-router-dom'
+import Colors from '../../Theme/Colors'
+import { PriceFeed } from './PriceFeed'
 
 const StyledSvg = styled.svg`
   position: absolute;
@@ -23,30 +24,24 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
 
   return (
     <StyledSvg height={height + 10} width={width}>
-      <filter id="greyscale">
-        <feColorMatrix
-          type="matrix"
-          values=".33 .33 .33 0 0
+      <defs>
+        <filter id="greyscale">
+          <feColorMatrix
+            type="matrix"
+            values=".33 .33 .33 0 0
            .33 .33 .33 0 0
            .33 .33 .33 0 0
            0 0 0 1 0"
-        ></feColorMatrix>
-      </filter>
-      <filter id="dropshadow" height="130%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-        <feOffset dx="2" dy="2" result="offsetblur" />
-        <feComponentTransfer>
-          <feFuncA type="linear" slope="0.5" />
-        </feComponentTransfer>
-        <feMerge>
-          <feMergeNode />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-      <defs>
-        <clipPath id="circleView">
-          <circle cx={half} cy={10} r="80" />
-        </clipPath>
+          ></feColorMatrix>
+        </filter>
+        <filter id="dropshadow" height="130%">
+          <feDropShadow
+            dx="0"
+            dy="0"
+            stdDeviation="4"
+            floodColor={Colors.green}
+          />
+        </filter>
       </defs>
       <path
         stroke="rgb(150, 150, 150)"
@@ -56,7 +51,6 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
           half + quarter
         },${height} ${width},0`}
       />
-      <ImageLogo x={half - 28} y={20} active />
       {linkArray.map((item, index) => (
         <HeadCircle
           {...item}
@@ -65,6 +59,9 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
           onClick={() => setActive(item.link)}
         />
       ))}
+      <foreignObject width="100%" height="100%" y={0}>
+        <PriceFeed />
+      </foreignObject>
     </StyledSvg>
   )
 }

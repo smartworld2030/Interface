@@ -24,6 +24,7 @@ export const sizeCalculator = (width: number) => {
       size: 15,
       link: '/info',
       text: 'Info',
+      textPos: fristHeight - 69,
       icon: <div></div>,
     },
     {
@@ -31,25 +32,28 @@ export const sizeCalculator = (width: number) => {
       positionY: secondHeight - 29,
       size: 20,
       link: '/freeze',
-      text: 'Freeze',
-      icon: <SttLogo width={40} x={half - eighth - 20} y={secondHeight - 70} />,
+      text: '',
+      textPos: secondHeight - 79,
+      icon: <SttLogo width={45} x={half - eighth - 23} y={secondHeight - 74} />,
     },
     {
       positionX: half,
       positionY: height - 10,
       size: 35,
       link: '/invest',
-      text: 'Invest',
-      icon: <InvestLogo width={60} x={half - 30} y={height - 75} />,
+      text: '',
+      textPos: height - 90,
+      icon: <InvestLogo width={70} x={half - 35} y={height - 81} />,
     },
     {
       positionX: half + eighth,
       positionY: secondHeight - 29,
       size: 20,
       link: '/swap',
-      text: 'Swap',
+      text: '',
+      textPos: secondHeight - 79,
       icon: (
-        <SwapLogo width={40} x={half + eighth - 20} y={secondHeight - 70} />
+        <SwapLogo width={42} x={half + eighth - 21} y={secondHeight - 70} />
       ),
     },
     {
@@ -58,6 +62,7 @@ export const sizeCalculator = (width: number) => {
       size: 15,
       link: '/stts',
       text: 'STTS',
+      textPos: fristHeight - 69,
       icon: <div></div>,
     },
   ]

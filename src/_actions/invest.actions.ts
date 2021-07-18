@@ -56,7 +56,7 @@ export const requestInvest = (method: any, args: any) => (
 
 export type TokenSymbol = 'STTS' | 'BTCB' | 'BNB'
 
-export const investmentDeposit = (token: string, value: string) => async (
+export const investmentDeposit = (token: string, value: number) => async (
   dispatch: Dispatch<AppActions>,
   getState: () => AppState
 ) => {
@@ -71,24 +71,27 @@ export const investmentDeposit = (token: string, value: string) => async (
     allowance = await tokenContract[token].allowance(address, info[chainId].STT)
 
   const requestDeposit = async () => {
+    const strValue = (value * 10 ** info.decimals[token]).toFixed().toString()
     if (accountInfo.id > 0) {
       if (token === 'STTS')
-        dispatch(requestInvest('updateStts', [value]) as any)
+        dispatch(requestInvest('updateStts', [strValue]) as any)
       else if (token === 'BTCB')
-        dispatch(requestInvest('updateBtcb', [value]) as any)
+        dispatch(requestInvest('updateBtcb', [strValue]) as any)
       else if (token === 'BNB')
-        dispatch(requestInvest('updateBnb', [{ value }]) as any)
+        dispatch(requestInvest('updateBnb', [{ value: strValue }]) as any)
     } else {
       let refInfo = utils.isAddress(referrer)
         ? ((await readInvest('users', ['id'], [referrer])) as { id: number })
         : { id: 0 }
       if (refInfo.id > 0) {
         if (token === 'STTS')
-          dispatch(requestInvest('investStts', [referrer, value]) as any)
+          dispatch(requestInvest('investStts', [referrer, strValue]) as any)
         else if (token === 'BTCB') {
-          dispatch(requestInvest('investBtcb', [referrer, value]) as any)
+          dispatch(requestInvest('investBtcb', [referrer, strValue]) as any)
         } else if (token === 'BNB')
-          dispatch(requestInvest('investBnb', [referrer, { value }]) as any)
+          dispatch(
+            requestInvest('investBnb', [referrer, { value: strValue }]) as any
+          )
       } else {
         const error = 'No valid referrer found!'
         dispatch({ type: INVEST_MESSAGES, payload: { error } })

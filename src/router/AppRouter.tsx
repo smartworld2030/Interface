@@ -12,7 +12,7 @@ import { accountTokenBalances } from '../_actions/account.actions'
 import Info from '../components/Wallet/Info'
 import ProtectedRoute from './ProtectedRoute'
 import { Container, Row, Col } from 'react-grid-system'
-import AccountAddress from '../components/Wallet/Main/AccountAddress'
+import Typography from 'antd/lib/typography'
 
 interface IProps {
   isMobile: boolean
@@ -26,6 +26,14 @@ type AppRouterProps = IProps &
 
 const delay = 60
 let timer
+
+const Titles = {
+  '/invest': 'INVESTMENT',
+  '/info': 'INFORMATION',
+  '/freeze': 'FREEZE',
+  '/swap': 'SWAP',
+  '/stts': 'STTS',
+}
 
 export const AppRouter: React.FC<AppRouterProps> = ({
   isMobile,
@@ -63,9 +71,11 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         height,
       }}
     >
-      <Row justify="between" align="start">
+      <Row justify="between" align="center">
         <Col xs={12}>
-          <AccountAddress />
+          <Typography.Title style={{ textAlign: 'center' }} level={5}>
+            {Titles[pathname]}
+          </Typography.Title>
         </Col>
         <Col
           xs={12}

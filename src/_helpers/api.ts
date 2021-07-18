@@ -1,6 +1,7 @@
 import { BigNumberish, utils } from 'ethers'
 import erc20 from '../_contracts/erc20'
 import MetaMaskOnboarding from '@metamask/onboarding'
+import info from '../_contracts/info'
 
 export const { ethereum } = window
 
@@ -15,8 +16,8 @@ export const formater = (balance: BigNumberish, token: string | number = 0) =>
   )
 
 export const formatToString = (balance: number, token: string | number = 0) =>
-  '' +
-  balance * 10 ** (typeof token === 'number' ? token : erc20.decimals[token])
+  balance * 10 ** (typeof token === 'number' ? token : info.decimals[token]) +
+  ''
 
 export const formaterNumber = (
   balance: BigNumberish,
@@ -31,7 +32,10 @@ export const formaterNumber = (
   return Number(formater(balance, decimal))
 }
 export const roundDecimals = (value: number, decimal: number = 2) =>
-  Math.round(value * 10 ** decimal) / 10 ** decimal
+  Math.round(Number(value) * 10 ** decimal) / 10 ** decimal
+
+export const roundDecimalsString = (value: number, decimal: number = 2) =>
+  Math.round(value / 10 ** decimal).toString()
 
 export const percentToValue = (val: number, per: number) => (val * per) / 100
 

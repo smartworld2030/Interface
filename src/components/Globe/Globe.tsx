@@ -5,8 +5,7 @@ import * as d3 from 'd3'
 import earth from '../../assets/earth.jpg'
 import background from '../../assets/background.png'
 import clouds from '../../assets/clouds.png'
-import SmartWorldAddress from '../Wallet/Main/SmartWorldAddress'
-import ListTokens from '../Wallet/Main/ListTokens'
+import SmartWorldAddress from '../Wallet/Main/ListTokens'
 
 interface GlobeProps {
   height: number
@@ -61,19 +60,17 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
         hexBinMerge={true}
         enablePointerInteraction={false}
       />
-      <div style={{ position: 'absolute', bottom: 5, left: 5 }}>
-        <SmartWorldAddress />
-      </div>
       <div
         style={{
           position: 'absolute',
-          width: width - 32,
+          overflowX: 'hidden',
+          width: width * 0.98,
           zIndex: 100,
-          bottom: 15,
-          right: 15,
+          bottom: 0,
+          left: 5,
         }}
       >
-        <ListTokens />
+        <SmartWorldAddress />
       </div>
     </div>
   )

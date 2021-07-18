@@ -1,18 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Colors from '../../../Theme/Colors'
 import Typography from 'antd/lib/typography'
 import { AppState } from '../../../_types'
 import { ethereum } from '../../../_helpers/api'
 import info from '../../../_contracts/info'
-import Button from 'antd/lib/button'
-import { Row } from 'react-grid-system'
+import { Col, Row } from 'react-grid-system'
+import bank from '../../../_contracts/bank'
+import { tooShorter } from '../../../_helpers/constants'
+
+const { Paragraph, Link } = Typography
 
 interface SmartWorldAddressProps {}
 
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
-const ListTokens: React.FC<IProps> = ({ chainId }) => {
+const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
+  const [account, setAccount] = useState('0x...')
+
+  useEffect(() => {
+    setAccount(tooShorter(address))
+  }, [address])
+
   const requestAddToken = ({ address, symbol, decimals, image }) =>
     new Promise((resolve, reject) => {
       ethereum
@@ -50,38 +59,75 @@ const ListTokens: React.FC<IProps> = ({ chainId }) => {
   }
 
   return (
-    <Row direction="column" align="end">
-      <Button
-        type="link"
-        onClick={() => addSttToWallet()}
-        style={{ fontSize: 9, cursor: 'pointer' }}
-      >
-        <Typography>
-          Add STT
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
-            <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
-          </svg>
-        </Typography>
-      </Button>
-      <Button
-        type="link"
-        onClick={() => addSttsToWallet()}
-        style={{ fontSize: 9, cursor: 'pointer' }}
-      >
-        <Typography>
-          Add STTS
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
-            <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
-          </svg>
-        </Typography>
-      </Button>
+    <Row
+      direction="column"
+      gutterWidth={0}
+      style={{ fontSize: 10, width: '100%' }}
+    >
+      <Col xs={11} style={{ margin: 'auto' }}>
+        <Row justify="between">
+          <Link
+            onClick={() =>
+              account?.length > 10
+                ? setAccount(tooShorter(address))
+                : setAccount(address!)
+            }
+          >
+            <Paragraph>
+              <LeftRetangle />
+              {account}
+              {chainId === 97 && '(TestNet)'}
+            </Paragraph>
+          </Link>
+
+          <Link onClick={() => addSttToWallet()}>
+            <Paragraph>
+              Add STT
+              <RightRetangle />
+            </Paragraph>
+          </Link>
+        </Row>
+      </Col>
+      <Col xs={11} style={{ margin: 'auto' }}>
+        <Row justify="between">
+          <Link
+            href={'https://bscscan.com/address/' + bank.address[56]}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Paragraph>
+              <LeftRetangle />
+              Smart World
+            </Paragraph>
+          </Link>
+          <Link onClick={() => addSttsToWallet()}>
+            <Paragraph>
+              Add STTS
+              <RightRetangle />
+            </Paragraph>
+          </Link>
+        </Row>
+      </Col>
     </Row>
   )
 }
 const mapStateToProps = (state: AppState) => {
+  const { address } = state.account
   const { chainId } = state.wallet
   return {
     chainId,
+    address,
   }
 }
-export default connect(mapStateToProps)(ListTokens)
+export default connect(mapStateToProps)(SmartWorldAddress)
+
+const LeftRetangle = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
+    <path d="M 0.25 0.5 L 1.5 1.25 L 0.25 2 L 0.25 0.5" fill={Colors.green} />
+  </svg>
+)
+const RightRetangle = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
+    <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
+  </svg>
+)

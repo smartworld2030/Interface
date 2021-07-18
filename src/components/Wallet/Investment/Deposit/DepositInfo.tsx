@@ -8,7 +8,6 @@ import { DepositButton } from '../../../Layout/svgs/DepositButton'
 import { connect } from 'react-redux'
 import { tokenPrices } from '../../../../_actions/bank.actions'
 import { investmentDeposit } from '../../../../_actions/invest.actions'
-import { formatToString } from '../../../../_helpers/api'
 
 interface IProps {
   token: string
@@ -31,8 +30,8 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
 }) => {
   const depositHandler = () => {
     if (!loading && !confirmed) {
-      console.log(formatToString(value, token))
-      investmentDeposit(token, formatToString(value, token))
+      console.log(token, value)
+      investmentDeposit(token, value)
     }
   }
 

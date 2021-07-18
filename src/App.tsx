@@ -39,7 +39,7 @@ class App extends Component<AppProps, AppStates> {
   }
 
   componentDidMount() {
-    console.log('initialisation')
+    console.log('initialization')
     this.props.init()
     window.addEventListener('resize', this.updateDimensions)
     this.setState({

@@ -4,6 +4,7 @@ import Colors from '../../Theme/Colors'
 interface HeadCircleProps {
   positionX: number
   positionY: number
+  textPos: number
   size: number
   text: string
   link: string
@@ -21,6 +22,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
   text,
   link,
   icon,
+  textPos,
 }) => {
   return (
     <g onClick={onClick} filter={active ? undefined : 'url(#greyscale)'}>
@@ -31,12 +33,12 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           r={size}
           stroke={active ? Colors.text : Colors.secondText}
           strokeWidth="1"
+          filter={active ? 'url(#dropshadow)' : undefined}
         />
         {icon}
         <text
-          filter="url(#dropshadow)"
           x={positionX}
-          y={positionY - size}
+          y={textPos}
           textAnchor="middle"
           alignmentBaseline="central"
           fontSize={size * 0.55}

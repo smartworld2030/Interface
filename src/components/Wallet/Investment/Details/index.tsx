@@ -67,10 +67,12 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
     >
       {done ? (
         <QRCode
+          size={150}
           value={link}
           bgColor={Colors.mainBackground}
           fgColor="white"
           onClick={() => setDone(false)}
+          style={{ position: 'relative' }}
         />
       ) : (
         <>

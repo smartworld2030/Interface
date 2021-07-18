@@ -6,6 +6,7 @@ import {
   WALLET_WAITING_MESSAGE,
   ONBOARDING_REQUEST,
   CHAIN_CHANGE_REQUEST,
+  CHAIN_CHANGE_SUCCESS,
   CHAIN_CHANGE_FAILURE,
   ContractObject,
   PriceContract,
@@ -196,6 +197,13 @@ export const changeToMain = () => (dispatch: Dispatch<AppActions>) => {
           blockExplorerUrls: ['https://bscscan.com'],
         },
       ],
+    })
+    .then((id) => {
+      console.log(id)
+      dispatch({
+        type: CHAIN_CHANGE_SUCCESS,
+        payload: { chainId: id },
+      })
     })
     .catch((error) => {
       errorHandler(error.message, WALLET_FAILURE)
