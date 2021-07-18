@@ -3,6 +3,7 @@ import { formatEther } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { roundDecimalsString, truncate } from '../../_helpers/api'
 import Marquee from 'react-fast-marquee'
+import axios from 'axios'
 
 interface PriceFeedProps {}
 
@@ -19,12 +20,12 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
         total: 0,
         balance: [{}],
       }
-    await fetch(
-      `https://api.nomics.com/v1/currencies/ticker?key=${process.env.REACT_APP_NOMICS_API}&ids=BTC,BNB&interval=1h`
-    )
-      .then((response) => response.json())
+    await axios
+      .get(
+        `https://api.nomics.com/v1/currencies/ticker?key=${process.env.REACT_APP_NOMICS_API}&ids=BTC,BNB&interval=1h`
+      )
       .then(
-        (data) =>
+        ({ data }) =>
           (apiPrices = data.reduce(
             (items, item) => ({
               ...items,
@@ -38,27 +39,27 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
           ))
       )
       .then(() =>
-        fetch(
-          `https://api.pancakeswap.info/api/v2/tokens/0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec`
-        )
-          .then((res) => res.json())
+        axios
+          .get(
+            `https://api.pancakeswap.info/api/v2/tokens/0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec`
+          )
           .then(
             ({ data }) =>
               (apiPrices = {
                 ...apiPrices,
                 STTS: {
-                  token: data.symbol,
-                  price: truncate(data.price, 2),
+                  token: data.data.symbol,
+                  price: truncate(data.data.price, 2),
                 },
               })
           )
       )
       .then(() =>
-        fetch(
-          `https://api.bscscan.com/api?module=account&action=balance&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
-        )
-          .then((res) => res.json())
-          .then((data) => {
+        axios
+          .get(
+            `https://api.bscscan.com/api?module=account&action=balance&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
+          )
+          .then(({ data }) => {
             const balance = truncate(formatEther(data.result), 2)
             const price = Number(balance) * Number(apiPrices.BNB.price)
             bank.total = bank.total + price
@@ -73,11 +74,11 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
           })
       )
       .then(() =>
-        fetch(
-          `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
-        )
-          .then((res) => res.json())
-          .then((data) => {
+        axios
+          .get(
+            `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
+          )
+          .then(({ data }) => {
             const balance = truncate(formatEther(data.result), 2)
             const price = Number(balance) * Number(apiPrices.BTC.price)
             bank.total = bank.total + price
@@ -92,11 +93,11 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
           })
       )
       .then(() =>
-        fetch(
-          `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
-        )
-          .then((res) => res.json())
-          .then((data) => {
+        axios
+          .get(
+            `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
+          )
+          .then(({ data }) => {
             const balance = truncate(roundDecimalsString(data.result, 8), 2)
             const price = Number(balance) * Number(apiPrices.STTS.price)
             bank.total = truncate(bank.total + price + '', 2)
