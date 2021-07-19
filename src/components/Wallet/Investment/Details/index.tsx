@@ -27,20 +27,14 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
   dollar,
 }) => {
   const [done, setDone] = useState(false)
-  const [loading, setLoading] = useState(false)
   const { pathname } = useLocation()
   const link = `${window.location.origin}${pathname}?ref=${address}`
 
   const copyHandler = () => {
-    if (!loading && !done) {
+    if (!done) {
       copy(link)
       successHandler('Reffral Link Copied!')
-      setLoading(true)
-      setDone(false)
-      setTimeout(() => {
-        setLoading(false)
-        setDone(true)
-      }, 500)
+      setDone(true)
     }
   }
   const calcSatoshi = () =>
@@ -106,9 +100,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
             <Row align="center" justify="around">
               <ReferralButton
                 width={90}
-                loading={loading}
                 onClick={copyHandler}
-                done={done}
                 disable={account.satoshi === 0}
               />
             </Row>

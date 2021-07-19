@@ -67,10 +67,11 @@ text {
 }
 
 .coin-flip {
-  animation-name: coin-highlight-flip;
-  animation-duration: 5s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease;
+  animation: coin-highlight-flip 5s infinite ease;
+}
+
+.coin-flip-loading {
+  animation: coin-highlight-flip-loading 1.5s infinite linear;
 }
 
 .doneSplash {
@@ -90,7 +91,6 @@ text {
   transform-box: fill-box;
   transform-origin: center;
   animation: scaling-2 2s alternate infinite ease;
-  animation-delay: 2s;
 }
 
 .ant-input-group-addon {
@@ -117,39 +117,40 @@ text {
   }
 }
 
+@keyframes coin-highlight-flip-loading {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
 @keyframes crescendo {
   0% {
     transform: scale(1);
   }
   100% {
-    transform: scale(1.7);
+    transform: scale(1.6);
   }
 }
 
 @keyframes scaling-1 {
   0% {
-    transform: scale(0.9);
+    transform: scale(1.2);
   }
   100% {
-    transform: scale(1.2);
+    transform: scale(1);
   }
 }
 
 @keyframes scaling-2 {
   0% {
-    transform: scale(0.7);
+    transform: scale(0.9);
   }
   100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes scaling-3 {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1.2);
+    transform: scale(1.3);
   }
 }
 

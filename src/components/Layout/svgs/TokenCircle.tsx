@@ -22,7 +22,7 @@ const TokenCircle: React.FC<CircleProps> = ({
   const r = half - 5
   const { opacity, transform } = useSpring({
     opacity: active ? 1 : 0,
-    transform: `rotatey(${active ? 180 : 0}deg) translateX(-40px)`,
+    transform: `rotatey(${active ? 180 : 0}deg) translateX(-35px)`,
     config: { mass: 5, tension: 500, friction: 80 },
   })
   return (
@@ -31,14 +31,14 @@ const TokenCircle: React.FC<CircleProps> = ({
         <a.g
           style={{
             opacity: opacity.to((o: any) => 1 - o),
-            transform: transform.to((t) => `translateX(40px) ${t}`),
+            transform: transform.to((t) => `translateX(35px) ${t}`),
           }}
         >
           <circle
             cx={half}
             cy={half}
             r={r}
-            stroke={active ? Colors.green : 'grey'}
+            stroke={active ? Colors.green : Colors.grey}
             strokeWidth="2.5"
             fill={Colors.background}
           />
@@ -61,7 +61,7 @@ const TokenCircle: React.FC<CircleProps> = ({
           style={{
             opacity: opacity,
             transform: transform.to(
-              (t) => `translateX(40px) rotatey(180deg) ${t}`
+              (t) => `translateX(35px) rotatey(180deg) ${t}`
             ),
           }}
         >
@@ -69,7 +69,7 @@ const TokenCircle: React.FC<CircleProps> = ({
             cx={half}
             cy={half}
             r={r}
-            stroke={active ? Colors.green : 'grey'}
+            stroke={active ? Colors.green : Colors.grey}
             strokeWidth="2.5"
             fill={Colors.background}
           />

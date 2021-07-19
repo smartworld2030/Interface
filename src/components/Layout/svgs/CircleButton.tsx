@@ -25,7 +25,7 @@ const CircleButton: React.FC<CircleButtonProps> = ({
         cy={y}
         r={r}
         className="neonShadow"
-        stroke={enabled ? Colors.green : 'grey'}
+        stroke={enabled ? Colors.green : Colors.grey}
         strokeWidth="1.5"
         fill={Colors.background}
         filter={enabled ? 'url(#ActiveDropShadow)' : 'url(#AnimatedDropShadow)'}
@@ -45,7 +45,7 @@ const CircleButton: React.FC<CircleButtonProps> = ({
         y1={y}
         x2={x + r}
         y2={y}
-        stroke={enabled ? Colors.green : 'grey'}
+        stroke={enabled ? Colors.green : Colors.grey}
       />
       <foreignObject
         x={x - r + 2}

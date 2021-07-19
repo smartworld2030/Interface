@@ -73,7 +73,10 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     >
       <Row justify="between" align="center">
         <Col xs={12}>
-          <Typography.Title style={{ textAlign: 'center' }} level={5}>
+          <Typography.Title
+            style={{ textAlign: 'center', margin: 0 }}
+            level={5}
+          >
             {Titles[pathname]}
           </Typography.Title>
         </Col>

@@ -22,7 +22,7 @@ export const DataPolygon: React.FC<DataCircleProps> = ({
       <polygon
         points={`${polyPos},150 ${polyPos - 45},220 ${polyPos + 45},220`}
         fill={Colors.background}
-        stroke={enabled ? 'green' : 'grey'}
+        stroke={enabled ? Colors.green : Colors.grey}
         filter={enabled ? 'url(#ActiveDropShadow)' : 'url(#AnimatedDropShadow)'}
       />
       <foreignObject

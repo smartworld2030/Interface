@@ -4,16 +4,12 @@ import Button from 'antd/lib/button'
 
 interface ReferralPolygonProps {
   width: number
-  done: boolean
-  loading: boolean
   disable?: boolean
   onClick: () => void
 }
 
 const ReferralButton: React.FC<ReferralPolygonProps> = ({
   width,
-  done,
-  loading,
   disable,
   onClick,
 }) => {
@@ -34,8 +30,8 @@ const ReferralButton: React.FC<ReferralPolygonProps> = ({
         viewBox="0 0 100 100"
         focusable="false"
         data-icon="check"
-        opacity={loading || done ? '1' : '0.5'}
-        fill={disable ? 'grey' : Colors.green}
+        opacity="0.5"
+        fill={disable ? Colors.grey : Colors.green}
       >
         <path className="ref-btn-scale-1" d="M50 17 69 47 31 47 50 17" />
         <path className="ref-btn-scale-2" d="M30 49 17 69 42 69 30 49" />
