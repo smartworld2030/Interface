@@ -1,0 +1,127 @@
+@notification-prefix-cls: ~'ant-notification';
+
+.@{notification-prefix-cls} {
+  .reset-component();
+
+  position: fixed;
+  z-index: @zindex-notification;
+  margin-right: @notification-margin-edge;
+
+  &-topLeft,
+  &-bottomLeft {
+    margin-right: 0;
+    margin-left: @notification-margin-edge;
+
+    .@{notification-prefix-cls}-fade-enter.@{notification-prefix-cls}-fade-enter-active,
+    .@{notification-prefix-cls}-fade-appear.@{notification-prefix-cls}-fade-appear-active {
+      animation-name: NotificationLeftFadeIn;
+    }
+  }
+
+  &-close-icon {
+    font-size: @font-size-base;
+    cursor: pointer;
+  }
+
+  &-hook-holder {
+    position: relative;
+  }
+
+  &-notice {
+    position: relative;
+    width: @notification-width;
+    max-width: ~'calc(100vw - @{notification-margin-edge} * 2)';
+    margin-bottom: 8px;
+    margin-left: auto;
+    padding: 10px 10px;
+    overflow: hidden;
+    line-height: @line-height-base;
+    word-wrap: break-word;
+    background: @notification-bg;
+    border-radius: @border-radius-base;
+    box-shadow: @shadow-2;
+
+    .@{notification-prefix-cls}-topLeft &,
+    .@{notification-prefix-cls}-bottomLeft & {
+      margin-right: auto;
+      margin-left: 0;
+    }
+
+    &-message {
+      margin-bottom: 8px;
+      color: @heading-color;
+      font-size: @font-size-lg;
+      line-height: 24px;
+
+      // https://github.com/ant-design/ant-design/issues/5846#issuecomment-296244140
+      &-single-line-auto-margin {
+        display: block;
+        width: ~'calc(@{notification-width} - @{notification-padding-horizontal} * 2 - 24px - 48px - 100%)';
+        max-width: 4px;
+        background-color: transparent;
+        pointer-events: none;
+        &::before {
+          display: block;
+          content: '';
+        }
+      }
+    }
+
+    &-description {
+      font-size: @font-size-base;
+    }
+
+    &-closable &-message {
+      padding-right: 24px;
+    }
+
+    &-with-icon &-message {
+      margin-bottom: 0;
+      margin-left: 24px;
+      font-size: 12px;
+      line-height: 24px;
+    }
+
+    &-with-icon &-description {
+      margin-left: 32px;
+      font-size: @font-size-base;
+    }
+
+    // Icon & color style in different selector level
+    // https://github.com/ant-design/ant-design/issues/16503
+    // https://github.com/ant-design/ant-design/issues/15512
+    &-icon {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    &-close {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      color: @text-color-secondary;
+      outline: none;
+      background-color: rgba(256, 256, 256, 0.1);
+      width: 20px;
+      text-align: center;
+      border-radius: 2px;
+      &:hover {
+        & when (@theme = dark) {
+          color: fade(@white, 85%);
+        }
+        & when not (@theme = dark) {
+          color: shade(@text-color-secondary, 40%);
+        }
+      }
+    }
+
+    &-btn {
+      float: right;
+      margin-top: 8px;
+      width: 100%;
+    }
+  }
+}

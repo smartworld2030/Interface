@@ -72,6 +72,7 @@ export const investmentDeposit = (token: string, value: number) => async (
 
   const requestDeposit = async () => {
     const strValue = (value * 10 ** info.decimals[token]).toFixed().toString()
+    console.log(strValue, info.decimals[token])
     if (accountInfo.id > 0) {
       if (token === 'STTS')
         dispatch(requestInvest('updateStts', [strValue]) as any)

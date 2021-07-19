@@ -8,10 +8,10 @@ import { useLocation } from 'react-router-dom'
 import { investInformation } from '../../../../_actions/invest.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
-import { notification } from 'antd'
 import copy from 'copy-to-clipboard'
 import QRCode from 'react-qr-code'
 import Colors from '../../../../Theme/Colors'
+import { successHandler } from '../../../../_helpers/alert'
 
 interface IProps {}
 
@@ -34,12 +34,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
   const copyHandler = () => {
     if (!loading && !done) {
       copy(link)
-      notification.success({
-        message: 'Reffral Link Copied!',
-        placement: 'bottomRight',
-        duration: 2,
-        closeIcon: <div></div>,
-      })
+      successHandler('Reffral Link Copied!')
       setLoading(true)
       setDone(false)
       setTimeout(() => {

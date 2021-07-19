@@ -1,4 +1,5 @@
 @import '~antd/dist/antd.less';
+
 body {
   overflow-x: hidden;
 }
@@ -64,18 +65,34 @@ text {
   filter: drop-shadow(0 0 2px rgb(24, 154, 93));
   opacity: 1;
 }
-.loadingDeposit {
-  stroke-dasharray: 250;
-  stroke-dashoffset: 250;
-  animation: svg-loading-base 1s ease infinite;
+
+.coin-flip {
+  animation-name: coin-highlight-flip;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
 }
 
 .doneSplash {
   transform: scale(1);
   transform-box: fill-box;
   transform-origin: center;
-  animation: crescendo 0.5s alternate infinite ease-in;
+  animation: crescendo 2s alternate infinite ease;
 }
+
+.ref-btn-scale-1 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: scaling-1 2s alternate infinite ease;
+}
+
+.ref-btn-scale-2 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: scaling-2 2s alternate infinite ease;
+  animation-delay: 2s;
+}
+
 .ant-input-group-addon {
   user-select: none;
   cursor: pointer;
@@ -86,12 +103,53 @@ text {
   padding-left: 8px;
 }
 
+@keyframes coin-highlight-flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  40% {
+    transform: rotateY(360deg);
+  }
+
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+
 @keyframes crescendo {
   0% {
     transform: scale(1);
   }
   100% {
-    transform: scale(1.8);
+    transform: scale(1.7);
+  }
+}
+
+@keyframes scaling-1 {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes scaling-2 {
+  0% {
+    transform: scale(0.7);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scaling-3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.2);
   }
 }
 
@@ -132,3 +190,4 @@ input[type='number'] {
 ::-webkit-scrollbar-thumb:hover {
   background: #2d3e53;
 }
+@import './notification.less';

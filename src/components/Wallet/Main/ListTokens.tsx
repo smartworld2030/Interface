@@ -74,7 +74,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
             }
           >
             <Paragraph>
-              <LeftRetangle />
+              <LeftEmptyRetangle color={account ? Colors.green : 'white'} />
               {account}
               {chainId === 97 && '(TestNet)'}
             </Paragraph>
@@ -83,7 +83,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
           <Link onClick={() => addSttToWallet()}>
             <Paragraph>
               Add STT
-              <RightRetangle />
+              <RightEmptyRetangle />
             </Paragraph>
           </Link>
         </Row>
@@ -103,7 +103,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
           <Link onClick={() => addSttsToWallet()}>
             <Paragraph>
               Add STTS
-              <RightRetangle />
+              <RightEmptyRetangle />
             </Paragraph>
           </Link>
         </Row>
@@ -126,8 +126,17 @@ const LeftRetangle = () => (
     <path d="M 0.25 0.5 L 1.5 1.25 L 0.25 2 L 0.25 0.5" fill={Colors.green} />
   </svg>
 )
-const RightRetangle = () => (
+const LeftEmptyRetangle = ({ color }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
-    <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" fill={Colors.green} />
+    <path
+      d="M 0.25 0.5 L 1.5 1.25 L 0.25 2 L 0.25 0.5"
+      stroke={color}
+      strokeWidth="0.1"
+    />
+  </svg>
+)
+const RightEmptyRetangle = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
+    <path d="M1.75.5 .5 1.25 1.75 2 1.75.5" stroke="white" strokeWidth="0.1" />
   </svg>
 )

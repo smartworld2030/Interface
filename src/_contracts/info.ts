@@ -19,6 +19,7 @@ const info = {
     STT: 8,
     STTS: 8,
     BTCB: 18,
+    BNB: 18,
   },
   56: {
     STT: '0xbBe476b50D857BF41bBd1EB02F777cb9084C1564',

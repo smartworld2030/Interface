@@ -54,8 +54,9 @@ export const snackBarMaker = (
     txLink = `${url}/tx/${link}`
     btn = (
       <Button
-        type="text"
+        type="primary"
         size="large"
+        style={{ width: '100%' }}
         onClick={() => window.open(txLink, '_blank')}
       >
         {shorter(link)}
@@ -65,7 +66,7 @@ export const snackBarMaker = (
 
   notification[variant]({
     message,
-    placement: 'bottomRight',
+    placement: 'topRight',
     duration: variant === 'success' ? 5 : 10,
     btn,
   })
