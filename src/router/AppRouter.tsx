@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
@@ -24,9 +24,6 @@ type AppRouterProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
 
-const delay = 60
-let timer
-
 const Titles = {
   '/invest': 'INVESTMENT',
   '/info': 'INFORMATION',
@@ -37,10 +34,8 @@ const Titles = {
 
 export const AppRouter: React.FC<AppRouterProps> = ({
   isMobile,
-  address,
   height,
   width,
-  accountTokenBalances,
 }) => {
   const location = useLocation()
   const { pathname } = location
@@ -50,18 +45,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
   })
-
-  useEffect(() => {
-    clearInterval(timer)
-    if (address) {
-      timer = setInterval(() => {
-        accountTokenBalances(address, ['STT', 'STTS', 'BTCB'], false)
-      }, delay * 1000)
-    }
-    return () => {
-      clearInterval(timer)
-    }
-  }, [address, accountTokenBalances])
 
   return (
     <Container

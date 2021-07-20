@@ -67,11 +67,16 @@ text {
 }
 
 .coin-flip {
-  animation: coin-highlight-flip 5s infinite ease;
+  animation-name: coin-highlight-flip;
+  animation-duration: 5s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  transform-origin: center;
 }
 
 .coin-flip-loading {
-  animation: coin-highlight-flip-loading 1.5s infinite linear;
+  transform-origin: center;
+  animation: coin-highlight-flip-loading 1.5s alternate linear infinite;
 }
 
 .doneSplash {
@@ -119,11 +124,15 @@ text {
 
 @keyframes coin-highlight-flip-loading {
   0% {
-    transform: rotateY(0deg);
+    transform: rotateY(0deg) scale(1);
   }
 
   100% {
-    transform: rotateY(360deg);
+    transform: rotateY(360deg) scale(1.6);
+  }
+
+  0% {
+    transform: rotateY(0deg) scale(1);
   }
 }
 
