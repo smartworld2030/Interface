@@ -11,13 +11,27 @@ interface IProps {
 
 type SwapProps = IProps & ReturnType<typeof mapStateToProps>
 
-const Swap: React.FC<SwapProps> = ({ isMobile }) => {
+const Swap: React.FC<SwapProps> = ({ isMobile, tokens }) => {
   return (
     <Row
       justify="around"
       style={{ minHeight: isMobile ? 750 : 300 }}
       direction={isMobile ? 'column' : 'row'}
     >
+      <Col xs={12}>
+        <Row justify="around">
+          {Object.keys(tokens)
+            .reverse()
+            .map(
+              (token) =>
+                token !== 'BTCB' && (
+                  <p key={token}>
+                    {token}: {tokens[token]}
+                  </p>
+                )
+            )}
+        </Row>
+      </Col>
       <Col xs={12} md={4}>
         <BnbSwap />
       </Col>

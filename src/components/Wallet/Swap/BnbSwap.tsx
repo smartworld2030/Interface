@@ -165,7 +165,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
     <Row
       direction="column"
       justify="around"
-      style={{ minHeight: 300 }}
+      style={{ minHeight: 270 }}
       gutterWidth={4}
     >
       {inputs.map((token, index) => (
