@@ -1,8 +1,8 @@
 export const messages = {
   available:
-    '🦊 Please click Connect button for connection to Binance Smart Chain using Metamask!',
+    '🦊 Please click Connect button for connection to Binance Smart Chain using your wallet!',
   notAvailable: '🦊 Please install Metamask into your browser: ',
-  itsMobile: '🦊 Please use Metamask App!',
+  itsMobile: '🦊 Please use Metamask/TrustWallet App!',
   loading: 'Loading...',
 }
 

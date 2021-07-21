@@ -47,7 +47,7 @@ export const initialization = () => (
 ) => {
   dispatch({ type: WALLET_REQUEST })
   if (!getState().wallet.active) {
-    if (ethereum && ethereum.isMetaMask) {
+    if (ethereum) {
       provider = new providers.Web3Provider(ethereum, 'any')
       provider.send('eth_requestAccounts', [])
       signer = provider.getSigner()
@@ -126,7 +126,7 @@ export const initialization = () => (
           code: 401,
         },
       })
-      const msg = 'MetaMask Is not Available!'
+      const msg = 'Wallet Is not Available!'
       errorHandler(msg, WALLET_WAITING_MESSAGE)
       dispatch({
         type: WALLET_WAITING_MESSAGE,
@@ -157,7 +157,7 @@ export const initialization = () => (
         })
       }, 1000)
     } else {
-      const msg = 'Please unlock your MetaMask!'
+      const msg = 'Please unlock your Wallet!'
       warningHandler(msg)
       dispatch({
         type: WALLET_WAITING_MESSAGE,
@@ -209,7 +209,7 @@ export const changeToMain = () => (dispatch: Dispatch<AppActions>) => {
       errorHandler(error.message, WALLET_FAILURE)
       dispatch({
         type: WALLET_FAILURE,
-        error: { msg: 'MetaMask Is not Available!', code: 401 },
+        error: { msg: 'Wallet Is not Available!', code: 401 },
       })
     })
 }

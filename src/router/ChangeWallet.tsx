@@ -27,20 +27,17 @@ const ChangeWallet: React.FC<IChangeWallet> = ({
       style={{ textAlign: 'center', paddingTop: 50 }}
     >
       <Typography style={{ padding: 50 }}>{error.msg}</Typography>
-      {error.code !== 200 && (
-        // error.code === 401 && (
-        // )}
-        // {error.code === 301 && (
-        <>
-          <Button type="primary" onClick={() => startOnBoarding()}>
-            Install MetaMask
+      {error.code === 401 && (
+        <Button type="primary" onClick={() => startOnBoarding()}>
+          Install MetaMask
+        </Button>
+      )}
+      {error.code === 301 && (
+        <StyledDiv>
+          <Button type="primary" onClick={() => changeToMain()}>
+            Connect
           </Button>
-          <StyledDiv>
-            <Button type="primary" onClick={() => changeToMain()}>
-              Connect
-            </Button>
-          </StyledDiv>
-        </>
+        </StyledDiv>
       )}
     </Col>
   </RowBody>
