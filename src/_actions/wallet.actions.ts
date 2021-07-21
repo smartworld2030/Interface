@@ -110,13 +110,13 @@ export const initialization = () => (
             },
           })
         }
-        ethereum?._metamask.isUnlocked().then((isUnlocked: boolean) => {
-          if (isUnlocked) {
-            signer.getAddress().then((address) => accountHandler(address))
-          } else {
-            accountHandler()
-          }
-        })
+        accountHandler()
+        // ethereum?._metamask.isUnlocked().then((isUnlocked: boolean) => {
+        //   if (isUnlocked) {
+        //     signer.getAddress().then((address) => accountHandler(address))
+        //   } else {
+        //   }
+        // })
       })
     } else {
       dispatch({
