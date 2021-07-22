@@ -33,7 +33,6 @@ const AccountAddress: React.FC<IProps> = ({ address, chainId }) => {
           />
         </svg>
         {account}
-        {chainId === 97 && '(TestNet)'}
       </Typography>
     </div>
   )

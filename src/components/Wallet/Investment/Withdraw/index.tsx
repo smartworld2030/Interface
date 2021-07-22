@@ -45,14 +45,14 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           </clipPath>
         </defs>
         <circle cx={half} cy={half} r={r} fill={Colors.background} />
-        <circle cx={half} cy={half} r={r - 14} fill="white" />
-        <circle
+        {/* <circle cx={half} cy={half} r={r - 14} fill="white" /> */}
+        {/* <circle
           cx={half}
           cy={half}
           r={r}
           fill={Colors.background}
           clipPath="url(#cut-off-middle)"
-        />
+        /> */}
         <circle
           cx={half}
           cy={half}
@@ -87,16 +87,18 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           textAnchor="middle"
           dominantBaseline="middle"
           x={half}
-          y={width * 0.16}
-          fontSize="8"
+          y={width * 0.17}
+          fontSize="11"
+          fill="white"
         >
           REWARD
         </text>
         <text
           textAnchor="middle"
           x={half}
-          y={width * 0.25}
-          fontSize={width / 18}
+          y={width * 0.26}
+          fontSize="14"
+          fill="white"
         >
           <tspan>{roundDecimals(formaterNumber(hourly, 'STT'), 2)}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
@@ -105,8 +107,9 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           textAnchor="middle"
           dominantBaseline="middle"
           x={half}
-          y={width * 0.78}
-          fontSize={width / 18}
+          y={width * 0.77}
+          fontSize="14"
+          fill="white"
         >
           <tspan>{roundDecimals(formaterNumber(referral, 'STT'), 2)}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
@@ -116,7 +119,8 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           dominantBaseline="middle"
           x={half}
           y={width * 0.85}
-          fontSize="8"
+          fontSize="11"
+          fill="white"
         >
           REFERRAL
         </text>

@@ -33,9 +33,8 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           cx={positionX}
           cy={positionY - size}
           r={size}
-          stroke={active ? Colors.text : Colors.secondText}
-          strokeWidth="1"
-          filter={active ? 'url(#dropshadow)' : undefined}
+          stroke={active ? Colors.green : Colors.secondText}
+          strokeWidth="2.5"
         />
         {icon}
         <text
@@ -49,23 +48,24 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
         >
           {text}
         </text>
-        <svg x={positionX - 6} y={textPos - 25}>
-          <path
-            d="M 12 0 L 6 10 L 0 0 L 12 0"
-            fill={active ? Colors.green : Colors.grey}
-            filter={active ? 'url(#dropshadow)' : undefined}
-          />
-          <text
-            x={6}
-            y={4}
-            textAnchor="middle"
-            alignmentBaseline="central"
-            fontSize="8"
-            fill={active ? Colors.background : 'white'}
-          >
-            {number}
-          </text>
-        </svg>
+        {number && (
+          <svg x={positionX - 6} y={textPos - 27}>
+            <path
+              d="M 12 0 L 6 10 L 0 0 L 12 0"
+              fill={active ? Colors.green : Colors.grey}
+            />
+            <text
+              x={6}
+              y={4}
+              textAnchor="middle"
+              alignmentBaseline="central"
+              fontSize="8"
+              fill={active ? Colors.background : 'white'}
+            >
+              {number}
+            </text>
+          </svg>
+        )}
       </Link>
     </g>
   )

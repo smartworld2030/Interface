@@ -76,7 +76,6 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
             <Paragraph>
               <LeftEmptyRetangle color={account ? Colors.green : 'white'} />
               {account}
-              {chainId === 97 && '(TestNet)'}
             </Paragraph>
           </Link>
 

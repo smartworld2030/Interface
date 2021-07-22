@@ -55,31 +55,23 @@ export const CircleInput: React.FC<CircleInputProps> = ({
           a 159.155 159.155 0 0 1 0 318.31
           a 159.155 159.155 0 0 1 0 -318.31"
         />
-        <path
-          d="M 180 90 L 290 90 C 230 20 130 20 70 90 L 180 90"
-          fill="white"
-        />
         <text
           x="175"
-          y="70"
+          y="80"
           fontSize="25"
           textAnchor="middle"
           dominantBaseline="middle"
+          fill="white"
         >
           {token}
         </text>
       </g>
       <g onClick={() => onMax()}>
-        <path
-          d="M 180 270 L 290 270 C 230 340 130 340 70 270 L 180 270"
-          fill={Colors.green}
-          strokeWidth="2"
-          stroke="white"
-        />
         <text
           x="175"
-          y="295"
-          fontSize="25"
+          y="290"
+          fontSize="30"
+          fill={Colors.green}
           textAnchor="middle"
           dominantBaseline="middle"
         >

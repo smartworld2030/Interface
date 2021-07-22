@@ -34,7 +34,7 @@ export const DepositButton: React.FC<DepositButtonProps> = ({
         viewBox="0 0 100 100"
         focusable="false"
         data-icon="check"
-        opacity={loading || done ? '1' : disable ? '1' : '0.5'}
+        opacity={loading || done ? '1' : disable ? '1' : '0.6'}
         fill={disable ? Colors.grey : Colors.green}
       >
         {done ? (

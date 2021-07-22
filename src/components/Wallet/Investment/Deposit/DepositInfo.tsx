@@ -100,6 +100,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
       <Col xs={12} width="100%">
         <Row align="center" justify="around" direction="column">
           {confirmed && <p style={{ color: Colors.green }}>Registered!</p>}
+          {loading && <p style={{ color: Colors.green }}>Waiting...</p>}
           <DepositButton
             width={90}
             onClick={depositHandler}
