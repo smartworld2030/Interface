@@ -16,6 +16,7 @@ import { formaterNumber, bytesFormater } from '../_helpers/api'
 import { AppActions, AppState } from '../_types'
 import { constants, Transaction, utils } from 'ethers'
 import info from '../_contracts/info'
+import { accountTokenBalances } from './account.actions'
 
 export const removeError = () => (dispatch: Dispatch<AppActions>) =>
   dispatch({ type: INVEST_MESSAGES, payload: { error: '' } })
@@ -45,6 +46,7 @@ export const requestInvest = (method: any, args: any) => (
           }, 5000)
           successHandler('Transaction Confirmed', null, transaction.hash)
           dispatch(investInformation() as any)
+          dispatch(accountTokenBalances(['BTCB', 'STT', 'STTS']) as any)
         })
       }
     })

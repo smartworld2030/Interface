@@ -14,6 +14,7 @@ const balances = { BTCB: 0, STT: 0, STTS: 0, BNB: 0 }
 const initialState: DefaultUserState = {
   loggedIn: false,
   loading: false,
+  address: '',
   tokens: balances,
   theme: 'dark',
 }

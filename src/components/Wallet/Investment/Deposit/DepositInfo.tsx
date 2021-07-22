@@ -8,6 +8,7 @@ import { DepositButton } from '../../../Layout/svgs/DepositButton'
 import { connect } from 'react-redux'
 import { tokenPrices } from '../../../../_actions/bank.actions'
 import { investmentDeposit } from '../../../../_actions/invest.actions'
+import Colors from '../../../../Theme/Colors'
 
 interface IProps {
   token: string
@@ -97,7 +98,8 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
         </Row>
       </Col>
       <Col xs={12} width="100%">
-        <Row align="center" justify="around">
+        <Row align="center" justify="around" direction="column">
+          {confirmed && <p style={{ color: Colors.green }}>Registered!</p>}
           <DepositButton
             width={90}
             onClick={depositHandler}

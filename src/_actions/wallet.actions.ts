@@ -145,20 +145,18 @@ export const initialization = () => (
             payload: { address },
           })
           dispatch(
-            accountTokenBalances(address, ['STT', 'STTS', 'BTCB']) as any
+            accountTokenBalances(['STT', 'STTS', 'BTCB'], address) as any
           )
           successHandler(`Account Changed ${tooShorter(address)}`)
         })
       }, 1000)
     } else {
-      const msg = 'Please unlock your Wallet!'
-      warningHandler(msg)
       dispatch({
         type: WALLET_WAITING_MESSAGE,
         payload: {
           error: {
             code: 301,
-            msg,
+            msg: 'Loading...',
           },
         },
       })

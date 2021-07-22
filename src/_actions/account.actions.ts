@@ -1,5 +1,5 @@
 import { Dispatch } from 'react'
-import { AppActions } from '../_types'
+import { AppActions, AppState } from '../_types'
 import { errorHandler } from '../_helpers/alert'
 import { formaterNumber } from '../_helpers/api'
 import {
@@ -12,17 +12,17 @@ import { ContractNames } from '../_types/wallet.types'
 import { provider, tokenContract } from './wallet.actions'
 
 export const accountTokenBalances = (
-  address: string,
   tokens: ContractNames[],
-  loading: boolean = true
-) => (dispatch: Dispatch<AppActions>) => {
+  address?: string
+) => (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
   if (tokenContract) {
-    loading && dispatch({ type: ACCOUNT_BALANCE_REQUEST })
+    const account = address ? address : getState().account.address
+    dispatch({ type: ACCOUNT_BALANCE_REQUEST })
     Promise.all(
       tokens.map((token) =>
         new Promise((resolve) =>
           tokenContract[token]
-            .balanceOf(address)
+            .balanceOf(account)
             .then((res) =>
               resolve({ token, balance: formaterNumber(res, token) })
             )
@@ -30,7 +30,7 @@ export const accountTokenBalances = (
       )
     )
       .then((data: any) => {
-        provider.getBalance(address).then((res) => {
+        provider.getBalance(account).then((res) => {
           let error
           let balance = formaterNumber(res, 'BNB')
           if (Number(balance) <= 0.001) {

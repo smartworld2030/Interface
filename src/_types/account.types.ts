@@ -18,7 +18,7 @@ export const CHANGE_THEME = 'CHANGE_THEME'
 export interface DefaultUserState {
   loggedIn: boolean
   loading: boolean
-  address?: string
+  address: string
   tokens: TokenBalances
   error?: string
   theme: 'light' | 'dark'

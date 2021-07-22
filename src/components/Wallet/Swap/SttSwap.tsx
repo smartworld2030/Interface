@@ -124,7 +124,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
     <Row
       direction="column"
       justify="around"
-      style={{ minHeight: 270 }}
+      style={{ minHeight: 240 }}
       gutterWidth={4}
     >
       <Col xs={12}>

@@ -165,7 +165,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
     <Row
       direction="column"
       justify="around"
-      style={{ minHeight: 270 }}
+      style={{ minHeight: 240 }}
       gutterWidth={4}
     >
       {inputs.map((token, index) => (
@@ -179,13 +179,15 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
               value={index ? input2.value : input1.value}
               suffix={token.name}
               addonAfter={
-                <span
-                  style={{ color: Colors.green }}
-                  onClick={() => maxHandler(token.name, index)}
-                  className="input-max-button"
-                >
-                  MAX
-                </span>
+                !index && (
+                  <span
+                    style={{ color: Colors.green }}
+                    onClick={() => maxHandler(token.name, index)}
+                    className="input-max-button"
+                  >
+                    MAX
+                  </span>
+                )
               }
             />
           </Col>

@@ -34,8 +34,8 @@ const ReferralButton: React.FC<ReferralPolygonProps> = ({
         fill={disable ? Colors.grey : Colors.green}
       >
         <path className="ref-btn-scale-1" d="M50 17 69 47 31 47 50 17" />
-        <path className="ref-btn-scale-2" d="M30 49 17 69 42 69 30 49" />
-        <path className="ref-btn-scale-2" d="M70 49 82 69 57 69 70 49" />
+        <path className="ref-btn-scale-2" d="M30 50 16 70 43 70 30 50" />
+        <path className="ref-btn-scale-3" d="M70 50 83 70 56 70 70 50" />
       </svg>
     </Button>
   )

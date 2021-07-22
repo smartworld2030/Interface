@@ -12,6 +12,7 @@ import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
 import { constants, Transaction } from 'ethers'
 import { bytesFormater, formaterNumber } from '../_helpers/api'
 import swap from '../_contracts/swap'
+import { accountTokenBalances } from './account.actions'
 
 export const requestSwap = (method: any, args: any) => async (
   dispatch: Dispatch<AppActions>,
@@ -42,6 +43,7 @@ export const requestSwap = (method: any, args: any) => async (
               })
             }, 5000)
             successHandler('Transaction Confirmed', null, transaction.hash)
+            dispatch(accountTokenBalances(['BTCB', 'STT', 'STTS']) as any)
           })
         }
       })

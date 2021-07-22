@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
           onClick={() => setActive(item.link)}
         />
       ))}
-      {/* <foreignObject width="100%" height="100%" y={height * 0.15}>
+      {/* <foreignObject width="100%" height="10%" y={height * 0.15}>
         <PriceFeed />
       </foreignObject> */}
     </StyledSvg>

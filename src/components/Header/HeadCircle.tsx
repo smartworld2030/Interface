@@ -6,6 +6,7 @@ interface HeadCircleProps {
   positionY: number
   textPos: number
   size: number
+  number: number
   text: string
   link: string
   onClick: () => void
@@ -17,6 +18,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
   positionX,
   positionY,
   size,
+  number,
   onClick,
   active,
   text,
@@ -47,6 +49,23 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
         >
           {text}
         </text>
+        <svg x={positionX - 6} y={textPos - 25}>
+          <path
+            d="M 12 0 L 6 10 L 0 0 L 12 0"
+            fill={active ? Colors.green : Colors.grey}
+            filter={active ? 'url(#dropshadow)' : undefined}
+          />
+          <text
+            x={6}
+            y={4}
+            textAnchor="middle"
+            alignmentBaseline="central"
+            fontSize="8"
+            fill={active ? Colors.background : 'white'}
+          >
+            {number}
+          </text>
+        </svg>
       </Link>
     </g>
   )
