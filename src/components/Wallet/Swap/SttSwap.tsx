@@ -9,7 +9,11 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../_types'
 import { swapContract } from '../../../_actions/wallet.actions'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { formatToString, truncate } from '../../../_helpers/api'
+import {
+  convertNumbers2English,
+  formatToString,
+  truncate,
+} from '../../../_helpers/api'
 import { BigNumber } from '@ethersproject/bignumber'
 import { requestSwap } from '../../../_actions/swap.actions'
 import Colors from '../../../Theme/Colors'
@@ -95,18 +99,20 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
   }
 
   const inputHandler = (value, index) => {
-    if (value) {
-      const val = value.includes('.') ? value : Number(value)
-      if (index) {
-        fetchInput2(val.toString())
+    value = convertNumbers2English(value)
+    if (value.length <= 18 && /^\d*\.?\d*$/.test(value))
+      if (value) {
+        const val = value.includes('.') ? value : Number(value)
+        if (index) {
+          fetchInput2(val.toString())
+        } else {
+          fetchInput1(val.toString())
+        }
       } else {
-        fetchInput1(val.toString())
+        setInput1({ value: '0', big: parseUnits('0') })
+        setInput2({ value: '0', big: parseUnits('0') })
+        setResult((prev) => ({ ...prev, allowed: '0', max: '0', min: '0' }))
       }
-    } else {
-      setInput1({ value: '0', big: parseUnits('0') })
-      setInput2({ value: '0', big: parseUnits('0') })
-      setResult((prev) => ({ ...prev, allowed: '0', max: '0', min: '0' }))
-    }
   }
 
   const maxHandler = (token, index) => {
@@ -130,8 +136,6 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
     >
       <Col xs={12}>
         <Input
-          type="number"
-          min={0}
           onChange={({ target }) => inputHandler(target.value, 0)}
           placeholder={tokens.STT.toString()}
           value={input1.value}
@@ -154,10 +158,6 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
       </Col>
       <Col xs={12}>
         <Input
-          type="number"
-          step={0.1}
-          min={0}
-          placeholder="0"
           onChange={({ target }) => inputHandler(target.value, 1)}
           value={input2.value}
           suffix="STTS"

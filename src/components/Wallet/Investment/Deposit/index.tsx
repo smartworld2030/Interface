@@ -5,7 +5,11 @@ import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { removeError } from '../../../../_actions/invest.actions'
 import { AppActions, AppState } from '../../../../_types'
-import { percentToValue, valueToPercent } from '../../../../_helpers/api'
+import {
+  convertNumbers2English,
+  percentToValue,
+  valueToPercent,
+} from '../../../../_helpers/api'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
 import TokenCircle from '../../../Layout/svgs/TokenCircle'
 import DepositInfo from './DepositInfo'
@@ -42,8 +46,11 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
 
   const inputHandler = (val: string) => {
     if (error) removeError()
-    const v = val.includes('.') ? val : Number(val)
-    setValue(v.toString())
+    val = convertNumbers2English(val)
+    if (val.length <= 20 && /^\d*\.?\d*$/.test(val)) {
+      const v = val.includes('.') ? val : Number(val)
+      setValue(v.toString())
+    }
   }
 
   return (

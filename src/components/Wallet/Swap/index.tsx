@@ -8,6 +8,7 @@ import BnbSwap from './BnbSwap'
 import SttSwap from './SttSwap'
 import { PriceValue } from './PriceValue'
 import { tokenPrices } from '../../../_actions/bank.actions'
+import Spin from 'antd/lib/spin'
 
 interface IProps {
   isMobile: boolean
@@ -22,6 +23,8 @@ const Swap: React.FC<SwapProps> = ({
   tokens,
   prices,
   dollar,
+  error,
+  waiting,
   tokenPrices,
 }) => {
   useEffect(() => {
@@ -37,49 +40,60 @@ const Swap: React.FC<SwapProps> = ({
     }
   }, [tokenPrices])
   return (
-    <Row
-      justify="around"
-      style={{ minHeight: isMobile ? 750 : 300 }}
-      direction={isMobile ? 'column' : 'row'}
+    <Spin
+      style={{
+        textAlign: 'center',
+        height: 150,
+      }}
+      spinning={waiting}
+      tip={error ? error : 'Loading...'}
     >
-      <Col xs={12}>
-        <Row justify="around">
-          {Object.keys(tokens)
-            .reverse()
-            .map(
-              (token) =>
-                token !== 'BTCB' && (
-                  <PriceValue
-                    token={token}
-                    prices={prices}
-                    value={tokens[token]}
-                    dollar={dollar}
-                    key={token}
-                  />
-                )
-            )}
-        </Row>
-      </Col>
-      <Col xs={12} md={4}>
-        <BnbSwap />
-      </Col>
-      <Col xs={12} md={4}>
-        <SttSwap />
-      </Col>
-    </Row>
+      <Row
+        justify="around"
+        style={{ minHeight: isMobile ? 750 : 300 }}
+        direction={isMobile ? 'column' : 'row'}
+      >
+        <Col xs={12}>
+          <Row justify="around">
+            {Object.keys(tokens)
+              .reverse()
+              .map(
+                (token) =>
+                  token !== 'BTCB' && (
+                    <PriceValue
+                      token={token}
+                      prices={prices}
+                      value={tokens[token]}
+                      dollar={dollar}
+                      key={token}
+                    />
+                  )
+              )}
+          </Row>
+        </Col>
+        <Col xs={12} md={4}>
+          <BnbSwap />
+        </Col>
+        <Col xs={12} md={4}>
+          <SttSwap />
+        </Col>
+      </Row>
+    </Spin>
   )
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { tokens, error, address } = state.account
+  const { tokens, address } = state.account
   const { prices, dollar } = state.bank
   const { chainId } = state.wallet
+  const { error, waiting } = state.swap
   return {
     chainId,
     address,
     tokens,
     dollar,
     prices,
+    waiting,
     error,
   }
 }

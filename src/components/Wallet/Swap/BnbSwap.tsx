@@ -8,7 +8,12 @@ import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../_types'
 import { swapContract } from '../../../_actions/wallet.actions'
-import { truncate, formaterNumber, formatToString } from '../../../_helpers/api'
+import {
+  truncate,
+  formaterNumber,
+  formatToString,
+  convertNumbers2English,
+} from '../../../_helpers/api'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { requestSwap } from '../../../_actions/swap.actions'
@@ -116,24 +121,26 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
   }
 
   const inputHandler = (value: string, index: number) => {
-    if (value && value !== '0') {
-      const val = value.includes('.') ? value : Number(value)
-      if (index) {
-        fetchInput2(val.toString())
+    value = convertNumbers2English(value)
+    if (value.length <= 20 && /^\d*\.?\d*$/.test(value))
+      if (value && value !== '0') {
+        const val = value.includes('.') ? value : Number(value)
+        if (index) {
+          fetchInput2(val.toString())
+        } else {
+          fetchInput1(val.toString())
+        }
       } else {
-        fetchInput1(val.toString())
+        setInput1({ value: '0', big: parseUnits('0') })
+        setInput2({ value: '0', big: parseUnits('0') })
+        setResult((prev) => ({
+          ...prev,
+          slippage: 0,
+          allowed: '0',
+          max: '0',
+          min: '0',
+        }))
       }
-    } else {
-      setInput1({ value: '0', big: parseUnits('0') })
-      setInput2({ value: '0', big: parseUnits('0') })
-      setResult((prev) => ({
-        ...prev,
-        slippage: 0,
-        allowed: '0',
-        max: '0',
-        min: '0',
-      }))
-    }
   }
 
   const maxHandler = (token, index) =>
@@ -170,11 +177,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
         <Fragment key={token.method}>
           <Col xs={12}>
             <Input
-              type="number"
-              step={0.001}
-              min={0}
               onChange={({ target }) => inputHandler(target.value, index)}
-              placeholder="0"
               value={index ? input2.value : input1.value}
               suffix={token.name}
               addonAfter={

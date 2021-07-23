@@ -2,11 +2,15 @@ import {
   SWAP_PRICE_REQUEST,
   SWAP_PRICE_SUCCESS,
   SWAP_PRICE_FAILURE,
+  SWAP_METHOD_REQUEST,
+  SWAP_METHOD_SUCCESS,
+  SWAP_METHOD_FAILURE,
 } from '../_types/swap.types'
 import { SwapActionTypes, DefaultSwapState } from '../_types/swap.types'
 
 const swapReducerDefaultState: DefaultSwapState = {
   loading: true,
+  waiting: false,
   error: 'Not Found',
   input: '',
   output: '',
@@ -20,6 +24,19 @@ export const swapReducer = (
   action: SwapActionTypes
 ): DefaultSwapState => {
   switch (action.type) {
+    case SWAP_METHOD_REQUEST:
+      return { ...state, waiting: true, error: 'Waiting...' }
+    case SWAP_METHOD_SUCCESS:
+      return {
+        ...state,
+        waiting: false,
+      }
+    case SWAP_METHOD_FAILURE:
+      return {
+        ...state,
+        // error: action.error,
+        waiting: false,
+      }
     case SWAP_PRICE_REQUEST:
       return { ...state, loading: true }
     case SWAP_PRICE_SUCCESS:

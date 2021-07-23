@@ -116,11 +116,6 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
           style={{
             borderColor: error ? Colors.red : '',
           }}
-          placeholder="0.00"
-          type="number"
-          size="large"
-          min={0}
-          step={token === 'STTS' ? 1 : 0.01}
           value={value}
           className="deposit-input"
           onChange={({ target }) => inputHandler(target.value)}

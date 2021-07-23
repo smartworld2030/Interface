@@ -7,6 +7,13 @@ export const { ethereum } = window
 
 export const onBoard = new MetaMaskOnboarding()
 
+export const convertNumbers2English = (string: string) =>
+  string
+    // @ts-ignore
+    .replace(/[\u0660-\u0669]/g, (c) => c.charCodeAt(0) - 0x0660)
+    // @ts-ignore
+    .replace(/[\u06f0-\u06f9]/g, (c) => c.charCodeAt(0) - 0x06f0)
+
 export const bytesFormater = (balance: any) => parseInt(balance._hex)
 
 export const formater = (balance: BigNumberish, token: string | number = 0) =>
