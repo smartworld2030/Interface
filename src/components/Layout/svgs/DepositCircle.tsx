@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 interface IProps {
   width: number
-  value: number
+  value: string
   token: string
   error?: string
   percent: number
@@ -121,9 +121,9 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
           size="large"
           min={0}
           step={token === 'STTS' ? 1 : 0.01}
-          value={value.toString()}
+          value={value}
           className="deposit-input"
-          onChange={inputHandler}
+          onChange={({ target }) => inputHandler(target.value)}
         />
       </Row>
       <CircleInput

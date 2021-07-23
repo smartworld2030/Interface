@@ -35,10 +35,12 @@ export const warningHandler = (err: any, type?: any, link?: string): void => {
 }
 
 const errorCompiler = (err: string | any) =>
-  typeof err === 'string'
-    ? err.replace(/<[^>]+>/g, '')
-    : typeof err === 'object'
-    ? err?.data?.message.split('::')[1]
+  err
+    ? typeof err === 'string'
+      ? err.replace(/<[^>]+>/g, '')
+      : typeof err === 'object'
+      ? err?.data?.message.split('::')[1]
+      : 'Message Not Found!'
     : 'Message Not Found!'
 
 export const snackBarMaker = (

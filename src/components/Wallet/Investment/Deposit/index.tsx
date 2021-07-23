@@ -28,25 +28,22 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
 }) => {
   const [token, setToken] = useState<string>('STTS')
   const [balance, setBalance] = useState(0)
-  const [value, setValue] = useState(0)
+  const [value, setValue] = useState('0')
 
   useEffect(() => {
-    const b = Number(tokens[token])
-    setBalance(b > 0 ? b : 0)
-    setValue(b > 0 ? b : 0)
+    setBalance(tokens[token])
+    setValue(tokens[token])
   }, [address, tokens, token])
 
   const percentHandler = (per: number) => {
     if (error) removeError()
-    setValue(percentToValue(balance, per))
+    setValue(percentToValue(balance, per).toString())
   }
 
-  const inputHandler = (e) => {
+  const inputHandler = (val: string) => {
     if (error) removeError()
-    const val = e.currentTarget?.valueAsNumber
-    if (val) {
-      setValue(val < 0 ? 0 : val)
-    } else setValue(0)
+    const v = val.includes('.') ? val : Number(val)
+    setValue(v.toString())
   }
 
   return (
@@ -75,14 +72,14 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
             width={isMobile ? 210 : 190}
             token={token}
             value={value}
-            percent={valueToPercent(value, balance)}
+            percent={valueToPercent(Number(value), balance)}
             inputHandler={inputHandler}
             percentHandler={percentHandler}
           />
         </Row>
       </Col>
       <Col md={6}>
-        <DepositInfo token={token} value={value} />
+        <DepositInfo token={token} value={Number(value)} />
       </Col>
     </Row>
   )

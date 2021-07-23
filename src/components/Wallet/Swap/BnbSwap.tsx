@@ -115,16 +115,17 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
     }
   }
 
-  const inputHandler = (value, index) => {
-    if (value && value !== '0')
+  const inputHandler = (value: string, index: number) => {
+    if (value && value !== '0') {
+      const val = value.includes('.') ? value : Number(value)
       if (index) {
-        fetchInput2(value)
+        fetchInput2(val.toString())
       } else {
-        fetchInput1(value)
+        fetchInput1(val.toString())
       }
-    else {
-      setInput1({ value: '', big: parseUnits('0') })
-      setInput2({ value: '', big: parseUnits('0') })
+    } else {
+      setInput1({ value: '0', big: parseUnits('0') })
+      setInput2({ value: '0', big: parseUnits('0') })
       setResult((prev) => ({
         ...prev,
         slippage: 0,
@@ -135,17 +136,14 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
     }
   }
 
-  const maxHandler = (token, index) => {
-    console.log(token, index)
+  const maxHandler = (token, index) =>
     inputHandler(truncate(formatToString(tokens[token]), 4), index)
-  }
 
   const tokenChanger = (token) => {
     setInputs((oldTokens) => [...oldTokens.slice(1), token])
   }
 
   const swapButtonHandler = () => {
-    console.log(result.token, input1.big)
     if (result.token === 'STTS') {
       requestSwap('safeBnbSwap', [
         '0',
@@ -174,6 +172,7 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
             <Input
               type="number"
               step={0.001}
+              min={0}
               onChange={({ target }) => inputHandler(target.value, index)}
               placeholder="0"
               value={index ? input2.value : input1.value}

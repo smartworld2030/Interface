@@ -95,15 +95,16 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
   }
 
   const inputHandler = (value, index) => {
-    if (value)
+    if (value) {
+      const val = value.includes('.') ? value : Number(value)
       if (index) {
-        fetchInput2(value)
+        fetchInput2(val.toString())
       } else {
-        fetchInput1(value)
+        fetchInput1(val.toString())
       }
-    else {
-      setInput1({ value: '', big: parseUnits('0') })
-      setInput2({ value: '', big: parseUnits('0') })
+    } else {
+      setInput1({ value: '0', big: parseUnits('0') })
+      setInput2({ value: '0', big: parseUnits('0') })
       setResult((prev) => ({ ...prev, allowed: '0', max: '0', min: '0' }))
     }
   }
@@ -130,8 +131,9 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
       <Col xs={12}>
         <Input
           type="number"
+          min={0}
           onChange={({ target }) => inputHandler(target.value, 0)}
-          placeholder="0"
+          placeholder={tokens.STT.toString()}
           value={input1.value}
           suffix="STT"
           addonAfter={
@@ -153,9 +155,10 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
       <Col xs={12}>
         <Input
           type="number"
-          step={0.01}
-          onChange={({ target }) => inputHandler(target.value, 1)}
+          step={0.1}
+          min={0}
           placeholder="0"
+          onChange={({ target }) => inputHandler(target.value, 1)}
           value={input2.value}
           suffix="STTS"
         />
