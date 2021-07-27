@@ -63,7 +63,7 @@ export const CircleInput: React.FC<CircleInputProps> = ({
           dominantBaseline="middle"
           fill="white"
         >
-          {token}
+          {token === 'BTCB' ? 'BTC' : token}
         </text>
       </g>
       <g onClick={() => onMax()}>

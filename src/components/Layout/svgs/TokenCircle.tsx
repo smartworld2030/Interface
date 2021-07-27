@@ -51,7 +51,7 @@ const TokenCircle: React.FC<CircleProps> = ({
             fill="white"
             fontSize="15"
           >
-            {token}
+            {token === 'BTCB' ? 'BTC' : token}
           </text>
           <text textAnchor="middle" x="50%" y="70%" fill="white" fontSize="9">
             {info}
@@ -81,7 +81,7 @@ const TokenCircle: React.FC<CircleProps> = ({
             dominantBaseline="middle"
             fontSize="15"
           >
-            {token}
+            {token === 'BTCB' ? 'BTC' : token}
           </text>
           <text textAnchor="middle" x="50%" y="70%" fill="white" fontSize="9">
             {info}

@@ -109,7 +109,7 @@ export const investmentDeposit = (token: string, value: number) => async (
     tokenContract[token]
       .approve(info[chainId].STT, constants.MaxUint256)
       .then((transaction) => {
-        provider.once(transaction.hash, (tx) => {
+        provider.once(transaction.hash, (_) => {
           requestDeposit()
         })
       })
