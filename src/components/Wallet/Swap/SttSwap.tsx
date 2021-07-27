@@ -171,13 +171,13 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
           </Typography>
         </Row>
         <Row justify="between" gutterWidth={-20}>
-          <Typography>Min:</Typography>
+          <Typography>Minimum received:</Typography>
           <Typography>
             {result.min} {result.token}
           </Typography>
         </Row>
         <Row justify="between" gutterWidth={-20}>
-          <Typography>Max:</Typography>
+          <Typography>Maximum received:</Typography>
           <Typography>
             {result.max} {result.token}
           </Typography>

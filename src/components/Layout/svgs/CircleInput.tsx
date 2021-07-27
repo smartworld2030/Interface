@@ -47,8 +47,8 @@ export const CircleInput: React.FC<CircleInputProps> = ({
         />
         <path
           fill="none"
-          stroke={percent === Infinity ? 'red' : 'white'}
-          strokeWidth="25"
+          stroke={percent === Infinity ? Colors.red : 'white'}
+          strokeWidth={percent === Infinity ? '10' : '25'}
           strokeLinecap="round"
           strokeDasharray={strokeCalculate()}
           d="M180 20.845

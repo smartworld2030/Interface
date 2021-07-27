@@ -23,6 +23,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   token,
   dollar,
   value,
+  error,
   loading,
   account,
   confirmed,
@@ -51,7 +52,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
       : maxPercent - account.percent
   }
 
-  const disableHandler = () => value <= 0 || calcSatoshi() < 500000
+  const disableHandler = () => value <= 0 || calcSatoshi() < 500000 || !!error
 
   return (
     <Row
@@ -101,6 +102,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
         <Row align="center" justify="around" direction="column">
           {confirmed && <p style={{ color: Colors.green }}>Registered!</p>}
           {loading && <p style={{ color: Colors.green }}>Waiting...</p>}
+          {error && <p style={{ color: Colors.red }}>{error}</p>}
           <DepositButton
             width={90}
             onClick={depositHandler}
@@ -131,10 +133,11 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { loggedIn } = state.account
+  const { loggedIn, error } = state.account
   const { prices, dollar } = state.bank
   const { investLoading, confirmed, account, maxPercent } = state.invest
   return {
+    error,
     prices,
     dollar,
     account,

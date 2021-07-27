@@ -24,7 +24,7 @@ const Swap: React.FC<SwapProps> = ({
   prices,
   dollar,
   error,
-  waiting,
+  swapLoading,
   tokenPrices,
 }) => {
   useEffect(() => {
@@ -45,7 +45,7 @@ const Swap: React.FC<SwapProps> = ({
         textAlign: 'center',
         height: 150,
       }}
-      spinning={waiting}
+      spinning={swapLoading}
       tip={error ? error : 'Loading...'}
     >
       <Row
@@ -86,14 +86,14 @@ const mapStateToProps = (state: AppState) => {
   const { tokens, address } = state.account
   const { prices, dollar } = state.bank
   const { chainId } = state.wallet
-  const { error, waiting } = state.swap
+  const { error, swapLoading } = state.swap
   return {
     chainId,
     address,
     tokens,
     dollar,
     prices,
-    waiting,
+    swapLoading,
     error,
   }
 }

@@ -1,13 +1,9 @@
 import React from 'react'
 import Input from 'antd/lib/input'
 import { Row } from 'react-grid-system'
-import Text from 'antd/lib/typography/Text'
 import { CircleInput } from './CircleInput'
-import Colors from '../../../Theme/Colors'
-import { AppState } from '../../../_types'
-import { connect } from 'react-redux'
 
-interface IProps {
+interface DepositCircleProps {
   width: number
   value: string
   token: string
@@ -17,15 +13,11 @@ interface IProps {
   inputHandler: (arg: any) => void
 }
 
-type DepositCircleProps = IProps & ReturnType<typeof mapStateToProps>
-
 const DepositCircle: React.FC<DepositCircleProps> = ({
   width,
-  error,
   value,
   percent,
   token,
-  tokens,
   inputHandler,
   percentHandler,
 }) => {
@@ -100,22 +92,13 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
         style={{
           width: width * 0.65,
           height: width / 2,
-          color: error ? Colors.red : '',
           fontSize: 10,
           fontWeight: 'bold',
           margin: 'auto',
           zIndex: 20,
         }}
       >
-        {tokens[token] === 0 ? (
-          <Text type="danger">Zero balance!</Text>
-        ) : (
-          error && <Text type="danger">{error}</Text>
-        )}
         <Input
-          style={{
-            borderColor: error ? Colors.red : '',
-          }}
           value={value}
           className="deposit-input"
           onChange={({ target }) => inputHandler(target.value)}
@@ -134,11 +117,5 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
     </Row>
   )
 }
-const mapStateToProps = (state: AppState) => {
-  const { error, tokens } = state.account
-  return {
-    error,
-    tokens,
-  }
-}
-export default connect(mapStateToProps)(DepositCircle)
+
+export default DepositCircle

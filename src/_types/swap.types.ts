@@ -23,7 +23,7 @@ export interface DefaultSwapBankState {
 export interface DefaultSwapState {
   error: string
   loading: boolean
-  waiting: boolean
+  swapLoading: boolean
   input: string
   output: string
   independentField: 'input' | 'output'
