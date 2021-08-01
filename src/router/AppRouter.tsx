@@ -144,7 +144,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                       <Investment isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
-                  <Route exact path="/pool">
+                  <Route exact path={['/pool', '/freeze']}>
                     <ProtectedRoute isMobile={isMobile} height={height}>
                       <Test isMobile={isMobile} />
                     </ProtectedRoute>

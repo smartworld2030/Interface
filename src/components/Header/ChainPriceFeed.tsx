@@ -1,5 +1,5 @@
 import React from 'react'
-import { truncate, numberWithCommas } from '../../_helpers/api'
+import { truncate } from '../../_helpers/api'
 import Marquee from 'react-fast-marquee'
 import { AppState } from '../../_types'
 import { connect } from 'react-redux'
@@ -12,7 +12,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
   const calcBTC = (value) => value / prices.BTCB
 
   const calcBtcPrice = (value) =>
-    numberWithCommas(Math.floor(calcBTC(value) * dollar.BTC).toString())
+    Math.floor(calcBTC(value) * dollar.BTC).toLocaleString('en')
 
   const calcDollar = (token, cut = 2) =>
     truncate(((prices[token] / 10 ** 8) * dollar.BTC).toString(), cut)
@@ -33,7 +33,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
           </p>
           BTC:
           <p className="price-value">
-            {numberWithCommas(calcBtcPrice(100000000))}
+            {calcBtcPrice(100000000)}
             <span>$</span>
           </p>
           STTS:

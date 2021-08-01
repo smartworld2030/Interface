@@ -14,9 +14,6 @@ export const convertNumbers2English = (string: string) =>
     // @ts-ignore
     .replace(/[\u06f0-\u06f9]/g, (c) => c.charCodeAt(0) - 0x06f0)
 
-export const numberWithCommas = (value: string) =>
-  value.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
-
 export const bytesFormater = (balance: any) => parseInt(balance._hex)
 
 export const formater = (balance: BigNumberish, token: string | number = 0) =>
