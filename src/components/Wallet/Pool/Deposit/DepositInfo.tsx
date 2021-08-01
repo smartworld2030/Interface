@@ -116,15 +116,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
           <TokenValue
             value={calcSTT()}
             precision={0}
-            title="Invetment reward"
+            title="Invetment Reward"
           />
           <TokenValue
             value={account.percent / 250}
-            precision={3}
+            precision={2}
             token="%"
             title="Referral percent"
-            double={calcPercent() / 250 < 0.001 ? 0 : calcPercent() / 250}
-            doubled
+            double={calcPercent() / 250 < 0.01 ? 0 : calcPercent() / 250}
           />
         </Row>
       </Col>

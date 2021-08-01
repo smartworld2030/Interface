@@ -73,17 +73,11 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                 token="%"
                 value={account.percent / 250}
               />
-              <TokenValue
-                value={
-                  account.depositDetails.reduce(
-                    (items, item) => items + Number(item.reward),
-                    0
-                  ) /
-                  10 ** 8
-                }
-                precision={2}
-                title="Hourly reward"
-              />
+              {/* <TokenValue
+            value={account.hourly}
+            precision={2}
+            title="Hourly reward"
+          /> */}
             </Row>
           </Col>
           <Col xs={12} width="100%">

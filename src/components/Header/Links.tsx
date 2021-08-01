@@ -32,7 +32,7 @@ export const sizeCalculator = (width: number) => {
       positionX: half - eighth,
       positionY: secondHeight - 29,
       size: 20,
-      link: '/freeze',
+      link: '/pool',
       text: '',
       textPos: secondHeight - 55,
       number: 2,

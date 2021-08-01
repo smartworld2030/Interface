@@ -29,7 +29,6 @@ export const requestInvest = (method: any, args: any) => (
   investContract.functions[method](...args)
     .then((transaction: Transaction) => {
       if (transaction.hash) {
-        console.log(transaction)
         dispatch({
           type: INVEST_METHOD_SUCCESS,
           payload: { transaction },
@@ -131,6 +130,7 @@ export const investInformation = (address?: string) => async (
   getState: () => AppState
 ) => {
   if (!address) address = getState().account.address
+
   dispatch({ type: INVEST_ACCOUNT_REQUEST })
   const maxPercent = await investContract.maxPercent()
   const accountInfo: any = await readInvest('users', ['id'], [address])
@@ -167,10 +167,36 @@ export const investInformation = (address?: string) => async (
         data.forEach((its) =>
           its.map((info) => (account[info.item] = info.balance))
         )
-        dispatch({
-          type: INVEST_ACCOUNT_SUCCESS,
-          payload: { account, maxPercent: bytesFormater(maxPercent) },
-        })
+        if (account.deposits > 0) {
+          const deps = Array.from(Array(account.deposits))
+          Promise.all(
+            deps.map((_, i) =>
+              readInvestItems(
+                'userDepositDetails',
+                ['reward', 'endTime'],
+                [address, i]
+              )
+            )
+          ).then((deposits: any) => {
+            account.depositDetails = []
+            deposits.forEach((item, i) =>
+              item.map(
+                (info) =>
+                  (account.depositDetails[i] = {
+                    ...account.depositDetails[i],
+                    [info.item]: info.balance,
+                  })
+              )
+            )
+            dispatch({
+              type: INVEST_ACCOUNT_SUCCESS,
+              payload: {
+                account,
+                maxPercent: bytesFormater(maxPercent),
+              },
+            })
+          })
+        }
       })
       .catch((err) => {
         errorHandler(err)

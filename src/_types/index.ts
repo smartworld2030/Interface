@@ -4,8 +4,8 @@ import { DefaultBankState, BankActionTypes } from './bank.types'
 import { SnackActionTypes } from './snackbar.types'
 import { DefaultWalletState, WalletActionTypes } from './wallet.types'
 import { InvestActionTypes, DefaultInvestState } from './invest.types'
-import { FreezeActionTypes, DefaultFreezeState } from './freeze.types'
 import { SwapActionTypes, DefaultSwapState } from './swap.types'
+import { DefaultPoolState, PoolActionTypes } from './pool.types'
 
 export type ArrayElement<
   ArrayType extends readonly unknown[]
@@ -29,10 +29,11 @@ export const FAILURE = {
 
 export type AppActions =
   | InvestActionTypes
+  | PoolActionTypes
   | UserActionTypes
   | BankActionTypes
   | WalletActionTypes
-  | FreezeActionTypes
+  | PoolActionTypes
   | SnackActionTypes
   | SwapActionTypes
   | CallHistoryMethodAction
@@ -43,6 +44,6 @@ export type AppState = {
   account: DefaultUserState
   wallet: DefaultWalletState
   invest: DefaultInvestState
-  freeze: DefaultFreezeState
   swap: DefaultSwapState
+  pool: DefaultPoolState
 }

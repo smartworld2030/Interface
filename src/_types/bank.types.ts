@@ -20,6 +20,7 @@ export interface DefaultBankState {
   tokens: TokenBalances
   prices: TokenPrices
   dollar: DoloarPrices
+  total: string
   satoshi?: TokenBalances
   error?: string
 }
@@ -78,7 +79,7 @@ export type BankSatoshiRequestAction = {
 
 export type BankSatoshiSuccessAction = {
   type: typeof BANK_SATOSHI_BALANCE_SUCCESS
-  payload: { satoshi: TokenBalances }
+  payload: { satoshi: TokenBalances; total: string }
 }
 export interface BankSatoshiFailureAction {
   type: typeof BANK_SATOSHI_BALANCE_FAILURE

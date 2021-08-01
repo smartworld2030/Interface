@@ -1,22 +1,17 @@
-import React, { useEffect } from 'react'
-import { bindActionCreators } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
+import React from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-grid-system'
-import { AppActions, AppState } from '../../../_types'
+import { AppState } from '../../../_types'
 import BnbSwap from './BnbSwap'
 import SttSwap from './SttSwap'
 import { PriceValue } from './PriceValue'
-import { tokenPrices } from '../../../_actions/bank.actions'
 import Spin from 'antd/lib/spin'
 
 interface IProps {
   isMobile: boolean
 }
 
-type SwapProps = IProps &
-  ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+type SwapProps = IProps & ReturnType<typeof mapStateToProps>
 
 const Swap: React.FC<SwapProps> = ({
   isMobile,
@@ -25,20 +20,7 @@ const Swap: React.FC<SwapProps> = ({
   dollar,
   error,
   swapLoading,
-  tokenPrices,
 }) => {
-  useEffect(() => {
-    let timer
-    clearInterval(timer)
-    tokenPrices()
-    timer = setInterval(() => {
-      tokenPrices()
-    }, 30 * 1000)
-
-    return () => {
-      clearInterval(timer)
-    }
-  }, [tokenPrices])
   return (
     <Spin
       style={{
@@ -97,8 +79,5 @@ const mapStateToProps = (state: AppState) => {
     error,
   }
 }
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  tokenPrices: bindActionCreators(tokenPrices, dispatch),
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Swap)
+export default connect(mapStateToProps)(Swap)

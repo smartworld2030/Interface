@@ -17,7 +17,10 @@ export const PriceValue: React.FC<PriceValueProps> = ({
 }) => {
   const calcSatoshi = () => prices[token] * value
 
-  const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
+  const calcDollar = () => {
+    const sats = calcSatoshi()
+    return (sats > 1 ? sats / 10 ** 8 : 0) * dollar.BTC
+  }
 
   return (
     <Row direction="column">

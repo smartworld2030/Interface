@@ -29,6 +29,7 @@ import swap from '../_contracts/swap'
 import { ISmartWorld } from '../_types/ISmartWorld'
 import { ISmartInvest } from '../_types/ISmartInvest'
 import { ISmartSwap } from '../_types/ISmartSwap'
+import { ISmartPool } from '../_types/ISmartPool'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -40,6 +41,7 @@ export let priceContract: PriceContract
 export let investContract: ISmartInvest
 export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
+export let poolContract: ISmartPool
 
 export const initialization = () => (
   dispatch: Dispatch<AppActions>,
@@ -57,7 +59,7 @@ export const initialization = () => (
       })
 
       ethereum.on('accountsChanged', (accounts) => {
-        accountHandler(accounts[0])
+        window.location.reload()
       })
 
       provider.on('network', ({ chainId }) => {
@@ -156,7 +158,7 @@ export const initialization = () => (
         payload: {
           error: {
             code: 301,
-            msg: 'Loading...',
+            msg: 'Waiting...',
           },
         },
       })

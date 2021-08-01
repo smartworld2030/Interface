@@ -19,6 +19,7 @@ const dollar = { BTC: 0 }
 const initialState: DefaultBankState = {
   bankLoading: false,
   tokens: balances,
+  total: '',
   prices,
   dollar,
   address: {
@@ -48,6 +49,7 @@ export function bankReducer(
       return {
         ...state,
         bankLoading: false,
+        total: action.payload.total,
         satoshi: { ...state.satoshi, ...action.payload.satoshi },
       }
     case BANK_SATOSHI_BALANCE_FAILURE:

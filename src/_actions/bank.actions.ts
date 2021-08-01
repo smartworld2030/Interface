@@ -1,7 +1,7 @@
 import { Dispatch } from 'react'
 import { AppActions, AppState } from '../_types'
 import { errorHandler } from '../_helpers/alert'
-import { bytesFormater, formaterNumber } from '../_helpers/api'
+import { bytesFormater, formaterNumber, formatToString } from '../_helpers/api'
 import {
   BANK_TOKEN_BALANCE_REQUEST,
   BANK_TOKEN_BALANCE_SUCCESS,
@@ -87,9 +87,17 @@ export const bankTotalSatoshi = () => (dispatch: Dispatch<AppActions>) => {
       Object.keys(res).forEach((key) => {
         if (key.length > 1) data[key] = formaterNumber(res[key])
       })
+
+      const satoshi = Object.keys(data).reduce(
+        (items, item) => items + data[item],
+        0
+      )
+
+      const total = formatToString(satoshi)
+      console.log(total)
       dispatch({
         type: BANK_SATOSHI_BALANCE_SUCCESS,
-        payload: { satoshi: data },
+        payload: { satoshi: data, total },
       })
     })
     .catch((err) => errorHandler(err, BANK_SATOSHI_BALANCE_FAILURE))

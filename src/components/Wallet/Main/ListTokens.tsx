@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Colors from '../../../Theme/Colors'
 import Typography from 'antd/lib/typography'
 import { AppState } from '../../../_types'
-import { ethereum } from '../../../_helpers/api'
+import { ethereum, truncate } from '../../../_helpers/api'
 import info from '../../../_contracts/info'
 import { Col, Row } from 'react-grid-system'
 import bank from '../../../_contracts/bank'
@@ -15,7 +15,7 @@ interface SmartWorldAddressProps {}
 
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
-const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
+const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
   const [account, setAccount] = useState('0x...')
 
   useEffect(() => {
@@ -78,10 +78,9 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
               {account}
             </Paragraph>
           </Link>
-
           <Link onClick={() => addSttToWallet()}>
             <Paragraph>
-              Add STT
+              {tokens.STT ? truncate(tokens.STT.toString(), 2) : 'Add'} STT
               <RightEmptyRetangle />
             </Paragraph>
           </Link>
@@ -101,7 +100,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
           </Link>
           <Link onClick={() => addSttsToWallet()}>
             <Paragraph>
-              Add STTS
+              {tokens.STTS ? truncate(tokens.STTS.toString(), 2) : 'Add'} STTS
               <RightEmptyRetangle />
             </Paragraph>
           </Link>
@@ -111,11 +110,12 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address }) => {
   )
 }
 const mapStateToProps = (state: AppState) => {
-  const { address } = state.account
+  const { address, tokens } = state.account
   const { chainId } = state.wallet
   return {
     chainId,
     address,
+    tokens,
   }
 }
 export default connect(mapStateToProps)(SmartWorldAddress)
