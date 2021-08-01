@@ -12,7 +12,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
   const calcBTC = (value) => value / prices.BTCB
 
   const calcBtcPrice = (value) =>
-    Math.floor(calcBTC(value) * dollar.BTC).toLocaleString('en')
+    Math.round(calcBTC(value) * dollar.BTC).toLocaleString('en')
 
   const calcDollar = (token, cut = 2) =>
     truncate(((prices[token] / 10 ** 8) * dollar.BTC).toString(), cut)
@@ -31,24 +31,29 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
             {calcBtcPrice(total)}
             <span>$</span>
           </p>
-          BTC:
+          STT:
           <p className="price-value">
-            {calcBtcPrice(100000000)}
-            <span>$</span>
+            {prices.STT}
+            <span>SATS</span>
           </p>
           STTS:
           <p className="price-value">
             {calcDollar('STTS')}
             <span>$</span>
           </p>
-          STT:
+          BTC:
           <p className="price-value">
-            {calcDollar('STT', 6)}
+            {calcBtcPrice(100000000)}
             <span>$</span>
           </p>
           BNB:
           <p className="price-value">
             {calcDollar('BNB')}
+            <span>$</span>
+          </p>
+          Minimum Investment:
+          <p className="price-value">
+            {calcBtcPrice(500000)}
             <span>$</span>
           </p>
         </div>
