@@ -1,24 +1,26 @@
 import React from 'react'
 import Input from 'antd/lib/input'
 import { Row } from 'react-grid-system'
-import { CircleInput } from './CircleInput'
+import { PoolCircleInput } from './PoolCircleInput'
 
-interface DepositCircleProps {
+interface PoolDepositCircleProps {
   width: number
   value: number
   token: string
   error?: string
   percent: number
+  disable?: boolean
   placeholder: string
   percentHandler: (arg: number) => void
   inputHandler: (arg: any) => void
 }
 
-const DepositCircle: React.FC<DepositCircleProps> = ({
+const PoolDepositCircle: React.FC<PoolDepositCircleProps> = ({
   width,
   value,
   percent,
   token,
+  disable,
   placeholder,
   inputHandler,
   percentHandler,
@@ -107,7 +109,8 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
           onChange={({ target }) => inputHandler(target.value)}
         />
       </Row>
-      <CircleInput
+      <PoolCircleInput
+        disable={disable}
         percent={percent}
         width={width}
         token={token}
@@ -116,9 +119,10 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
         onTouchEnd={roundSlideTune}
         onTouchMove={roundSlideTune}
         onMouseMove={circleSlider}
+        disableMax
       />
     </Row>
   )
 }
 
-export default DepositCircle
+export default PoolDepositCircle

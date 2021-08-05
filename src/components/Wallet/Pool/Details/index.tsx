@@ -12,19 +12,27 @@ import copy from 'copy-to-clipboard'
 import QRCode from 'react-qr-code'
 import Colors from '../../../../Theme/Colors'
 import { successHandler } from '../../../../_helpers/alert'
+import { UnfreezeButton } from '../../../Layout/svgs/UnfreezeButton'
+import { poolUnfreeze } from '../../../../_actions/pool.actions'
 
-interface IProps {}
+interface ReferralSectionProps {
+  isMobile: boolean
+}
 
-type ReferralSectionProps = IProps &
+type IProps = ReferralSectionProps &
   ReturnType<typeof mapDispatchToProps> &
   ReturnType<typeof mapStateToProps>
 
-export const DetailSection: React.FC<ReferralSectionProps> = ({
+export const DetailSection: React.FC<IProps> = ({
   address,
   account,
   tokens,
   prices,
   dollar,
+  loading,
+  isMobile,
+  confirmed,
+  poolUnfreeze,
 }) => {
   const [done, setDone] = useState(false)
   const { pathname } = useLocation()
@@ -38,10 +46,32 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
     }
   }
   const calcSatoshi = () =>
-    ((account.referral + account.hourly) / 10 ** 8) * prices.STT
+    ((account.referral + account.daily) / 10 ** 8) * prices.STT
 
   const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
 
+  const remainigDays = () =>
+    account.expired
+      ? 0
+      : account.expires
+      ? Math.floor((account.expires - Date.now() / 1000) / 60)
+      : 37
+
+  const calcDaily = () =>
+    account.nextReward > 0 ? (account.nextReward / 10 ** 8).toFixed(8) : 0
+
+  const formatedDaily = () =>
+    calcDaily() > 1
+      ? !account.expired
+        ? (account.nextReward / 10 ** 8).toFixed(2)
+        : 0
+      : calcDaily()
+
+  const unfreezeHandler = () => {
+    if (!loading && !confirmed) {
+      poolUnfreeze()
+    }
+  }
   return (
     <Row
       align="center"
@@ -68,16 +98,12 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
               <TokenValue
-                title="Referral percent"
-                precision={2}
-                token="%"
-                value={account.percent / 250}
+                title="Remaining Days"
+                precision={0}
+                token="Day"
+                value={remainigDays()}
               />
-              {/* <TokenValue
-            value={account.hourly}
-            precision={2}
-            title="Hourly reward"
-          /> */}
+              <TokenValue value={formatedDaily()} title="Next reward" />
             </Row>
           </Col>
           <Col xs={12} width="100%">
@@ -86,32 +112,45 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                 title="Rewards(Satoshi)"
                 precision={0}
                 token="SATS"
-                value={calcSatoshi()}
+                value={calcSatoshi() > 1 ? calcSatoshi() : 0}
               />
               <TokenValue
-                value={calcDollar()}
+                value={calcDollar() > 0.01 ? calcDollar() : 0}
                 precision={2}
                 title="Rewards(Dollar)"
                 token="$"
               />
             </Row>
           </Col>
-          <Col xs={12} width="100%">
-            <Row align="center" justify="around">
+          <Col xs={12} width="70%">
+            <Row
+              align="center"
+              justify={account.expired ? 'between' : 'around'}
+              direction={isMobile ? 'column' : 'row'}
+              style={account.expired && isMobile ? { height: 200 } : {}}
+            >
               <ReferralButton
                 width={90}
                 onClick={copyHandler}
-                disable={account.satoshi === 0}
+                disable={account.liquidity === 0}
               />
+              {account.expired && (
+                <UnfreezeButton
+                  width={70}
+                  onClick={unfreezeHandler}
+                  done={confirmed}
+                  loading={loading}
+                />
+              )}
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
               <TokenValue
-                token="SATS"
+                token="STTS"
                 precision={0}
-                value={account.satoshi}
-                title="Total investment"
+                value={account.totalStts}
+                title="Total pool"
               />
               <TokenValue
                 value={tokens.STT}
@@ -129,19 +168,22 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 
 const mapStateToProps = (state: AppState) => {
   const { address, tokens, error } = state.account
-  const { account } = state.invest
+  const { account, confirmed, poolLoading: loading } = state.pool
   const { prices, dollar } = state.bank
   return {
     account,
     address,
     tokens,
     prices,
-    dollar,
     error,
+    dollar,
+    loading,
+    confirmed,
   }
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
+  poolUnfreeze: bindActionCreators(poolUnfreeze, dispatch),
   investInformation: bindActionCreators(investInformation, dispatch),
 })
 

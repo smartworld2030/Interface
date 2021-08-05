@@ -4,13 +4,14 @@ import { Col, Row } from 'react-grid-system'
 import { AppState } from '../../../_types'
 import Button from 'antd/lib/button'
 import {
-  SendOutlined,
   GithubOutlined,
-  MediumOutlined,
+  MediumSquareFilled,
   GlobalOutlined,
   FileDoneOutlined,
   InstagramOutlined,
+  TwitterOutlined,
 } from '@ant-design/icons'
+import { TelegramIcon } from './TelegramIcon'
 interface IProps {
   isMobile: boolean
 }
@@ -24,8 +25,8 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
       align="center"
       style={{ minHeight: isMobile ? 300 : 300 }}
     >
-      <Col xs={12} md={3}></Col>
-      <Col xs={12} md={3}>
+      <Col xs={12} md={2}></Col>
+      <Col xs={12} md={4}>
         <Row justify="around">
           <Button
             type="primary"
@@ -39,6 +40,15 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           <Button
             type="primary"
             shape="circle"
+            icon={<FileDoneOutlined />}
+            size="large"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+          />
+          <Button
+            type="primary"
+            shape="circle"
             icon={<GithubOutlined />}
             size="large"
             target="_blank"
@@ -48,7 +58,7 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           <Button
             type="primary"
             shape="circle"
-            icon={<SendOutlined />}
+            icon={<TelegramIcon />}
             size="large"
             target="_blank"
             rel="noopener noreferrer"
@@ -56,12 +66,21 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           />
         </Row>
       </Col>
-      <Col xs={12} md={3}>
+      <Col xs={12} md={4}>
         <Row justify="around">
           <Button
             type="primary"
             shape="circle"
-            icon={<MediumOutlined />}
+            icon={<TwitterOutlined />}
+            size="large"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://twitter.com/smart_world_pro?s=11"
+          />
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<MediumSquareFilled />}
             size="large"
             target="_blank"
             rel="noopener noreferrer"
@@ -87,7 +106,7 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           />
         </Row>
       </Col>
-      <Col xs={12} md={3}></Col>
+      <Col xs={12} md={2}></Col>
     </Row>
   )
 }

@@ -21,7 +21,7 @@ import { onBoard } from '../_helpers/api'
 import erc20 from '../_contracts/erc20'
 import bank from '../_contracts/bank'
 import invest from '../_contracts/invest'
-// import pool from '../_contracts/pool'
+import pool from '../_contracts/pool'
 import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
 import { accountTokenBalances } from './account.actions'
 import { INVEST_RESET } from '../_types/invest.types'
@@ -59,7 +59,7 @@ export const initialization = () => (
         window.location.reload()
       })
 
-      ethereum.on('accountsChanged', (accounts) => {
+      ethereum.on('accountsChanged', () => {
         window.location.reload()
       })
 
@@ -92,11 +92,11 @@ export const initialization = () => (
             swap.abi,
             signer
           ) as ISmartSwap
-          // poolContract = new Contract(
-          //   pool.address[chainId],
-          //   pool.abi,
-          //   signer
-          // ) as ISmartPool
+          poolContract = new Contract(
+            pool.address[chainId],
+            pool.abi,
+            signer
+          ) as ISmartPool
           dispatch({
             type: WALLET_ACTIVATED,
             payload: {

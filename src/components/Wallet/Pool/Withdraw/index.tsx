@@ -6,11 +6,12 @@ import { formaterNumber, roundDecimals } from '../../../../_helpers/api'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
-import { withdrawInterest } from '../../../../_actions/invest.actions'
+import { withdrawInterest } from '../../../../_actions/pool.actions'
 
 interface IProps {
   width: number
 }
+
 type WithdrawCircleProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
@@ -19,18 +20,24 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   width,
   latestWithdraw,
   referral,
-  hourly,
+  daily,
   withdrawInterest,
 }) => {
   const half = width / 2
   const r = half - 10
   const c = 2 * Math.PI * r
-  const period = 3600
+  const period = 60
   const secPast =
     latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
 
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
+
+  const calcDaily = () => (daily > 0 ? (daily / 10 ** 8).toFixed(8) : 0)
+
+  const formatedDaily = () =>
+    calcDaily() > 1 ? (daily / 10 ** 8).toFixed(2) : calcDaily()
+
   return (
     <Row
       direction="column"
@@ -45,14 +52,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           </clipPath>
         </defs>
         <circle cx={half} cy={half} r={r} fill={Colors.background} />
-        {/* <circle cx={half} cy={half} r={r - 14} fill="white" /> */}
-        {/* <circle
-          cx={half}
-          cy={half}
-          r={r}
-          fill={Colors.background}
-          clipPath="url(#cut-off-middle)"
-        /> */}
         <circle
           cx={half}
           cy={half}
@@ -73,7 +72,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
                 dur={secRemain}
               />
               <animate
-                id="hourly"
+                id="daily"
                 begin="remains.end"
                 attributeName="stroke-dasharray"
                 values={`0 ${c};${c} 0`}
@@ -100,7 +99,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           fontSize="14"
           fill="white"
         >
-          <tspan>{roundDecimals(formaterNumber(hourly, 'STT'), 2)}</tspan>
+          <tspan>{formatedDaily()}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
         </text>
         <text
@@ -124,7 +123,9 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
         >
           REFERRAL
         </text>
-        <g onClick={() => withdrawInterest()}>
+        <g
+          onClick={referral + daily > 0 ? () => withdrawInterest() : undefined}
+        >
           <rect
             x={30}
             y={r * 0.87}
@@ -167,11 +168,11 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
 
 const mapStateToProps = (state: AppState) => {
   const { error, tokens } = state.account
-  const { hourly, referral, latestWithdraw } = state.invest.account
+  const { daily, referral, latestWithdraw } = state.pool.account
   return {
     error,
     tokens,
-    hourly,
+    daily,
     referral,
     latestWithdraw,
   }

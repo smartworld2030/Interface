@@ -13,6 +13,7 @@ import {
   formaterNumber,
   formatToString,
   convertNumbers2English,
+  deadline,
 } from '../../../_helpers/api'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -154,16 +155,13 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
     if (result.token === 'STTS') {
       requestSwap('safeBnbSwap', [
         '0',
-        Math.floor(Date.now() / 1000) + 180,
+        deadline(3),
         {
           value: input1.big,
         },
       ])
     } else if (result.token === 'BNB') {
-      requestSwap('safeBnbSwap', [
-        input1.big,
-        Math.floor(Date.now() / 1000) + 180,
-      ])
+      requestSwap('safeBnbSwap', [input1.big, deadline(3)])
     }
   }
   return (

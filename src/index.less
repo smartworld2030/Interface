@@ -69,7 +69,15 @@ text {
 .coin-flip {
   animation-name: coin-highlight-flip;
   animation-duration: 5s;
-  animation-timing-function: ease;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+  transform-origin: center;
+}
+
+.coin-flip-reverse {
+  animation-name: coin-highlight-flip;
+  animation-duration: 5s;
+  animation-timing-function: ease-out;
   animation-iteration-count: infinite;
   transform-origin: center;
 }
@@ -85,7 +93,11 @@ text {
   transform-origin: center;
   animation: crescendo 2s alternate infinite ease;
 }
-
+.ant-btn-circle {
+  padding: 0px;
+  border-width: 3px;
+  background-color: #2d2d2d;
+}
 .ant-input-group-addon {
   user-select: none;
   cursor: pointer;

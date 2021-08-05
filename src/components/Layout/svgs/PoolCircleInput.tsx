@@ -1,19 +1,23 @@
 import React from 'react'
 import Colors from '../../../Theme/Colors'
 
-interface CircleInputProps extends React.HTMLAttributes<SVGElement> {
+interface PoolCircleInputProps extends React.HTMLAttributes<SVGElement> {
   percent: number
   width: number
   token: string
+  disable?: boolean
+  disableMax?: boolean
   onMax: () => void
 }
 
-export const CircleInput: React.FC<CircleInputProps> = ({
+export const PoolCircleInput: React.FC<PoolCircleInputProps> = ({
   percent,
   width,
   onClick,
   onMax,
   token,
+  disable,
+  disableMax,
   ...rest
 }) => {
   percent = percent > 0 ? percent * 10 : 0
@@ -36,7 +40,9 @@ export const CircleInput: React.FC<CircleInputProps> = ({
         <circle r="160" cx="180" cy="180" fill={Colors.background} />
         <path
           fill="none"
-          stroke={percent <= 1000 ? Colors.green : Colors.red}
+          stroke={
+            disable ? Colors.grey : percent <= 1000 ? Colors.green : Colors.red
+          }
           strokeWidth="12"
           strokeLinecap="round"
           strokeDasharray={`${percent},1000`}
@@ -66,12 +72,11 @@ export const CircleInput: React.FC<CircleInputProps> = ({
         </text>
       </g>
       <g onClick={() => onMax()}>
-        <rect x="135" y="270" width="80" height="35" fill="transparent" />
         <text
           x="175"
           y="290"
           fontSize="30"
-          fill={Colors.green}
+          fill={disableMax ? Colors.grey : Colors.green}
           textAnchor="middle"
           dominantBaseline="middle"
         >

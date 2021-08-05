@@ -20,9 +20,6 @@ const ReferralButton: React.FC<ReferralPolygonProps> = ({
       style={{
         height: width,
         width: width,
-        padding: 0,
-        borderWidth: 3,
-        backgroundColor: '#2d2d2d',
       }}
       onClick={disable ? undefined : onClick}
     >

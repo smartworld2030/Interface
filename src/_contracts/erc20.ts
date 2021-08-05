@@ -22,6 +22,9 @@ const erc20 = {
     STTS: 8,
     BTCB: 18,
     BTC: 18,
+    'STTS-BNB': 18,
+    totalStts: 8,
+    liquidity: 18,
   },
   abi: [
     'function name() view returns (string)',

@@ -8,7 +8,6 @@ import Button from 'antd/lib/button'
 
 export const errorHandler = (err: any, type?: any, link?: string): void => {
   let error = errorCompiler(err)
-  console.log(error, err, type, link)
   if (error) {
     if (type) store.dispatch({ type, payload: { error } })
     store.dispatch({
@@ -69,7 +68,7 @@ export const snackBarMaker = (
   notification[variant]({
     message,
     placement: 'topRight',
-    duration: variant === 'success' ? 5 : 10,
+    duration: variant === 'success' ? 7 : 10,
     btn,
   })
 }

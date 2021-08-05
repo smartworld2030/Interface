@@ -18,29 +18,30 @@ export interface DefaultPoolState {
   transaction?: Transaction
   method?: string
   error?: string
-  account: PoolInfo
-  maxStts: number
+  account: PoolAccountInfo
+  currentPrice: CurrentPrice
   confirmed: boolean
   poolLoading: boolean
 }
 
-export type PoolInfo = {
-  bnb: number
-  stts: number
-  btcb: number
-  satoshi: number
-  hourly: number
-  percent: number
-  referrer: number
+export type PoolAccountInfo = {
+  update: CurrentPrice
+  daily: number
+  nextReward: number
+  expires: number
+  expired: boolean
   referral: number
+  referrer: number
   deposits: number
+  liquidity: number
+  totalStts: number
   latestWithdraw: number
-  depositDetails?: DepositDetail[]
+  depositDetails: number[]
 }
 
-type DepositDetail = {
-  reward: string
-  endTime: number
+export type CurrentPrice = {
+  stts: number
+  bnb: number
 }
 
 export interface RequestPoolAction {
@@ -71,12 +72,20 @@ export interface AccountPoolRequestAction {
 }
 export interface AccountPoolSuccessAction {
   type: typeof POOL_ACCOUNT_SUCCESS
-  payload: { account: PoolInfo; maxStts: number; error?: string }
+  payload: {
+    account: PoolAccountInfo
+    currentPrice: CurrentPrice
+    error?: string
+  }
 }
 
 export interface AccountPoolFailureAction {
   type: typeof POOL_ACCOUNT_FAILURE
-  payload: { maxStts?: number; error: string }
+  payload: {
+    currentPrice?: CurrentPrice
+    account?: PoolAccountInfo
+    error: string
+  }
 }
 
 export interface MessagePoolAction {

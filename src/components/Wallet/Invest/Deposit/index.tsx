@@ -27,29 +27,28 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
   tokens,
   error,
-  address,
   removeError,
 }) => {
   const [token, setToken] = useState<string>('STTS')
-  const [balance, setBalance] = useState(0)
-  const [value, setValue] = useState('0')
+  const [value, setValue] = useState(0)
 
   useEffect(() => {
-    setBalance(tokens[token])
-    setValue(tokens[token])
-  }, [address, tokens, token])
+    return () => {
+      setValue(0)
+    }
+  }, [token])
 
   const percentHandler = (per: number) => {
     if (error) removeError()
-    setValue(percentToValue(balance, per).toString())
+    setValue(percentToValue(tokens[token], per))
   }
 
   const inputHandler = (val: string) => {
     if (error) removeError()
     val = convertNumbers2English(val)
     if (val.length <= 20 && /^\d*\.?\d*$/.test(val)) {
-      const v = val.includes('.') ? val : Number(val)
-      setValue(v.toString())
+      const v = val.includes('.') ? val : val
+      setValue(Number(v))
     }
   }
 
@@ -79,7 +78,8 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
             width={isMobile ? 210 : 190}
             token={token}
             value={value}
-            percent={valueToPercent(Number(value), balance)}
+            placeholder={tokens[token].toString()}
+            percent={valueToPercent(Number(value), tokens[token])}
             inputHandler={inputHandler}
             percentHandler={percentHandler}
           />

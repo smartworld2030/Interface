@@ -16,22 +16,24 @@ import {
 } from '../_types/pool.types'
 
 const account = {
-  satoshi: 0,
-  hourly: 0,
-  percent: 0,
-  referrer: 0,
+  update: { bnb: 0, stts: 0 },
+  daily: 0,
+  expires: 0,
+  expired: false,
   referral: 0,
-  btcb: 0,
-  stts: 0,
-  bnb: 0,
+  referrer: 0,
   deposits: 0,
+  liquidity: 0,
+  totalStts: 0,
+  nextReward: 0,
   latestWithdraw: 0,
+  depositDetails: [],
 }
 
 const poolReducerDefaultState: DefaultPoolState = {
   poolLoading: false,
   confirmed: false,
-  maxStts: 0,
+  currentPrice: { stts: 0, bnb: 0 },
   error: '',
   account,
 }
@@ -79,11 +81,15 @@ export const poolReducer = (
       return {
         ...state,
         account: { ...account, ...action.payload.account },
-        maxStts: action.payload.maxStts,
+        currentPrice: action.payload.currentPrice,
         error: action.payload.error,
       }
     case POOL_ACCOUNT_FAILURE:
-      return { ...state, ...action.payload }
+      return {
+        ...state,
+        account: { ...account, ...action.payload.account },
+        ...action.payload.currentPrice,
+      }
     case POOL_RESET:
       return { ...poolReducerDefaultState }
     default:

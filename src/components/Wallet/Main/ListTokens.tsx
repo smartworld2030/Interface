@@ -80,7 +80,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
           </Link>
           <Link onClick={() => addSttToWallet()}>
             <Paragraph>
-              {tokens.STT ? truncate(tokens.STT.toString(), 2) : 'Add'} STT
+              {tokens.STT ? truncate(tokens.STT.toString(), 2) : 0} STT
               <RightEmptyRetangle />
             </Paragraph>
           </Link>
@@ -100,7 +100,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
           </Link>
           <Link onClick={() => addSttsToWallet()}>
             <Paragraph>
-              {tokens.STTS ? truncate(tokens.STTS.toString(), 2) : 'Add'} STTS
+              {tokens.STTS ? truncate(tokens.STTS.toString(), 2) : 0} STTS
               <RightEmptyRetangle />
             </Paragraph>
           </Link>

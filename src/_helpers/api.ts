@@ -14,7 +14,12 @@ export const convertNumbers2English = (string: string) =>
     // @ts-ignore
     .replace(/[\u06f0-\u06f9]/g, (c) => c.charCodeAt(0) - 0x06f0)
 
+export const deadline = (min: any) => Math.floor(Date.now() / 1000) + min * 60
+
 export const bytesFormater = (balance: any) => parseInt(balance._hex)
+
+export const bytesFormaterString = (balance: any) =>
+  parseInt(balance._hex).toString()
 
 export const formater = (balance: BigNumberish, token: string | number = 0) =>
   utils.formatUnits(

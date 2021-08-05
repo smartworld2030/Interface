@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import Investment from '../components/Wallet/Investment'
+import Investment from '../components/Wallet/Invest'
 import Swap from '../components/Wallet/Swap'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
@@ -17,6 +17,7 @@ import { tokenPrices, bankTotalSatoshi } from '../_actions/bank.actions'
 import { investInformation } from '../_actions/invest.actions'
 import { poolInformation } from '../_actions/pool.actions'
 import { investContract, poolContract } from '../_actions/wallet.actions'
+import Pool from '../components/Wallet/Pool'
 
 interface IProps {
   isMobile: boolean
@@ -31,11 +32,13 @@ type AppRouterProps = IProps &
 const Titles = {
   '/invest': 'INVESTMENT',
   '/info': 'INFORMATION',
-  '/pool': 'POOL',
+  '/pool': 'POOL(Coming Soon!)',
   '/swap': 'SWAP',
   '/stts': 'STTS',
 }
-
+console.warn('dont forget change Timer')
+const priceDelay = 30
+const detailsDelay = 60
 let timer
 let routeTimer
 
@@ -61,7 +64,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       timer = setInterval(() => {
         tokenPrices()
         bankTotalSatoshi()
-      }, 30 * 1000)
+      }, priceDelay * 1000)
     }
     return () => {
       clearInterval(timer)
@@ -88,13 +91,12 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       switcher()
       routeTimer = setInterval(() => {
         switcher()
-      }, 30 * 1000)
+      }, detailsDelay * 1000)
     }
     return () => {
       clearInterval(routeTimer)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, address])
+  }, [pathname, address, poolInformation, investInformation])
 
   const transitions = useTransition(location, {
     key: pathname,
@@ -146,7 +148,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                   </Route>
                   <Route exact path={['/pool', '/freeze']}>
                     <ProtectedRoute isMobile={isMobile} height={height}>
-                      <Test isMobile={isMobile} />
+                      <Pool isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
                   <Route exact path="/stts">
