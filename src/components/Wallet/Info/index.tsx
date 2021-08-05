@@ -10,6 +10,7 @@ import {
   FileDoneOutlined,
   InstagramOutlined,
   TwitterOutlined,
+  SwapOutlined,
 } from '@ant-design/icons'
 import { TelegramIcon } from './TelegramIcon'
 interface IProps {
@@ -40,7 +41,7 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           <Button
             type="primary"
             shape="circle"
-            icon={<FileDoneOutlined />}
+            icon={<SwapOutlined />}
             size="large"
             target="_blank"
             rel="noopener noreferrer"
