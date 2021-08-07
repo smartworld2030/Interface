@@ -76,7 +76,7 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
             size="large"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://twitter.com/smart_world_pro?s=11"
+            href="https://twitter.com/smart_world_app"
           />
           <Button
             type="primary"

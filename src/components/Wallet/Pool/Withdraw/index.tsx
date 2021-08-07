@@ -26,7 +26,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   const half = width / 2
   const r = half - 10
   const c = 2 * Math.PI * r
-  const period = 60
+  const period = 86400
   const secPast =
     latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
 

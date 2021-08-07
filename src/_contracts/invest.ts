@@ -1,6 +1,6 @@
 const invest = {
   address: {
-    56: '0x8f2974a63C3Df971d1A8ff5FdCebC49ae05948E3',
+    56: '0x98cf1b38af1446702F30A9933A3e20aB8DE4E1B8',
     97: '0x081cE1551dCCBB66Bdc78CE5ADA05890fC5a3521',
   },
   abi: [

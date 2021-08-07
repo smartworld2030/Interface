@@ -54,7 +54,7 @@ export const DetailSection: React.FC<IProps> = ({
     account.expired
       ? 0
       : account.expires
-      ? Math.floor((account.expires - Date.now() / 1000) / 60)
+      ? Math.floor((account.expires - Date.now() / 1000) / 86400)
       : 37
 
   const calcDaily = () =>
@@ -122,7 +122,7 @@ export const DetailSection: React.FC<IProps> = ({
               />
             </Row>
           </Col>
-          <Col xs={12} width="70%">
+          <Col xs={12} width="75%">
             <Row
               align="center"
               justify={account.expired ? 'between' : 'around'}
@@ -136,7 +136,7 @@ export const DetailSection: React.FC<IProps> = ({
               />
               {account.expired && (
                 <UnfreezeButton
-                  width={70}
+                  width={65}
                   onClick={unfreezeHandler}
                   done={confirmed}
                   loading={loading}

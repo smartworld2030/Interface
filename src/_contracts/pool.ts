@@ -1,7 +1,7 @@
-const invest = {
+const pool = {
   address: {
-    56: '0x8f2974a63C3Df971d1A8ff5FdCebC49ae05948E3',
-    97: '0x2DB73E3EcdFEa11A649a309635Aa37746396Ffdd',
+    56: '0x98cf1b38af1446702F30A9933A3e20aB8DE4E1B8',
+    97: '0x573d999096b35FDA3BCca41Ea67D9bE12c259b2f',
   },
   abi: [
     'event WithdrawInterest(address indexed user, uint256 daily, uint256 referrals)',
@@ -29,4 +29,4 @@ const invest = {
   ],
 }
 
-export default invest
+export default pool

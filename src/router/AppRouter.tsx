@@ -32,11 +32,11 @@ type AppRouterProps = IProps &
 const Titles = {
   '/invest': 'INVESTMENT',
   '/info': 'INFORMATION',
-  '/pool': 'POOL(Coming Soon!)',
+  '/pool': 'POOL',
   '/swap': 'SWAP',
-  '/stts': 'STTS',
+  '/stb': 'STB',
 }
-console.warn('dont forget change Timer')
+
 const priceDelay = 30
 const detailsDelay = 60
 let timer
@@ -151,7 +151,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                       <Pool isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
-                  <Route exact path="/stts">
+                  <Route exact path="/stb">
                     <ProtectedRoute isMobile={isMobile} height={height}>
                       <Test isMobile={isMobile} />
                     </ProtectedRoute>

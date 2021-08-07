@@ -205,7 +205,7 @@ export const poolInformation = (address?: string) => async (
       {
         name: 'calculateDaily',
         tokens: ['nextReward'],
-        args: [address, Math.floor(Date.now() / 1000) + 60],
+        args: [address, Math.floor(Date.now() / 1000) + 86400],
       },
       {
         name: 'userExpired',
