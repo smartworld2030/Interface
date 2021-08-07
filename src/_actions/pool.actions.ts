@@ -74,7 +74,7 @@ export const poolUnfreeze = () => async (
     [address, 0],
     false
   )) as any
-  console.log(stts, minStts, minBnb)
+
   if (stts > 0) {
     dispatch(requestPool('unfreeze', [minStts, minBnb, deadline(3)]) as any)
   } else {
@@ -106,7 +106,7 @@ export const poolFreeze = () => async (
       [address, 0],
       false
     )) as any
-    console.log(bnb, minStts, minBnb)
+
     if (
       utils.isAddress(account.referrer) &&
       account.referrer !== info.addressZero
