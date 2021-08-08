@@ -35,7 +35,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
       investmentDeposit(token, value)
     }
   }
-
+  console.log(value)
   const calcSatoshi = () => prices[token] * value
 
   const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC

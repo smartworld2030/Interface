@@ -84,7 +84,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
         </Row>
       </Col>
       <Col md={6}>
-        <DepositInfo token={token} value={Number(value)} />
+        <DepositInfo token={token} value={Number(value ?? 0)} />
       </Col>
     </Row>
   )

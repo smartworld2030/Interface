@@ -61,20 +61,18 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           <Button
             type="primary"
             shape="circle"
-            icon={<GithubOutlined />}
+            icon={<MailOutlined />}
             size="large"
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://github.com/smartworldproject"
+            href="mailto:info@smartworld.app"
           />
           <Button
             type="primary"
             shape="circle"
-            icon={<TelegramIcon />}
+            icon={<GithubOutlined />}
             size="large"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://t.me/smart_world_project"
+            href="https://github.com/smartworld2030"
           />
         </Row>
       </Col>
@@ -83,9 +81,11 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
           <Button
             type="primary"
             shape="circle"
-            icon={<MailOutlined />}
+            icon={<TelegramIcon />}
             size="large"
-            href="mailto:info@smartworld.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://t.me/smart_world_project"
           />
           <Button
             type="primary"

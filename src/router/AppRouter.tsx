@@ -165,7 +165,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                   </Route>
                   <Route exact path="/stb">
                     <ProtectedRoute isMobile={isMobile} height={height}>
-                      <Test isMobile={isMobile} />
+                      <STB isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
                   <Route exact path="/info">
@@ -193,7 +193,7 @@ interface tester {
   isMobile: boolean
 }
 
-export const Test: React.FC<tester> = ({ isMobile }) => {
+export const STB: React.FC<tester> = ({ isMobile }) => {
   return (
     <Row
       justify="around"

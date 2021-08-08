@@ -7,7 +7,7 @@ export const TelegramIcon: React.FC = () => {
       focusable="false"
       role="img"
       viewBox="0 0 748 812"
-      style={{ padding: '8px 0 0 7px' }}
+      style={{ padding: '7px 0 0 7px' }}
     >
       <path
         fill="currentColor"
