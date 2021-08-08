@@ -2,17 +2,11 @@ import { Component } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Globe from './components/Globe/Globe'
 import { Header } from './components/Header'
-import { AppActions, AppState } from './_types'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { ThunkDispatch } from 'redux-thunk'
-import { initialization } from './_actions/wallet.actions'
 import AppRouter from './router/AppRouter'
 
 let setTime: NodeJS.Timeout
 
-type AppProps = ReturnType<typeof mapDispatchToProps> &
-  ReturnType<typeof mapStateToProps>
+type AppProps = {}
 
 interface AppStates {
   spacerHeight: number
@@ -39,8 +33,6 @@ class App extends Component<AppProps, AppStates> {
   }
 
   componentDidMount() {
-    console.log('initialization')
-    this.props.init()
     window.addEventListener('resize', this.updateDimensions)
     this.setState({
       spacerHeight: window.innerHeight - 10,
@@ -69,13 +61,4 @@ class App extends Component<AppProps, AppStates> {
   }
 }
 
-const mapStateToProps = (state: AppState) => {
-  // const {} = state.wallet
-  return {}
-}
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  init: bindActionCreators(initialization, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default App

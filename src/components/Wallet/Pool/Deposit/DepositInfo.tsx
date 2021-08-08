@@ -60,7 +60,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
         <Row align="center" justify="around">
           <TokenValue
             title="Number of STTS"
-            precision={0}
+            precision={1}
             token="STTS"
             value={values.stts}
           />

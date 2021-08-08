@@ -16,7 +16,11 @@ import Typography from 'antd/lib/typography'
 import { tokenPrices, bankTotalSatoshi } from '../_actions/bank.actions'
 import { investInformation } from '../_actions/invest.actions'
 import { poolInformation } from '../_actions/pool.actions'
-import { investContract, poolContract } from '../_actions/wallet.actions'
+import {
+  initialization,
+  investContract,
+  poolContract,
+} from '../_actions/wallet.actions'
 import Pool from '../components/Wallet/Pool'
 
 interface IProps {
@@ -48,6 +52,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   height,
   width,
   active,
+  init,
   tokenPrices,
   poolInformation,
   bankTotalSatoshi,
@@ -55,6 +60,12 @@ export const AppRouter: React.FC<AppRouterProps> = ({
 }) => {
   const location = useLocation()
   const { pathname } = location
+  useEffect(() => {
+    setTimeout(() => {
+      console.log('initialization')
+      init()
+    }, 1000)
+  }, [init])
 
   useEffect(() => {
     clearInterval(timer)
@@ -206,6 +217,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
+  init: bindActionCreators(initialization, dispatch),
   tokenPrices: bindActionCreators(tokenPrices, dispatch),
   bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),

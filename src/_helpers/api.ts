@@ -19,7 +19,7 @@ export const deadline = (min: any) => Math.floor(Date.now() / 1000) + min * 60
 export const bytesFormater = (balance: any) => parseInt(balance._hex)
 
 export const bytesFormaterString = (balance: any) =>
-  parseInt(balance._hex).toString()
+  utils.formatUnits(balance, 0)
 
 export const formater = (balance: BigNumberish, token: string | number = 0) =>
   utils.formatUnits(
@@ -44,10 +44,10 @@ export const formaterNumber = (
   return Number(formater(balance, decimal))
 }
 export const roundDecimals = (value: number, decimal: number = 2) =>
-  Math.round(Number(value) * 10 ** decimal) / 10 ** decimal
+  Math.ceil(Number(value) * 10 ** decimal) / 10 ** decimal
 
 export const roundDecimalsString = (value: number, decimal: number = 2) =>
-  Math.round(value / 10 ** decimal).toString()
+  Math.ceil(value / 10 ** decimal).toString()
 
 export const percentToValue = (val: number, per: number) => (val * per) / 100
 

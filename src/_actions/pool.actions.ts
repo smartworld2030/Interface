@@ -106,7 +106,7 @@ export const poolFreeze = () => async (
       [address, 0],
       false
     )) as any
-
+    console.log(bnb, minStts, minBnb)
     if (
       utils.isAddress(account.referrer) &&
       account.referrer !== info.addressZero
