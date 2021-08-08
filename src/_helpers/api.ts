@@ -49,7 +49,8 @@ export const roundDecimals = (value: number, decimal: number = 2) =>
 export const roundDecimalsString = (value: number, decimal: number = 2) =>
   Math.ceil(value / 10 ** decimal).toString()
 
-export const percentToValue = (val: number, per: number) => (val * per) / 100
+export const percentToValue = (val: number, per: number) =>
+  ((val * per) / 100).toString()
 
 export const valueToPercent = (val: number, max: number) =>
   roundDecimals((val / max) * 100)

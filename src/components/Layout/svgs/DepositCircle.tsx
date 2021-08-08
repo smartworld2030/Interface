@@ -5,7 +5,7 @@ import { CircleInput } from './CircleInput'
 
 interface DepositCircleProps {
   width: number
-  value: number
+  value?: string
   token: string
   error?: string
   percent: number
@@ -101,7 +101,7 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
         }}
       >
         <Input
-          value={value === 0 ? '' : value}
+          value={value}
           placeholder={placeholder}
           className="deposit-input"
           onChange={({ target }) => inputHandler(target.value)}

@@ -11,6 +11,8 @@ import {
   InstagramOutlined,
   TwitterOutlined,
   SwapOutlined,
+  FileSearchOutlined,
+  MailOutlined,
 } from '@ant-design/icons'
 import { TelegramIcon } from './TelegramIcon'
 interface IProps {
@@ -29,6 +31,15 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
       <Col xs={12} md={2}></Col>
       <Col xs={12} md={4}>
         <Row justify="around">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<FileSearchOutlined />}
+            size="large"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://smartworld.app/assets/whitepaper.pdf"
+          />
           <Button
             type="primary"
             shape="circle"
@@ -69,6 +80,13 @@ const Info: React.FC<InfoProps> = ({ isMobile }) => {
       </Col>
       <Col xs={12} md={4}>
         <Row justify="around">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<MailOutlined />}
+            size="large"
+            href="mailto:info@smartworld.app"
+          />
           <Button
             type="primary"
             shape="circle"

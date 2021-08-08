@@ -29,12 +29,12 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   error,
   removeError,
 }) => {
-  const [token, setToken] = useState<string>('STTS')
-  const [value, setValue] = useState(0)
+  const [token, setToken] = useState('STTS')
+  const [value, setValue] = useState<string>()
 
   useEffect(() => {
     return () => {
-      setValue(0)
+      setValue(undefined)
     }
   }, [token])
 
@@ -46,10 +46,8 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   const inputHandler = (val: string) => {
     if (error) removeError()
     val = convertNumbers2English(val)
-    if (val.length <= 20 && /^\d*\.?\d*$/.test(val)) {
-      const v = val.includes('.') ? val : val
-      setValue(Number(v))
-    }
+    if (val.length <= 20 && /^\d*\.?\d*$/.test(val))
+      setValue(val === '00' ? Number(val).toString() : val === '.' ? '0.' : val)
   }
 
   return (

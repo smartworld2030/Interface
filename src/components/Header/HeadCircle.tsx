@@ -58,6 +58,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
               x={6}
               y={4}
               textAnchor="middle"
+              dominantBaseline="central"
               alignmentBaseline="central"
               fontSize="8"
               fill={active ? Colors.background : 'white'}
