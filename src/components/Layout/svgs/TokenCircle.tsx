@@ -25,6 +25,7 @@ const TokenCircle: React.FC<CircleProps> = ({
     transform: `rotatey(${active ? 180 : 0}deg) translateX(-35px)`,
     config: { mass: 5, tension: 500, friction: 80 },
   })
+
   return (
     <svg height={width} width={width}>
       <g onClick={() => onClick(token)}>
@@ -53,8 +54,8 @@ const TokenCircle: React.FC<CircleProps> = ({
           >
             {token === 'BTCB' ? 'BTC' : token}
           </text>
-          <text textAnchor="middle" x="50%" y="70%" fill="white" fontSize="9">
-            {info}
+          <text textAnchor="middle" x="50%" y="80%" fill="white" fontSize="7">
+            {info ?? 0}
           </text>
         </a.g>
         <a.g
@@ -83,8 +84,8 @@ const TokenCircle: React.FC<CircleProps> = ({
           >
             {token === 'BTCB' ? 'BTC' : token}
           </text>
-          <text textAnchor="middle" x="50%" y="70%" fill="white" fontSize="9">
-            {info}
+          <text textAnchor="middle" x="50%" y="80%" fill="white" fontSize="7">
+            {info ?? 0}
           </text>
         </a.g>
       </g>

@@ -7,7 +7,9 @@ import { removeError } from '../../../../_actions/invest.actions'
 import { AppActions, AppState } from '../../../../_types'
 import {
   convertNumbers2English,
+  formatToString,
   percentToValue,
+  truncate,
   valueToPercent,
 } from '../../../../_helpers/api'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
@@ -26,6 +28,7 @@ export const tokenNames = ['STTS', 'BNB', 'BTCB']
 export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
   tokens,
+  prices,
   error,
   removeError,
 }) => {
@@ -37,6 +40,13 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
       setValue(undefined)
     }
   }, [token])
+
+  const minimumAmount = (t: string) =>
+    truncate(
+      formatToString(500000 / prices[t]),
+      t === 'STTS' ? 1 : 3,
+      t !== 'BTCB'
+    )
 
   const percentHandler = (per: number) => {
     if (error) removeError()
@@ -66,6 +76,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
               onClick={setToken}
               token={t}
               active={token === t}
+              info={minimumAmount(t)}
             />
           ))}
         </Row>
@@ -92,9 +103,11 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { tokens, address, loggedIn } = state.account
   const { error } = state.invest
+  const { prices } = state.bank
   return {
     address,
     loggedIn,
+    prices,
     tokens,
     error,
   }

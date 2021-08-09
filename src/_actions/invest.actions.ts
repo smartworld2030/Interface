@@ -76,7 +76,11 @@ export const investmentDeposit = (token: string, value: number) => async (
     console.log(strValue, info.decimals[token])
     if (accountInfo.id > 0) {
       if (token === 'STTS')
-        dispatch(requestInvest('updateStts', [strValue]) as any)
+        dispatch(
+          requestInvest('updateStts', [
+            (Number(strValue) - 100000).toString(),
+          ]) as any
+        )
       else if (token === 'BTCB')
         dispatch(requestInvest('updateBtcb', [strValue]) as any)
       else if (token === 'BNB')
@@ -87,7 +91,12 @@ export const investmentDeposit = (token: string, value: number) => async (
         : { id: 0 }
       if (refInfo.id > 0) {
         if (token === 'STTS')
-          dispatch(requestInvest('investStts', [referrer, strValue]) as any)
+          dispatch(
+            requestInvest('investStts', [
+              referrer,
+              (Number(strValue) - 100000).toString(),
+            ]) as any
+          )
         else if (token === 'BTCB') {
           dispatch(requestInvest('investBtcb', [referrer, strValue]) as any)
         } else if (token === 'BNB')

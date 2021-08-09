@@ -44,10 +44,10 @@ export const formaterNumber = (
   return Number(formater(balance, decimal))
 }
 export const roundDecimals = (value: number, decimal: number = 2) =>
-  Math.ceil(Number(value) * 10 ** decimal) / 10 ** decimal
+  Math.round(Number(value) * 10 ** decimal) / 10 ** decimal
 
 export const roundDecimalsString = (value: number, decimal: number = 2) =>
-  Math.ceil(value / 10 ** decimal).toString()
+  Math.round(value / 10 ** decimal).toString()
 
 export const percentToValue = (val: number, per: number) =>
   ((val * per) / 100).toString()
@@ -55,10 +55,18 @@ export const percentToValue = (val: number, per: number) =>
 export const valueToPercent = (val: number, max: number) =>
   roundDecimals((val / max) * 100)
 
-export const truncate = (str: string, decimals: number) => {
+export const truncate = (str: string, decimals: number, ceil = false) => {
   if (str.includes('.')) {
     const parts = str.split('.')
-    return parts[0] + '.' + parts[1].slice(0, decimals)
+    const float = parts[1].slice(0, decimals)
+    if (ceil) {
+      return parts[0] === '0'
+        ? parts[0] +
+            '.' +
+            (float.slice(0, decimals - 1) + (Number(float.slice(-1)) + 1))
+        : Math.ceil(Number(str)).toString()
+    }
+    return parts[0] + '.' + float
   }
   return str
 }
