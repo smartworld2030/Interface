@@ -41,6 +41,7 @@ export const HeadCircle: React.FC<HeadCircleProps> = ({
           x={positionX}
           y={textPos}
           textAnchor="middle"
+          dominantBaseline="central"
           alignmentBaseline="central"
           fontSize={size * 0.55}
           fontWeight="700"

@@ -61,6 +61,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
 }) => {
   const location = useLocation()
   const { pathname } = location
+
   useEffect(() => {
     setTimeout(() => {
       console.log('initialization')
