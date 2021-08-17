@@ -101,7 +101,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
           <Link
             target="_blank"
             rel="noopener noreferrer"
-            href="https://link.medium.com/y7OPOwewNib"
+            href="https://smartworldapp.medium.com/smart-world-42eb6851ea5c"
           >
             <Paragraph>
               <LeftRetangle />
