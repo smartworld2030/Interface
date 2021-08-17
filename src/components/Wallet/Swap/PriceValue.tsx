@@ -1,5 +1,5 @@
 import { truncate } from '../../../_helpers/api'
-import React from 'react'
+
 import { Row } from 'react-grid-system'
 
 interface PriceValueProps {

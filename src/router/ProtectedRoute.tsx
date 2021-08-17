@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import ChangeWallet from './ChangeWallet'
 import { AppState } from '../_types'

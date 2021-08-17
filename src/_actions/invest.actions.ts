@@ -21,9 +21,7 @@ import { accountTokenBalances } from './account.actions'
 export const removeError = () => (dispatch: Dispatch<AppActions>) =>
   dispatch({ type: INVEST_MESSAGES, payload: { error: '' } })
 
-export const requestInvest = (method: any, args: any) => (
-  dispatch: Dispatch<AppActions>
-) => {
+export const requestInvest = (method: any, args: any) => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: INVEST_METHOD_REQUEST, payload: { method } })
   // @ts-ignore
   investContract.functions[method](...args)
@@ -59,7 +57,7 @@ export type TokenSymbol = 'STTS' | 'BTCB' | 'BNB'
 
 export const investmentDeposit = (token: string, value: number) => async (
   dispatch: Dispatch<AppActions>,
-  getState: () => AppState
+  getState: () => AppState,
 ) => {
   const chainId = getState().wallet.chainId
   const address = getState().account.address
@@ -68,41 +66,25 @@ export const investmentDeposit = (token: string, value: number) => async (
 
   const accountInfo: any = await readInvest('users', ['id'], [address])
 
-  if (token !== 'BNB')
-    allowance = await tokenContract[token].allowance(address, info[chainId].STT)
+  if (token !== 'BNB') allowance = await tokenContract[token].allowance(address, info[chainId].STT)
 
   const requestDeposit = async () => {
     const strValue = (value * 10 ** info.decimals[token]).toFixed().toString()
     console.log(strValue, info.decimals[token])
     if (accountInfo.id > 0) {
-      if (token === 'STTS')
-        dispatch(
-          requestInvest('updateStts', [
-            (Number(strValue) - 100000).toString(),
-          ]) as any
-        )
-      else if (token === 'BTCB')
-        dispatch(requestInvest('updateBtcb', [strValue]) as any)
-      else if (token === 'BNB')
-        dispatch(requestInvest('updateBnb', [{ value: strValue }]) as any)
+      if (token === 'STTS') dispatch(requestInvest('updateStts', [(Number(strValue) - 100000).toString()]) as any)
+      else if (token === 'BTCB') dispatch(requestInvest('updateBtcb', [strValue]) as any)
+      else if (token === 'BNB') dispatch(requestInvest('updateBnb', [{ value: strValue }]) as any)
     } else {
       let refInfo = utils.isAddress(referrer)
         ? ((await readInvest('users', ['id'], [referrer])) as { id: number })
         : { id: 0 }
       if (refInfo.id > 0) {
         if (token === 'STTS')
-          dispatch(
-            requestInvest('investStts', [
-              referrer,
-              (Number(strValue) - 100000).toString(),
-            ]) as any
-          )
+          dispatch(requestInvest('investStts', [referrer, (Number(strValue) - 100000).toString()]) as any)
         else if (token === 'BTCB') {
           dispatch(requestInvest('investBtcb', [referrer, strValue]) as any)
-        } else if (token === 'BNB')
-          dispatch(
-            requestInvest('investBnb', [referrer, { value: strValue }]) as any
-          )
+        } else if (token === 'BNB') dispatch(requestInvest('investBnb', [referrer, { value: strValue }]) as any)
       } else {
         const error = 'No valid referrer found!'
         dispatch({ type: INVEST_MESSAGES, payload: { error } })
@@ -128,15 +110,13 @@ export const investmentDeposit = (token: string, value: number) => async (
   } else requestDeposit()
 }
 
-export const withdrawInterest = (address?: string) => async (
-  dispatch: Dispatch<AppActions>
-) => {
+export const withdrawInterest = (address?: string) => async (dispatch: Dispatch<AppActions>) => {
   dispatch(requestInvest('withdrawInterest', []) as any)
 }
 
 export const investInformation = (address?: string) => async (
   dispatch: Dispatch<AppActions>,
-  getState: () => AppState
+  getState: () => AppState,
 ) => {
   if (!address) address = getState().account.address
 
@@ -168,24 +148,14 @@ export const investInformation = (address?: string) => async (
       { name: 'users', tokens: ['id', 'latestWithdraw'], args: [address] },
     ]
 
-    Promise.all(
-      items.map((item) => readInvestItems(item.name, item.tokens, item.args))
-    )
+    Promise.all(items.map((item) => readInvestItems(item.name, item.tokens, item.args)))
       .then((data: any) => {
         const account: any = {}
-        data.forEach((its) =>
-          its.map((info) => (account[info.item] = info.balance))
-        )
+        data.forEach((its) => its.map((info) => (account[info.item] = info.balance)))
         if (account.deposits > 0) {
           const deps = Array.from(Array(account.deposits))
           Promise.all(
-            deps.map((_, i) =>
-              readInvestItems(
-                'userDepositDetails',
-                ['reward', 'endTime'],
-                [address, i]
-              )
-            )
+            deps.map((_, i) => readInvestItems('userDepositDetails', ['reward', 'endTime'], [address, i])),
           ).then((deposits: any) => {
             account.depositDetails = []
             deposits.forEach((item, i) =>
@@ -194,8 +164,8 @@ export const investInformation = (address?: string) => async (
                   (account.depositDetails[i] = {
                     ...account.depositDetails[i],
                     [info.item]: info.balance,
-                  })
-              )
+                  }),
+              ),
             )
             dispatch({
               type: INVEST_ACCOUNT_SUCCESS,
@@ -230,11 +200,11 @@ export const readInvestItems = async (method: any, items: any[], args: any) =>
         items.map((item: string) =>
           items.length > 1
             ? array.push({ item, balance: formaterNumber(res[item], item) })
-            : array.push({ item, balance: bytesFormater(res) })
+            : array.push({ item, balance: bytesFormater(res) }),
         )
         resolve(array)
       })
-      .catch((err) => reject(err))
+      .catch((err) => reject(err)),
   )
 
 export const readInvest = async (method: any, items: any[], args: any) =>
@@ -243,11 +213,9 @@ export const readInvest = async (method: any, items: any[], args: any) =>
       .then((res) => {
         const array: any[] = []
         items.map((item: string) =>
-          items.length > 1
-            ? (array[item] = formaterNumber(res[item], item))
-            : (array[item] = bytesFormater(res[item]))
+          items.length > 1 ? (array[item] = formaterNumber(res[item], item)) : (array[item] = bytesFormater(res[item])),
         )
         resolve(array)
       })
-      .catch((err) => reject(err))
+      .catch((err) => reject(err)),
   )

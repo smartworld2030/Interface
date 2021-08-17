@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface InvestLogoProps {
   width: number
   x: number

@@ -1,5 +1,5 @@
 import Colors from '../../../Theme/Colors'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Row from 'antd/lib/row'
 
 interface StyledFlexDivProps {

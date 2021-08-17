@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface SwapLogoProps {
   width: number
   x: number

@@ -1,4 +1,3 @@
-import React from 'react'
 import { bindActionCreators } from 'redux'
 import { Row, Col } from 'react-grid-system'
 import { ThunkDispatch } from 'redux-thunk'

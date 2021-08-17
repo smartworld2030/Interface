@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Button, { ButtonProps } from 'antd/lib/button'
 import Colors from '../../../Theme/Colors'
 

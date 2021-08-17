@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface SttLogoProps {
   width: number
   x: number

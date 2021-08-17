@@ -1,5 +1,5 @@
 import { Button } from 'antd'
-import React from 'react'
+
 import Colors from '../../../Theme/Colors'
 
 interface DepositButtonProps {

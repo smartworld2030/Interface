@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import React, { useState } from 'react'
 import { sizeCalculator } from './Links'
 import { HeadCircle } from './HeadCircle'

@@ -1,7 +1,6 @@
-import React from 'react'
 import Button from 'antd/lib/button'
 import { CopyOutlined } from '@ant-design/icons'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Tooltip from 'antd/lib/tooltip'
 import notification from 'antd/lib/notification'
 

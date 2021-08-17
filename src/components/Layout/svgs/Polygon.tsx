@@ -1,4 +1,3 @@
-import React from 'react'
 import Colors from '../../../Theme/Colors'
 import { STT } from '../typography/Tokens'
 

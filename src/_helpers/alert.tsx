@@ -1,4 +1,3 @@
-import React from 'react'
 import notification from 'antd/lib/notification'
 import { store } from '../_store/store.config'
 import { SHOW_SNACKBAR } from '../_types/snackbar.types'
@@ -50,6 +49,7 @@ export const snackBarMaker = (
   let txLink = ''
   let btn
   if (link) {
+    // @ts-ignore
     const chainId = store.getState().wallet.chainId
     const url = chainList[chainId].explorers[0].url
     txLink = `${url}/tx/${link}`

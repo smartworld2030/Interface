@@ -1,4 +1,3 @@
-import React from 'react'
 import Input from 'antd/lib/input'
 import { Row } from 'react-grid-system'
 import { CircleInput } from './CircleInput'

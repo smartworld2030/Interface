@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col } from 'react-grid-system'
-import { AppState } from '../../../_types'
+import { AppState } from '_types'
 import BnbSwap from './BnbSwap'
 import SttSwap from './SttSwap'
 import { PriceValue } from './PriceValue'
 import Spin from 'antd/lib/spin'
+import { FACTORY_ADDRESS, Token, WETH, Fetcher, Route } from '@pancakeswap/sdk'
+import { provider } from '_actions/wallet.actions'
+import info from '_contracts/info'
 
 interface IProps {
   isMobile: boolean
@@ -15,12 +18,36 @@ type SwapProps = IProps & ReturnType<typeof mapStateToProps>
 
 const Swap: React.FC<SwapProps> = ({
   isMobile,
+  chainId,
   tokens,
   prices,
   dollar,
   error,
   swapLoading,
 }) => {
+  const fetchData = async () => {
+    const STTS = new Token(
+      chainId,
+      info[chainId].STTS,
+      8,
+      'Smart World Token - Stock',
+      'STTS'
+    )
+
+    console.log(STTS, WETH[chainId], FACTORY_ADDRESS)
+    // note that you may want/need to handle this async code differently,
+    // for example if top-level await is not an option
+    const pair = await Fetcher.fetchPairData(STTS, WETH[chainId], provider)
+    console.log(pair)
+
+    const route = new Route([pair], WETH[chainId])
+    console.log(route.pairs) // 201.306
+    console.log(route.midPrice.toSignificant(10)) // 201.306
+    console.log(route.midPrice.invert().toSignificant(10)) // 0.00496756
+  }
+  useEffect(() => {
+    fetchData()
+  }, [])
   return (
     <Spin
       style={{

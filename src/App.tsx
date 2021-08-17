@@ -49,8 +49,8 @@ class App extends Component<AppProps, AppStates> {
     const globeHeight = spacerHeight * 0.6
     return (
       <Router>
-        <Header width={appWidth} />
-        <Globe height={globeHeight} width={appWidth} />
+        {/* <Header width={appWidth} />
+        <Globe height={globeHeight} width={appWidth} /> */}
         <AppRouter
           isMobile={isMobile}
           width={appWidth}

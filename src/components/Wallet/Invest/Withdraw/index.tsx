@@ -1,43 +1,23 @@
-import React from 'react'
 import { Row } from 'react-grid-system'
-import { connect } from 'react-redux'
 import Colors from '../../../../Theme/Colors'
 import { formaterNumber, roundDecimals } from '../../../../_helpers/api'
-import { bindActionCreators } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
-import { AppActions, AppState } from '../../../../_types'
-import { withdrawInterest } from '../../../../_actions/invest.actions'
 
-interface IProps {
+interface WithdrawCircleProps {
   width: number
 }
-type WithdrawCircleProps = IProps &
-  ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
 
-const WithdrawSection: React.FC<WithdrawCircleProps> = ({
-  width,
-  latestWithdraw,
-  referral,
-  hourly,
-  withdrawInterest,
-}) => {
+const WithdrawSection: React.FC<WithdrawCircleProps> = ({ width }) => {
+  let latestWithdraw, referral, hourly, withdrawInterest
   const half = width / 2
   const r = half - 10
   const c = 2 * Math.PI * r
   const period = 3600
-  const secPast =
-    latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
+  const secPast = latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
 
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
   return (
-    <Row
-      direction="column"
-      justify="around"
-      align="center"
-      style={{ height: '100%' }}
-    >
+    <Row direction="column" justify="around" align="center" style={{ height: '100%' }}>
       <svg height={width} width={width}>
         <defs>
           <clipPath id="cut-off-middle">
@@ -83,50 +63,21 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
             </>
           )}
         </circle>
-        <text
-          textAnchor="middle"
-          dominantBaseline="middle"
-          x={half}
-          y={width * 0.17}
-          fontSize="11"
-          fill="white"
-        >
+        <text textAnchor="middle" dominantBaseline="middle" x={half} y={width * 0.17} fontSize="11" fill="white">
           REWARD
         </text>
-        <text
-          textAnchor="middle"
-          x={half}
-          y={width * 0.26}
-          fontSize="14"
-          fill="white"
-        >
+        <text textAnchor="middle" x={half} y={width * 0.26} fontSize="14" fill="white">
           <tspan>{roundDecimals(formaterNumber(hourly, 'STT'), 2)}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
         </text>
-        <text
-          textAnchor="middle"
-          dominantBaseline="middle"
-          x={half}
-          y={width * 0.77}
-          fontSize="14"
-          fill="white"
-        >
+        <text textAnchor="middle" dominantBaseline="middle" x={half} y={width * 0.77} fontSize="14" fill="white">
           <tspan>{roundDecimals(formaterNumber(referral, 'STT'), 2)}</tspan>
           <tspan fill={Colors.green}> STT</tspan>
         </text>
-        <text
-          textAnchor="middle"
-          dominantBaseline="middle"
-          x={half}
-          y={width * 0.85}
-          fontSize="11"
-          fill="white"
-        >
+        <text textAnchor="middle" dominantBaseline="middle" x={half} y={width * 0.85} fontSize="11" fill="white">
           REFERRAL
         </text>
-        <g
-          onClick={referral + hourly > 0 ? () => withdrawInterest() : undefined}
-        >
+        <g onClick={referral + hourly > 0 ? () => withdrawInterest() : undefined}>
           <rect
             x={30}
             y={r * 0.87}
@@ -139,13 +90,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
             fill="none"
             stroke="#434343"
           />
-          <text
-            textAnchor="middle"
-            fill={Colors.green}
-            x={half}
-            y={half + 6}
-            fontSize={width / 12}
-          >
+          <text textAnchor="middle" fill={Colors.green} x={half} y={half + 6} fontSize={width / 12}>
             WITHDRAW
           </text>
           <rect
@@ -167,20 +112,4 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   )
 }
 
-const mapStateToProps = (state: AppState) => {
-  const { error, tokens } = state.account
-  const { hourly, referral, latestWithdraw } = state.invest.account
-  return {
-    error,
-    tokens,
-    hourly,
-    referral,
-    latestWithdraw,
-  }
-}
-
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  withdrawInterest: bindActionCreators(withdrawInterest, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(WithdrawSection)
+export default WithdrawSection

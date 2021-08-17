@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Colors from '../../../Theme/Colors'
 import Typography from 'antd/lib/typography'
 

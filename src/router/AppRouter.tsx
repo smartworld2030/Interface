@@ -1,28 +1,31 @@
-import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
-import Investment from '../components/Wallet/Invest'
-import Swap from '../components/Wallet/Swap'
+import React, { lazy } from 'react'
+import { usePollBlockNumber } from 'state/block/hooks'
+import useEagerConnect from 'hooks/useEagerConnect'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
-import { AbsoluteBody } from '../components/Layout/divs/Divs'
-import { AppActions, AppState } from '../_types'
-import { accountTokenBalances } from '../_actions/account.actions'
-import Info from '../components/Wallet/Info'
-import ProtectedRoute from './ProtectedRoute'
+import { AbsoluteBody } from 'components/Layout/divs/Divs'
 import { Container, Row, Col } from 'react-grid-system'
 import Typography from 'antd/lib/typography'
-import { tokenPrices, bankTotalSatoshi } from '../_actions/bank.actions'
-import { investInformation } from '../_actions/invest.actions'
-import { poolInformation } from '../_actions/pool.actions'
+import Logo from 'assets/Logo.png'
+import GlobalStyle from 'style/Global'
 import {
-  initialization,
-  investContract,
-  poolContract,
-} from '../_actions/wallet.actions'
-import Pool from '../components/Wallet/Pool'
-import Logo from '../assets/Logo.png'
+  RedirectDuplicateTokenIds,
+  RedirectOldAddLiquidityPathStructure,
+  RedirectToAddLiquidity,
+} from 'components/Wallet/Swap/AddLiquidity/redirects'
+import SuspenseWithChunkError from 'components/SuspenseWithChunkError'
+import PageLoader from 'components/Loader/PageLoader'
+import RedirectOldRemoveLiquidityPathStructure from 'components/Wallet/Swap/RemoveLiquidity/redirects'
+import { RedirectPathToSwapOnly, RedirectToSwap } from 'components/Wallet/Swap/Swap/redirects'
+
+const AddLiquidity = lazy(() => import('components/Wallet/Swap/AddLiquidity'))
+const Liquidity = lazy(() => import('components/Wallet/Swap/Pool'))
+const PoolFinder = lazy(() => import('components/Wallet/Swap/PoolFinder'))
+const RemoveLiquidity = lazy(() => import('components/Wallet/Swap/RemoveLiquidity'))
+const Investment = lazy(() => import('components/Wallet/Invest'))
+const Swap = lazy(() => import('components/Wallet/Swap/Swap'))
+const Info = lazy(() => import('components/Wallet/Info'))
+const Pool = lazy(() => import('components/Wallet/Pool'))
 
 interface IProps {
   isMobile: boolean
@@ -30,9 +33,7 @@ interface IProps {
   width: number
 }
 
-type AppRouterProps = IProps &
-  ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+type AppRouterProps = IProps
 
 const Titles = {
   '/invest': 'INVESTMENT',
@@ -42,74 +43,11 @@ const Titles = {
   '/stb': 'STB',
 }
 
-const priceDelay = 30
-const detailsDelay = 60
-let timer
-let routeTimer
-
-export const AppRouter: React.FC<AppRouterProps> = ({
-  isMobile,
-  address,
-  height,
-  width,
-  active,
-  init,
-  tokenPrices,
-  poolInformation,
-  bankTotalSatoshi,
-  investInformation,
-}) => {
+export const AppRouter: React.FC<AppRouterProps> = ({ isMobile, height, width }) => {
   const location = useLocation()
   const { pathname } = location
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.log('initialization')
-      init()
-    }, 1000)
-  }, [init])
-
-  useEffect(() => {
-    clearInterval(timer)
-    if (active) {
-      tokenPrices()
-      bankTotalSatoshi()
-      timer = setInterval(() => {
-        tokenPrices()
-        bankTotalSatoshi()
-      }, priceDelay * 1000)
-    }
-    return () => {
-      clearInterval(timer)
-    }
-  }, [active, bankTotalSatoshi, tokenPrices])
-
-  useEffect(() => {
-    const switcher = () => {
-      switch (pathname) {
-        case '/pool':
-          if (poolContract) poolInformation()
-          break
-        case '/invest':
-          if (investContract) investInformation()
-          break
-        case '/swap':
-          break
-        default:
-          break
-      }
-    }
-    clearInterval(routeTimer)
-    if (address) {
-      switcher()
-      routeTimer = setInterval(() => {
-        switcher()
-      }, detailsDelay * 1000)
-    }
-    return () => {
-      clearInterval(routeTimer)
-    }
-  }, [pathname, address, poolInformation, investInformation])
+  usePollBlockNumber()
+  useEagerConnect()
 
   const transitions = useTransition(location, {
     key: pathname,
@@ -126,12 +64,10 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         height,
       }}
     >
+      <GlobalStyle />
       <Row justify="between" align="center">
         <Col xs={12}>
-          <Typography.Title
-            style={{ textAlign: 'center', margin: 0 }}
-            level={5}
-          >
+          <Typography.Title style={{ textAlign: 'center', margin: 0 }} level={5}>
             {Titles[pathname]}
           </Typography.Title>
         </Col>
@@ -144,43 +80,34 @@ export const AppRouter: React.FC<AppRouterProps> = ({
           }}
         >
           {transitions((style, item, _, key) => (
-            <AbsoluteBody
-              height={isMobile ? undefined : 300}
-              width={width - 32}
-            >
+            //@ts-ignore
+            <AbsoluteBody height={isMobile ? undefined : 300} width={width - 32}>
               <animated.div key={key} style={style}>
-                <Switch location={item}>
-                  <Route exact path="/invest">
-                    <ProtectedRoute
-                      isMobile={isMobile}
-                      height={height}
-                      needLogin
-                    >
-                      <Investment isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path={['/pool', '/freeze']}>
-                    <ProtectedRoute isMobile={isMobile} height={height}>
-                      <Pool isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path="/stb">
-                    <ProtectedRoute isMobile={isMobile} height={height}>
-                      <STB isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path="/info">
-                    <Info isMobile={isMobile} />
-                  </Route>
-                  <Route exact path="/swap">
-                    <ProtectedRoute isMobile={isMobile} height={height}>
-                      <Swap isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route path="/">
-                    <Redirect to="/invest" />
-                  </Route>
-                </Switch>
+                <SuspenseWithChunkError fallback={<PageLoader />}>
+                  <Switch location={item}>
+                    <Route exact strict path="/ingo" component={Info} />
+                    <Route exact strict path="/invest" component={Investment} />
+                    <Route exact strict path={['/pool', '/freeze']} component={Pool} />
+                    <Route exact strict path="/stb" component={STB} />
+                    <Route exact strict path="/swap" component={Swap} />
+                    <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+                    <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
+                    <Route exact strict path="/find" component={PoolFinder} />
+                    <Route exact strict path="/liquidity" component={Liquidity} />
+                    <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+                    <Route exact path="/add" component={AddLiquidity} />
+                    <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                    <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                    <Route exact path="/create" component={AddLiquidity} />
+                    <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                    <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                    <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+                    <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+                    <Route path="/">
+                      <Redirect to="/invest" />
+                    </Route>
+                  </Switch>
+                </SuspenseWithChunkError>
               </animated.div>
             </AbsoluteBody>
           ))}
@@ -220,31 +147,12 @@ export const STB: React.FC<tester> = ({ isMobile }) => {
       <Col xs={12} md={2}></Col>
       <Col xs={12} md={4}>
         Coming Soon!
-        <hr /> STB is the future stable coin. STB is issued only by the STT
-        payment. The STB token is generated from 99 percent of the STT payment
-        which is always worth as 100 SATOSHI or one BITS. <br />1 STB = 100
-        Satoshi
+        <hr /> STB is the future stable coin. STB is issued only by the STT payment. The STB token is generated from 99
+        percent of the STT payment which is always worth as 100 SATOSHI or one BITS. <br />1 STB = 100 Satoshi
       </Col>
       <Col xs={12} md={2}></Col>
     </Row>
   )
 }
 
-const mapStateToProps = (state: AppState) => {
-  const { active } = state.wallet
-  const { address } = state.account
-  return {
-    active,
-    address,
-  }
-}
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  init: bindActionCreators(initialization, dispatch),
-  tokenPrices: bindActionCreators(tokenPrices, dispatch),
-  bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
-  poolInformation: bindActionCreators(poolInformation, dispatch),
-  investInformation: bindActionCreators(investInformation, dispatch),
-  accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppRouter)
+export default AppRouter

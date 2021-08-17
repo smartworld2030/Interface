@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { animated } from 'react-spring'
 
 export const AnimatedSvg = styled(animated.svg)`

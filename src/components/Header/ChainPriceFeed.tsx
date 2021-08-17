@@ -1,4 +1,3 @@
-import React from 'react'
 import { truncate } from '../../_helpers/api'
 import Marquee from 'react-fast-marquee'
 import { AppState } from '../../_types'

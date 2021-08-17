@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import { Col, Row } from 'react-grid-system'
 import { AppState } from '../../../_types'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Row } from 'react-grid-system'
 import { connect } from 'react-redux'
 import Colors from '../../../../Theme/Colors'
