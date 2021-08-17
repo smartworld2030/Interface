@@ -222,8 +222,9 @@ export const STB: React.FC<tester> = ({ isMobile }) => {
         Coming Soon!
         <hr /> STB is the future stable coin. STB is issued only by the STT
         payment. The STB token is generated from 99 percent of the STT payment
-        which is always worth as 100 SATOSHI or one BITS. <br />1 STB = 100
-        Satoshi
+        which is always worth as 100 SATOSHI or one BITS. <br />
+        1 dollar = 100 cents
+        <br />1 STB = 100 SATOSHI
       </Col>
       <Col xs={12} md={2}></Col>
     </Row>
