@@ -21,7 +21,7 @@ export const requestSwap = (method: any, args: any) => async (
   dispatch({ type: SWAP_METHOD_REQUEST, payload: { method } })
   const chainId = getState().wallet.chainId
   const address = getState().account.address
-
+  console.log(args)
   const requester = () => {
     // @ts-ignore
     swapContract.functions[method](...args)
@@ -53,6 +53,62 @@ export const requestSwap = (method: any, args: any) => async (
       })
   }
   if (address && method === 'safeBnbSwap' && formaterNumber(args[0]) !== 0) {
+    const allowance = await tokenContract.STTS.allowance(
+      address,
+      swap.address[chainId]
+    )
+    if (bytesFormater(allowance) === 0) {
+      dispatch({ type: SWAP_METHOD_REQUEST, payload: { method: 'approve' } })
+      tokenContract.STTS.approve(swap.address[chainId], constants.MaxUint256)
+        .then((transaction) => {
+          provider.once(transaction.hash, (_) => {
+            requester()
+          })
+        })
+        .catch((err) => {
+          dispatch({ type: SWAP_METHOD_FAILURE, payload: err })
+          errorHandler(err)
+        })
+    } else requester()
+  } else requester()
+}
+
+export const requestSTTSwap = (sttsArgs: any, bnbArgs: any) => async (
+  dispatch: Dispatch<AppActions>,
+  getState: () => AppState
+) => {
+  dispatch({ type: SWAP_METHOD_REQUEST, payload: { method: 'STTtoBnbSwap' } })
+  const chainId = getState().wallet.chainId
+  const address = getState().account.address
+  console.log(sttsArgs, bnbArgs)
+  const requester = () => {
+    swapContract
+      // @ts-ignore
+      .safeSTTSwap(...sttsArgs)
+      .then((transaction: Transaction) => {
+        if (transaction.hash) {
+          console.log(transaction)
+          dispatch({
+            type: SWAP_METHOD_SUCCESS,
+            payload: { transaction },
+          })
+          warningHandler('Transaction Pending', null, transaction.hash)
+          provider.once(transaction.hash, () => {
+            dispatch({
+              type: SWAP_METHOD_MINED,
+            })
+            successHandler('Transaction Confirmed', null, transaction.hash)
+            dispatch(requestSwap('safeBnbSwap', bnbArgs) as any)
+            dispatch(accountTokenBalances(['BTCB', 'STT', 'STTS']) as any)
+          })
+        }
+      })
+      .catch((err) => {
+        dispatch({ type: SWAP_METHOD_FAILURE, payload: { error: err } })
+        errorHandler(err)
+      })
+  }
+  if (address && formaterNumber(sttsArgs[0]) !== 0) {
     const allowance = await tokenContract.STTS.allowance(
       address,
       swap.address[chainId]

@@ -211,18 +211,6 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
             {result.min} {result.token}
           </Typography>
         </Row>
-        <Row justify="between" gutterWidth={-80}>
-          <Typography>Minimum received:</Typography>
-          <Typography>
-            {result.allowed} {result.token}
-          </Typography>
-        </Row>
-        <Row justify="between" gutterWidth={-80}>
-          <Typography>Maximum received:</Typography>
-          <Typography>
-            {result.max} {result.token}
-          </Typography>
-        </Row>
       </Col>
       <Row justify="center">
         <Col xs={6}>

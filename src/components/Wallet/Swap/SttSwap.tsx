@@ -11,11 +11,12 @@ import { swapContract } from '../../../_actions/wallet.actions'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import {
   convertNumbers2English,
+  deadline,
   formatToString,
   truncate,
 } from '../../../_helpers/api'
 import { BigNumber } from '@ethersproject/bignumber'
-import { requestSwap } from '../../../_actions/swap.actions'
+import { requestSTTSwap } from '../../../_actions/swap.actions'
 import Colors from '../../../Theme/Colors'
 
 interface IProps {}
@@ -29,9 +30,11 @@ let secondTimer
 
 const params = ['allowed', 'max', 'min', 'slippage']
 
-const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
+const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSTTSwap }) => {
   const [result, setResult] = useState({
     token: '',
+    stts: parseUnits('0'),
+    sttsMin: '0',
     allowed: '0',
     max: '0',
     min: '0',
@@ -66,30 +69,39 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
     setInput1({ value, big })
     clearTimeout(tokenTimer)
     const values = {
+      stts: parseUnits('0'),
+      sttsMin: '0',
       allowed: '0',
       max: '0',
       min: '0',
       price: '0',
+      BnbPrice: '0',
       decimals: 0,
     }
     if (Number(value) > 0) {
       tokenTimer = setTimeout(async () => {
         values.price = formatUnits(await swapContract.STTStoSTTPrice(), 0)
+        values.BnbPrice = formatUnits(await swapContract.STTStoBNBPrice(), 0)
         swapContract
           .STTtoSTTSInfo(bigNumber ? bigNumber : big, 0)
           .then((res) => {
+            values.stts = res.allowed
+            values.sttsMin = res.min.toString()
+            return swapContract.STTStoBNBInfo(res.allowed)
+          })
+          .then((res: any) => {
             params.forEach((param) => {
               if (param !== 'slippage')
-                values[param] = truncate(formatUnits(res[param], 8), 4)
+                values[param] = truncate(formatUnits(res[param], 18), 8)
             })
             values.decimals = 8
-            setResult({ ...values, token: 'STTS' })
+            setResult({ ...values, token: 'BNB' })
             const value = bigNumber
-              ? truncate(formatUnits(bigNumber, 8), 4)
-              : truncate(formatUnits(res.allowed, 8), 4)
+              ? truncate(formatUnits(bigNumber, 18), 8)
+              : truncate(formatUnits(res.min, 18), 8)
             bigNumber
               ? setInput1({ value, big: bigNumber })
-              : setInput2({ value, big: res.allowed })
+              : setInput2({ value, big: res.min })
           })
           .catch((err) => {
             console.log(err)
@@ -119,12 +131,12 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
     inputHandler(truncate(formatToString(tokens[token]), 4), index)
   }
   const swapButtonHandler = () => {
-    requestSwap('safeSTTSwap', [
-      input1.big,
-      result.price,
-      100,
-      Math.floor(Date.now() / 1000) + 180,
-    ])
+    setTimeout(() => {
+      requestSTTSwap(
+        [input1.big, result.price, 100, deadline(3)],
+        [result.stts, deadline(3)]
+      )
+    }, 500)
   }
 
   return (
@@ -160,26 +172,20 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
         <Input
           onChange={({ target }) => inputHandler(target.value, 1)}
           value={input2.value}
-          suffix="STTS"
+          suffix="BNB"
         />
       </Col>
       <Col xs={12}>
         <Row justify="between" gutterWidth={-20}>
-          <Typography>Estimated:</Typography>
+          <Typography>Estimated STTS:</Typography>
           <Typography>
-            {result.allowed} {result.token}
+            {truncate(formatUnits(result.stts, 8), 4)} STTS
           </Typography>
         </Row>
         <Row justify="between" gutterWidth={-20}>
-          <Typography>Minimum received:</Typography>
+          <Typography>Estimated BNB:</Typography>
           <Typography>
             {result.min} {result.token}
-          </Typography>
-        </Row>
-        <Row justify="between" gutterWidth={-20}>
-          <Typography>Maximum received:</Typography>
-          <Typography>
-            {result.max} {result.token}
           </Typography>
         </Row>
       </Col>
@@ -191,7 +197,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
               input2.value === '0' || input1.value === '0' || !!!input1.value
             }
           >
-            Swap STT for STTS
+            Swap STT for BNB
           </Button>
         </Col>
       </Row>
@@ -210,7 +216,7 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  requestSwap: bindActionCreators(requestSwap, dispatch),
+  requestSTTSwap: bindActionCreators(requestSTTSwap, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SttSwap)
