@@ -14,8 +14,8 @@ import {
   toCallKey,
   ListenerOptions,
 } from './actions'
-import { useMulticallContract } from 'hooks/useContract'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { getMulticallContract } from 'utils/contractHelpers'
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -295,39 +295,55 @@ export function useSingleCallMultipleMethod(
   }, [results, contract, fragments, latestBlockNumber])
 }
 
-export interface MultiCallArray {
-  contract: Contract
+export interface MultiCallSingleData {
+  ifs: Interface
+  address: string
+  name: string
+  decimals?: number
+  methods: string[]
+  args: (string | number)[][]
+}
+
+export interface MultiCallMultipleData {
+  ifs: Interface
+  address: string
   methods: string[]
   args: (string | number)[][]
 }
 export interface MultiCall {
-  address: string
+  target: string
   callData: string
+}
+interface MulticallOptions {
+  requireSuccess?: boolean
 }
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multiCalls chunk of calls to make
  */
-export function useMultiCallFetcher(multiCalls: MultiCallArray[]): { [key: string]: string | string[] } {
+export function useMultiCallMultipleData(
+  multiCalls: MultiCallMultipleData[],
+  options: MulticallOptions = { requireSuccess: false },
+): { [key: string]: string | string[] } {
+  const { requireSuccess } = options
   const [states, setStates] = useState({})
   const latestBlockNumber = useBlockNumber()
-  const { chainId } = useActiveWeb3React()
-  const multicallContract = useMulticallContract()
+  const multiContract = getMulticallContract()
   const windowVisible = useIsWindowVisible()
 
   useEffect(() => {
     let callCounter = 0
-    if (!latestBlockNumber || !chainId || !windowVisible) return
+    if (!latestBlockNumber || !windowVisible) return
     async function multiCallRequest() {
       const calls: MultiCall[] = multiCalls.reduce(
-        (calls, { contract, methods, args }) => [
+        (calls, { ifs, address, methods, args }) => [
           ...calls,
           ...methods.reduce(
             (items, method, i) => [
               ...items,
               {
-                address: contract.address,
-                callData: contract.interface.encodeFunctionData(method, args[i]),
+                target: address.toLowerCase(),
+                callData: ifs.encodeFunctionData(method, args[i]),
               },
             ],
             [],
@@ -335,29 +351,104 @@ export function useMultiCallFetcher(multiCalls: MultiCallArray[]): { [key: strin
         ],
         [],
       )
-
-      const { returnData } = await multicallContract.aggregate(calls.map((obj) => [obj.address, obj.callData]))
-
-      setStates(
-        multiCalls.reduce(
-          (items, { contract, methods }) => ({
-            ...items,
-            ...methods.reduce(
-              (its, method) => ({
-                ...its,
-                [method]: contract.interface.decodeFunctionResult(method, returnData[callCounter++]),
-              }),
-              {},
-            ),
-          }),
-          {},
-        ),
-      )
+      try {
+        const multiCall = calls.map(({ target, callData }) => [target, callData])
+        const data = await multiContract.tryAggregate(requireSuccess, multiCall)
+        setStates(
+          multiCalls.reduce(
+            (items, { ifs, methods }) => ({
+              ...items,
+              ...methods.reduce(
+                (its, method) => ({
+                  ...its,
+                  [method]: ifs.decodeFunctionResult(method, data[callCounter++].returnData),
+                }),
+                {},
+              ),
+            }),
+            {},
+          ),
+        )
+      } catch (error) {
+        console.log(error)
+        setStates({})
+      }
     }
     if (multiCalls) {
       multiCallRequest()
     }
-  }, [multicallContract, multiCalls, windowVisible, latestBlockNumber, chainId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multiCalls, windowVisible, latestBlockNumber])
 
   return states
+}
+
+/**
+ * Fetches a chunk of calls, enforcing a minimum block number constraint
+ * @param multiCalls chunk of calls to make
+ */
+export function useMultiCallSingleData(
+  multiCalls: MultiCallSingleData[],
+  options: MulticallOptions = { requireSuccess: false },
+): { [key: string]: string | string[] } {
+  const { requireSuccess } = options
+  const [states, setStates] = useState({})
+  const latestBlockNumber = useBlockNumber()
+  const multiContract = getMulticallContract()
+  const windowVisible = useIsWindowVisible()
+
+  useEffect(() => {
+    if (!latestBlockNumber || !windowVisible) return
+
+    if (multiCalls) {
+      multiCallRequest(multiContract, multiCalls, requireSuccess).then((res) => {
+        setStates(res)
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multiCalls, windowVisible])
+
+  return states
+}
+
+export async function multiCallRequest(multiContract, multiCalls, requireSuccess) {
+  let callCounter = 0
+
+  const calls: MultiCall[] = multiCalls.reduce(
+    (calls, { ifs, address, methods, args }) => [
+      ...calls,
+      ...methods.reduce(
+        (items, method, i) => [
+          ...items,
+          {
+            target: address.toLowerCase(),
+            callData: ifs.encodeFunctionData(method, args[i]),
+          },
+        ],
+        [],
+      ),
+    ],
+    [],
+  )
+  try {
+    const multiCall = calls.map(({ target, callData }) => [target, callData])
+    const data = await multiContract.tryAggregate(requireSuccess, multiCall)
+
+    return multiCalls.reduce(
+      (items, { name, ifs, methods }) => ({
+        ...items,
+        ...methods.reduce(
+          (its, method) => ({
+            ...its,
+            [name]: ifs.decodeFunctionResult(method, data[callCounter++].returnData),
+          }),
+          {},
+        ),
+      }),
+      {},
+    )
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
 }

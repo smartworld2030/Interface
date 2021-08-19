@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { updateBankStates } from './actions'
-import { useBankContract, useBtcPriceContract } from 'hooks/useContract'
-import { useMultiCallFetcher } from 'state/multicall/hooks'
 import useDebounce from 'hooks/useDebounce'
+import { updateBankStates } from './actions'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useMultiCallMultipleData } from 'state/multicall/hooks'
+import { useBankContract, useBtcPriceContract } from 'hooks/useContract'
 
 export default function Updater(): null {
   const dispatch = useDispatch()
@@ -15,12 +15,14 @@ export default function Updater(): null {
   const multicalls = useMemo(
     () => [
       {
-        contract: bankContract,
+        ifs: bankContract.interface,
+        address: bankContract.address,
         methods: ['totalSatoshi', 'sttPrice', 'btcToSatoshi', 'bnbToSatoshi', 'sttsToSatoshi'],
-        args: [[], [], [10 ** 18 + ''], [10 ** 18 + ''], [10 ** 8 + '']],
+        args: [[], [], [String(10 ** 18)], [String(10 ** 18)], [String(10 ** 8)]],
       },
       {
-        contract: tokenPrice,
+        ifs: tokenPrice.interface,
+        address: tokenPrice.address,
         methods: ['latestAnswer'],
         args: [[]],
       },
@@ -28,7 +30,7 @@ export default function Updater(): null {
     [bankContract, tokenPrice],
   )
 
-  const results = useMultiCallFetcher(multicalls)
+  const results = useMultiCallMultipleData(multicalls)
 
   const compiledStates = useMemo(() => {
     if (!Object.keys(results).length) return undefined

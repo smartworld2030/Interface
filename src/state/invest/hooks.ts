@@ -8,10 +8,38 @@ export function useInvestStates(): InvestData {
   return useSelector((state: AppState) => state.invest[chainId ?? -1])
 }
 
-export function useInvestMax(): InvestData['maxPercent'] {
+export function useInvestMax(): number {
   const { chainId } = useActiveWeb3React()
 
-  return useSelector((state: AppState) => state.invest[chainId ?? -1]?.maxPercent)
+  return useSelector((state: AppState) => +state.invest[chainId ?? -1]?.maxPercent)
+}
+
+export function useUserDetails(): InvestData {
+  return useInvestStates()
+}
+
+export function useUserInfo(): InvestData['users'] {
+  const { chainId } = useActiveWeb3React()
+
+  return useSelector((state: AppState) => state.invest[chainId ?? -1]?.users)
+}
+
+export function useUserInterest(): InvestData['calculateInterest'] {
+  const { chainId } = useActiveWeb3React()
+
+  return useSelector((state: AppState) => state.invest[chainId ?? -1]?.calculateInterest)
+}
+
+export function useUserPercent(): InvestData['calculatePercent'] {
+  const { chainId } = useActiveWeb3React()
+
+  return useSelector((state: AppState) => state.invest[chainId ?? -1]?.calculatePercent)
+}
+
+export function useUserInvestBalance(): InvestData['userBalances'] {
+  const { chainId } = useActiveWeb3React()
+
+  return useSelector((state: AppState) => state.invest[chainId ?? -1]?.userBalances)
 }
 
 export default useInvestStates

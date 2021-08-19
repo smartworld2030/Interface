@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { updateInvestStates } from './actions'
 import { useInvestContract } from 'hooks/useContract'
-import { useMultiCallFetcher } from 'state/multicall/hooks'
+import { useMultiCallMultipleData } from 'state/multicall/hooks'
 import useDebounce from 'hooks/useDebounce'
 
 export default function Updater(): null {
@@ -15,20 +15,22 @@ export default function Updater(): null {
     () => [
       account
         ? {
-            contract: investContract,
-            methods: ['calculateInterest', 'userBalances', 'calculatePercent', 'users', 'maxPercent'],
-            args: [[account], [account], [account, 0], [account], []],
+            ifs: investContract.interface,
+            address: investContract.address,
+            methods: ['maxPercent', 'userBalances', 'users', 'calculateInterest'],
+            args: [[], [account], [account], [account]],
           }
         : {
-            contract: investContract,
+            ifs: investContract.interface,
+            address: investContract.address,
             methods: ['maxPercent'],
             args: [[]],
           },
     ],
-    [investContract, account, chainId],
+    [investContract, account],
   )
 
-  const results = useMultiCallFetcher(calls)
+  const results = useMultiCallMultipleData(calls)
 
   const compiledStates = useMemo(() => {
     if (!Object.keys(results).length) return undefined

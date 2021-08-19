@@ -100,7 +100,7 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
         }}
       >
         <Input
-          value={value}
+          value={value ? value : undefined}
           placeholder={placeholder}
           className="deposit-input"
           onChange={({ target }) => inputHandler(target.value)}

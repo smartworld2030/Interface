@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-grid-system'
+import { useBankSatoshi } from 'state/bank/hooks'
+import { useInvestTokenBalances } from 'state/wallet/hooks'
 import { removeError } from '../../../../_actions/invest.actions'
-import {
-  convertNumbers2English,
-  formatToString,
-  percentToValue,
-  truncate,
-  valueToPercent,
-} from '../../../../_helpers/api'
+import { convertNumbers2English, percentToValue, truncate, valueToPercent } from '../../../../_helpers/api'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
 import TokenCircle from '../../../Layout/svgs/TokenCircle'
 import DepositInfo from './DepositInfo'
@@ -16,11 +12,11 @@ interface DepositSectionProps {
   isMobile: boolean
 }
 
-export const tokenNames = ['STTS', 'BNB', 'BTCB']
+export const tokenNames = ['STTS', 'BNB', 'BTC']
 
 export const DepositSection: React.FC<DepositSectionProps> = ({ isMobile }) => {
-  const prices = {}
-  const tokens = {}
+  const prices = useBankSatoshi()
+  const tokens = useInvestTokenBalances()
   const error = {}
   const [token, setToken] = useState('STTS')
   const [value, setValue] = useState<string>()
@@ -31,11 +27,13 @@ export const DepositSection: React.FC<DepositSectionProps> = ({ isMobile }) => {
     }
   }, [token])
 
-  const minimumAmount = (t: string) => truncate(formatToString(500000 / prices[t]), t === 'STTS' ? 1 : 3, t !== 'BTCB')
+  const minimumAmount = (t: string) =>
+    truncate((500000 / Number(prices[t.toLowerCase()])).toString(), t === 'STTS' ? 1 : 3, t !== 'BTC')
 
   const percentHandler = (per: number) => {
     if (error) removeError()
-    setValue(percentToValue(tokens[token], per))
+    const percent = percentToValue(tokens[token], per)
+    setValue(percent && percent !== 'NaN' ? percent : '0')
   }
 
   const inputHandler = (val: string) => {
@@ -56,19 +54,19 @@ export const DepositSection: React.FC<DepositSectionProps> = ({ isMobile }) => {
       </Col>
       <Col md={4}>
         <Row justify="around" align="center" style={{ height: '100%' }}>
-          {/* <DepositCircle
+          <DepositCircle
             width={isMobile ? 210 : 190}
             token={token}
             value={value}
-            placeholder={tokens[token].toString()}
-            percent={valueToPercent(Number(value), tokens[token])}
+            placeholder={tokens?.[token]?.toString()}
+            percent={valueToPercent(value, tokens?.[token])}
             inputHandler={inputHandler}
             percentHandler={percentHandler}
-          /> */}
+          />
         </Row>
       </Col>
       <Col md={6}>
-        <DepositInfo token={token} value={Number(value ?? 0)} />
+        <DepositInfo token={token} value={Number(value ?? 0)} prices={prices} />
       </Col>
     </Row>
   )

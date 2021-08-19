@@ -5,9 +5,12 @@ import WithdrawSection from './Withdraw'
 import DepositSection from './Deposit'
 import DetailSection from './Details'
 import InvestUpdater from 'state/invest/updater'
-import { useMultiCallFetcher } from 'state/multicall/hooks'
+import { useMultiCallMultipleData } from 'state/multicall/hooks'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useInvestContract } from 'hooks/useContract'
+import { useInvestTokenBalances, useTokenBalance } from 'state/wallet/hooks'
+import erc20 from '_contracts/erc20'
+import useInvestStates from 'state/invest/hooks'
 
 interface InvestmentProps {
   isMobile: boolean
@@ -20,21 +23,22 @@ const Investment: React.FC<InvestmentProps> = ({ isMobile }) => {
         textAlign: 'center',
         height: 150,
       }}
-      // spinning={investLoading}
-      // tip={error ? error : 'Waiting...'}
+      spinning={false}
     >
       <InvestUpdater />
-      {/* <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
+      <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
         <Col md={12} lg={6}>
           <DepositSection isMobile={isMobile} />
         </Col>
-        <Col md={6} lg={3}>
+        {/*
+         <Col md={6} lg={3}>
           <WithdrawSection width={230} />
         </Col>
         <Col md={6} lg={3}>
           <DetailSection />
-        </Col>
-      </Row> */}
+        </Col> 
+      */}
+      </Row>
     </Spin>
   )
 }

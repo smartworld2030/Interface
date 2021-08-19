@@ -7,17 +7,9 @@ interface CircleInputProps extends React.HTMLAttributes<SVGElement> {
   onMax: () => void
 }
 
-export const CircleInput: React.FC<CircleInputProps> = ({
-  percent,
-  width,
-  onClick,
-  onMax,
-  token,
-  ...rest
-}) => {
+export const CircleInput: React.FC<CircleInputProps> = ({ percent, width, onClick, onMax, token, ...rest }) => {
   percent = percent > 0 ? percent * 10 : 0
-  const strokeCalculate = () =>
-    `0,${percent % 1000},0,${1000 - (percent % 1000)}`
+  const strokeCalculate = () => `0,${percent % 1000},0,${1000 - (percent % 1000)}`
 
   return (
     <svg
@@ -53,27 +45,13 @@ export const CircleInput: React.FC<CircleInputProps> = ({
           a 159.155 159.155 0 0 1 0 318.31
           a 159.155 159.155 0 0 1 0 -318.31"
         />
-        <text
-          x="175"
-          y="80"
-          fontSize="25"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fill="white"
-        >
+        <text x="175" y="80" fontSize="25" textAnchor="middle" dominantBaseline="middle" fill="white">
           {token === 'BTCB' ? 'BTC' : token}
         </text>
       </g>
       <g onClick={() => onMax()}>
         <rect x="135" y="270" width="80" height="35" fill="transparent" />
-        <text
-          x="175"
-          y="290"
-          fontSize="30"
-          fill={Colors.green}
-          textAnchor="middle"
-          dominantBaseline="middle"
-        >
+        <text x="175" y="290" fontSize="30" fill={Colors.green} textAnchor="middle" dominantBaseline="middle">
           MAX
         </text>
       </g>

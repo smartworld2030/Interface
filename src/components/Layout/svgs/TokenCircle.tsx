@@ -5,17 +5,11 @@ interface CircleProps {
   width: number
   token: string
   active: boolean
-  info?: string
+  info?: number | string
   onClick: (arg: string) => void
 }
 
-const TokenCircle: React.FC<CircleProps> = ({
-  width,
-  active,
-  token,
-  info,
-  onClick,
-}) => {
+const TokenCircle: React.FC<CircleProps> = ({ width, active, token, info, onClick }) => {
   const half = width / 2
   const r = half - 5
   const { opacity, transform } = useSpring({
@@ -42,26 +36,17 @@ const TokenCircle: React.FC<CircleProps> = ({
             fill={Colors.background}
           />
 
-          <text
-            textAnchor="middle"
-            dominantBaseline="middle"
-            x="50%"
-            y="53%"
-            fill="white"
-            fontSize="15"
-          >
+          <text textAnchor="middle" dominantBaseline="middle" x="50%" y="53%" fill="white" fontSize="15">
             {token === 'BTCB' ? 'BTC' : token}
           </text>
           <text textAnchor="middle" x="50%" y="80%" fill="white" fontSize="7">
-            {info ?? 0}
+            {info && info !== 'Infinity' ? info : 0}
           </text>
         </a.g>
         <a.g
           style={{
             opacity: opacity,
-            transform: transform.to(
-              (t) => `translateX(35px) rotatey(180deg) ${t}`
-            ),
+            transform: transform.to((t) => `translateX(35px) rotatey(180deg) ${t}`),
           }}
         >
           <circle
@@ -72,18 +57,11 @@ const TokenCircle: React.FC<CircleProps> = ({
             strokeWidth="2.5"
             fill={Colors.background}
           />
-          <text
-            textAnchor="middle"
-            x="50%"
-            y="53%"
-            fill="white"
-            dominantBaseline="middle"
-            fontSize="15"
-          >
+          <text textAnchor="middle" x="50%" y="53%" fill="white" dominantBaseline="middle" fontSize="15">
             {token === 'BTCB' ? 'BTC' : token}
           </text>
           <text textAnchor="middle" x="50%" y="80%" fill="white" fontSize="7">
-            {info ?? 0}
+            {info && info !== 'Infinity' ? info : 0}
           </text>
         </a.g>
       </g>

@@ -2,11 +2,12 @@ import { ChainId, Token } from '@pancakeswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { DEFAULT_LIST_OF_LISTS } from 'config/constants/lists'
+import { DEFAULT_LIST_OF_LISTS, TokenDetail } from 'config/constants/lists'
 import { AppState } from '../index'
 import DEFAULT_TOKEN_LIST from '../../config/constants/tokenLists/pancake-default.tokenlist.json'
 import { UNSUPPORTED_LIST_URLS } from '../../config/constants/lists'
 import UNSUPPORTED_TOKEN_LIST from '../../config/constants/tokenLists/pancake-unsupported.tokenlist.json'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -15,12 +16,8 @@ export interface TagInfo extends TagDetails {
 
 // use ordering of default list of lists to assign priority
 function sortByListPriority(urlA: string, urlB: string) {
-  const first = DEFAULT_LIST_OF_LISTS.includes(urlA)
-    ? DEFAULT_LIST_OF_LISTS.indexOf(urlA)
-    : Number.MAX_SAFE_INTEGER
-  const second = DEFAULT_LIST_OF_LISTS.includes(urlB)
-    ? DEFAULT_LIST_OF_LISTS.indexOf(urlB)
-    : Number.MAX_SAFE_INTEGER
+  const first = DEFAULT_LIST_OF_LISTS.includes(urlA) ? DEFAULT_LIST_OF_LISTS.indexOf(urlA) : Number.MAX_SAFE_INTEGER
+  const second = DEFAULT_LIST_OF_LISTS.includes(urlB) ? DEFAULT_LIST_OF_LISTS.indexOf(urlB) : Number.MAX_SAFE_INTEGER
 
   // need reverse order to make sure mapping includes top priority last
   if (first < second) return 1
@@ -37,13 +34,7 @@ export class WrappedTokenInfo extends Token {
   public readonly tags: TagInfo[]
 
   constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
-    super(
-      tokenInfo.chainId,
-      tokenInfo.address,
-      tokenInfo.decimals,
-      tokenInfo.symbol,
-      tokenInfo.name
-    )
+    super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
     this.tokenInfo = tokenInfo
     this.tags = tags
   }
@@ -70,9 +61,7 @@ const EMPTY_LIST: TokenAddressMap = {
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
-  typeof WeakMap !== 'undefined'
-    ? new WeakMap<TokenList, TokenAddressMap>()
-    : null
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
 export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
@@ -88,8 +77,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined)
-        throw Error('Duplicate tokens.')
+      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
         [token.chainId]: {
@@ -101,7 +89,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
         },
       }
     },
-    { ...EMPTY_LIST }
+    { ...EMPTY_LIST },
   )
   listCache?.set(list, map)
   return map
@@ -115,15 +103,10 @@ export function useAllLists(): {
     readonly error: string | null
   }
 } {
-  return useSelector<AppState, AppState['lists']['byUrl']>(
-    (state) => state.lists.byUrl
-  )
+  return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
 }
 
-function combineMaps(
-  map1: TokenAddressMap,
-  map2: TokenAddressMap
-): TokenAddressMap {
+function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
     [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
     [ChainId.TESTNET]: { ...map1[ChainId.TESTNET], ...map2[ChainId.TESTNET] },
@@ -131,9 +114,7 @@ function combineMaps(
 }
 
 // merge tokens contained within lists from urls
-function useCombinedTokenMapFromUrls(
-  urls: string[] | undefined
-): TokenAddressMap {
+function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
 
   return useMemo(() => {
@@ -161,18 +142,21 @@ function useCombinedTokenMapFromUrls(
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['activeListUrls']>(
-    (state) => state.lists.activeListUrls
-  )?.filter((url) => !UNSUPPORTED_LIST_URLS.includes(url))
+  return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
+    (url) => !UNSUPPORTED_LIST_URLS.includes(url),
+  )
+}
+
+export function useProjectTokenList(): TokenDetail | undefined {
+  const { chainId } = useActiveWeb3React()
+
+  return useSelector<AppState, any>((state) => state.lists.neededTokenLists[chainId ?? -1])
 }
 
 export function useInactiveListUrls(): string[] {
   const lists = useAllLists()
   const allActiveListUrls = useActiveListUrls()
-  return Object.keys(lists).filter(
-    (url) =>
-      !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url)
-  )
+  return Object.keys(lists).filter((url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
 }
 
 // get all the tokens from active lists, combine with local default tokens
@@ -200,9 +184,7 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   const localUnsupportedListMap = listToTokenMap(UNSUPPORTED_TOKEN_LIST)
 
   // get any loaded unsupported tokens
-  const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(
-    UNSUPPORTED_LIST_URLS
-  )
+  const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
   return combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)

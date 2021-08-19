@@ -2,7 +2,13 @@ import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 // eslint-disable-next-line import/no-unresolved
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS, DEFAULT_LIST_OF_LISTS } from '../../config/constants/lists'
+import {
+  DEFAULT_ACTIVE_LIST_URLS,
+  UNSUPPORTED_LIST_URLS,
+  DEFAULT_LIST_OF_LISTS,
+  DEFAULT_INVEST_LIST_TOKENS,
+  ProjectChainToken,
+} from '../../config/constants/lists'
 
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, enableList, disableList } from './actions'
@@ -20,6 +26,7 @@ export interface ListsState {
   readonly lastInitializedDefaultListOfLists?: string[]
 
   // currently active lists
+  readonly neededTokenLists: ProjectChainToken
   readonly activeListUrls: string[] | undefined
 }
 
@@ -42,6 +49,7 @@ const initialState: ListsState = {
       return memo
     }, {}),
   },
+  neededTokenLists: DEFAULT_INVEST_LIST_TOKENS,
   activeListUrls: DEFAULT_ACTIVE_LIST_URLS,
 }
 
@@ -151,6 +159,7 @@ export default createReducer(initialState, (builder) =>
         state.byUrl = initialState.byUrl
         state.activeListUrls = initialState.activeListUrls
       } else if (state.lastInitializedDefaultListOfLists) {
+        state.neededTokenLists = initialState.neededTokenLists
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s, l) => s.add(l),
           new Set(),

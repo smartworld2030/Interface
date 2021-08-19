@@ -35,9 +35,8 @@ import { useExpertModeManager, useUserSlippageTolerance, useUserSingleHopOnly } 
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from 'utils/prices'
 import CircleLoader from 'components/Loader/CircleLoader'
-import Page from '../Page'
 import SwapWarningModal from './components/SwapWarningModal'
-import { useBankDollars } from 'state/bank/hooks'
+import ListsUpdater from 'state/lists/updater'
 
 const Label = styled(Text)`
   font-size: 12px;
@@ -315,6 +314,7 @@ export default function Swap({ history }: RouteComponentProps) {
   return (
     <div style={{ height: '100%', display: 'flex', justifyContent: 'space-between' }}>
       <AppBody>
+        <ListsUpdater />
         {/* <AppHeader title={t('Exchange')} subtitle={t('Trade tokens in an instant')} /> */}
         <Wrapper id="swap-page">
           <AutoColumn gap="md" style={{ display: 'flex', justifyContent: 'space-between' }}>

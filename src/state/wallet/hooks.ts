@@ -1,11 +1,21 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@pancakeswap/sdk'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import ERC20_INTERFACE from 'config/abi/erc20'
-import { useAllTokens } from 'hooks/Tokens'
+import { useProjectTokens, useAllTokens } from 'hooks/Tokens'
 import { useMulticallContract } from 'hooks/useContract'
 import { isAddress } from 'utils'
-import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
+import {
+  useSingleContractMultipleData,
+  useMultipleContractSingleData,
+  MultiCallSingleData,
+  multiCallRequest,
+} from '../multicall/hooks'
+import { getMulticallContract } from 'utils/contractHelpers'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import useBlockNumber from 'state/application/hooks'
+import useDebounce from 'hooks/useDebounce'
+import { truncate } from '_helpers/api'
 
 /**
  * Returns a map of the given addresses to their eventually consistent BNB balances.
@@ -82,6 +92,68 @@ export function useTokenBalancesWithLoadingIndicator(
   ]
 }
 
+export function useProjectBalances(
+  account: string,
+  tokens: Token[],
+): {
+  [key: string]: string | undefined
+} {
+  const [states, setStates] = useState({})
+  const latestBlockNumber = useBlockNumber()
+  const multiContract = getMulticallContract()
+  const windowVisible = useIsWindowVisible()
+
+  const multicall: MultiCallSingleData[] = useMemo(
+    () =>
+      tokens.reduce(
+        (items, { address, symbol, decimals }) => [
+          ...items,
+          {
+            ifs: ERC20_INTERFACE,
+            name: symbol,
+            address,
+            methods: ['balanceOf'],
+            args: [[account]],
+            decimals,
+          },
+        ],
+        [
+          {
+            ifs: multiContract.interface,
+            name: 'BNB',
+            address: multiContract.address,
+            methods: ['getEthBalance'],
+            args: [[account]],
+            decimals: 18,
+          },
+        ],
+      ),
+    [tokens, account, multiContract],
+  )
+
+  const blockNumber = useDebounce(latestBlockNumber, 1000)
+  const visible = useDebounce(windowVisible, 1000)
+
+  useEffect(() => {
+    multiCallRequest(multiContract, multicall, false)
+      .then((result) => {
+        setStates(result)
+      })
+      .catch(() => setStates({}))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, blockNumber, account])
+
+  return useMemo(
+    () =>
+      multicall.reduce<{ [address: string]: string }>((memo, { name, decimals }) => {
+        const value: string = states?.[name]?.[0].toString()
+        if (value) memo[name] = truncate((+value / 10 ** decimals).toString(), 4)
+        return memo
+      }, {}),
+    [states, multicall],
+  )
+}
+
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[],
@@ -131,4 +203,12 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   return balances ?? {}
+}
+
+// mimics useAllBalances
+export function useInvestTokenBalances(): { [key: string]: string } | {} {
+  const { account } = useWeb3React()
+  const allTokens = useProjectTokens()
+  const balances = useProjectBalances(account, allTokens)
+  return balances
 }
