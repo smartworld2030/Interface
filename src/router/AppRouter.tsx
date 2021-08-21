@@ -5,8 +5,6 @@ import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
 import { AbsoluteBody } from 'components/Layout/divs/Divs'
 import { Container, Row, Col } from 'react-grid-system'
-import Typography from 'antd/lib/typography'
-import Logo from 'assets/Logo.png'
 import GlobalStyle from 'style/Global'
 import {
   RedirectDuplicateTokenIds,
@@ -17,6 +15,7 @@ import SuspenseWithChunkError from 'components/SuspenseWithChunkError'
 import PageLoader from 'components/Loader/PageLoader'
 import RedirectOldRemoveLiquidityPathStructure from 'components/Wallet/Swap/RemoveLiquidity/redirects'
 import { RedirectPathToSwapOnly, RedirectToSwap } from 'components/Wallet/Swap/Swap/redirects'
+import { SectionHeader } from 'components/Wallet/SectionHeader'
 
 const AddLiquidity = lazy(() => import('components/Wallet/Swap/AddLiquidity'))
 const Liquidity = lazy(() => import('components/Wallet/Swap/Pool'))
@@ -26,6 +25,7 @@ const Investment = lazy(() => import('components/Wallet/Invest'))
 const Swap = lazy(() => import('components/Wallet/Swap/Swap'))
 const Info = lazy(() => import('components/Wallet/Info'))
 const Pool = lazy(() => import('components/Wallet/Pool'))
+const STB = lazy(() => import('components/Wallet/STB'))
 
 interface IProps {
   isMobile: boolean
@@ -66,10 +66,8 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile, height, width })
     >
       <GlobalStyle />
       <Row justify="between" align="center">
-        <Col xs={12}>
-          <Typography.Title style={{ textAlign: 'center', margin: 0 }} level={5}>
-            {Titles[pathname]}
-          </Typography.Title>
+        <Col xs={12} style={{ padding: 0 }}>
+          <SectionHeader title={Titles[pathname]} />
         </Col>
         <Col
           xs={12}
@@ -85,10 +83,18 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile, height, width })
               <animated.div key={key} style={style}>
                 <SuspenseWithChunkError fallback={<PageLoader />}>
                   <Switch location={item}>
-                    <Route exact strict path="/ingo" component={Info} />
-                    <Route exact strict path="/invest" component={Investment} />
-                    <Route exact strict path={['/pool', '/freeze']} component={Pool} />
-                    <Route exact strict path="/stb" component={STB} />
+                    <Route exact strict path="/info">
+                      <Info isMobile={isMobile} />
+                    </Route>
+                    <Route exact strict path="/invest">
+                      <Investment isMobile={isMobile} />
+                    </Route>
+                    <Route exact strict path={['/pool', '/freeze']}>
+                      <Pool isMobile={isMobile} />
+                    </Route>
+                    <Route exact strict path="/stb">
+                      <STB isMobile={isMobile} />
+                    </Route>
                     <Route exact strict path="/swap" component={Swap} />
                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                     <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
@@ -114,44 +120,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({ isMobile, height, width })
         </Col>
       </Row>
     </Container>
-  )
-}
-
-interface tester {
-  isMobile: boolean
-}
-
-export const STB: React.FC<tester> = ({ isMobile }) => {
-  return (
-    <Row
-      justify="around"
-      align="center"
-      style={{
-        fontSize: '15px',
-        minHeight: isMobile ? 300 : 300,
-        textShadow: '1px 1px 2px black',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          filter: 'blur(4px) grayscale(0.2)',
-          height: '40vh',
-          width: '100vw',
-          backgroundSize: '200px 200px',
-          backgroundImage: `url(${Logo})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-        }}
-      />
-      <Col xs={12} md={2}></Col>
-      <Col xs={12} md={4}>
-        Coming Soon!
-        <hr /> STB is the future stable coin. STB is issued only by the STT payment. The STB token is generated from 99
-        percent of the STT payment which is always worth as 100 SATOSHI or one BITS. <br />1 STB = 100 Satoshi
-      </Col>
-      <Col xs={12} md={2}></Col>
-    </Row>
   )
 }
 

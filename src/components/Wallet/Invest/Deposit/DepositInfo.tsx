@@ -39,7 +39,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, prices, value }) => {
   }
 
   const disableHandler = () => value <= 0 || calcSatoshi() < 500000
-  console.log(account.refPercent, calcPercent())
+
   return (
     <Row
       align="center"

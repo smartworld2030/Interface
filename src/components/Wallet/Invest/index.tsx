@@ -1,16 +1,9 @@
-import { useMemo } from 'react'
 import Spin from 'antd/lib/spin'
 import { Row, Col } from 'react-grid-system'
 import WithdrawSection from './Withdraw'
 import DepositSection from './Deposit'
 import DetailSection from './Details'
 import InvestUpdater from 'state/invest/updater'
-import { useMultiCallMultipleData } from 'state/multicall/hooks'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useInvestContract } from 'hooks/useContract'
-import { useInvestTokenBalances, useTokenBalance } from 'state/wallet/hooks'
-import erc20 from '_contracts/erc20'
-import useInvestStates from 'state/invest/hooks'
 
 interface InvestmentProps {
   isMobile: boolean

@@ -1,6 +1,7 @@
-import { Button, useWalletModal } from '@pancakeswap/uikit'
+import Button from 'antd/lib/button'
 import useAuth from 'hooks/useAuth'
 import { useTranslation } from 'contexts/Localization'
+import { useWalletModal } from '@pancakeswap/uikit'
 
 const ConnectWalletButton = (props) => {
   const { t } = useTranslation()
