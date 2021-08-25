@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
-import { Text, Link } from '@pancakeswap/uikit'
+import { Text, Link } from '@smartworld-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import useENS from 'hooks/ENS/useENS'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -23,11 +23,8 @@ const ContainerRow = styled.div<{ error: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid
-    ${({ error, theme }) =>
-      error ? theme.colors.failure : theme.colors.background};
-  transition: border-color 300ms
-      ${({ error }) => (error ? 'step-end' : 'step-start')},
+  border: 1px solid ${({ error, theme }) => (error ? theme.colors.failure : theme.colors.background)};
+  transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
     color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.colors.backgroundAlt};
 `
@@ -45,8 +42,7 @@ const Input = styled.input<{ error?: boolean }>`
   width: 0;
   background-color: ${({ theme }) => theme.colors.backgroundAlt};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) =>
-    error ? theme.colors.failure : theme.colors.primary};
+  color: ${({ error, theme }) => (error ? theme.colors.failure : theme.colors.primary)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
@@ -94,7 +90,7 @@ export default function AddressInputPanel({
       const withoutSpaces = input.replace(/\s+/g, '')
       onChange(withoutSpaces)
     },
-    [onChange]
+    [onChange],
   )
 
   const error = Boolean(value.length > 0 && !loading && !address)
@@ -107,11 +103,7 @@ export default function AddressInputPanel({
             <RowBetween>
               <Text>{t('Recipient')}</Text>
               {address && chainId && (
-                <Link
-                  external
-                  small
-                  href={getBscScanLink(name ?? address, 'address', chainId)}
-                >
+                <Link external small href={getBscScanLink(name ?? address, 'address', chainId)}>
                   ({t('View on BscScan')})
                 </Link>
               )}

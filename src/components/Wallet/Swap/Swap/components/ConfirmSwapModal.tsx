@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { currencyEquals, Trade } from '@pancakeswap/sdk'
-import { InjectedModalProps } from '@pancakeswap/uikit'
+import { InjectedModalProps } from '@smartworld-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -19,10 +19,7 @@ function tradeMeaningfullyDiffers(tradeA: Trade, tradeB: Trade): boolean {
     tradeA.tradeType !== tradeB.tradeType ||
     !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
     !tradeA.inputAmount.equalTo(tradeB.inputAmount) ||
-    !currencyEquals(
-      tradeA.outputAmount.currency,
-      tradeB.outputAmount.currency
-    ) ||
+    !currencyEquals(tradeA.outputAmount.currency, tradeB.outputAmount.currency) ||
     !tradeA.outputAmount.equalTo(tradeB.outputAmount)
   )
 }
@@ -39,9 +36,7 @@ interface ConfirmSwapModalProps {
   customOnDismiss?: () => void
 }
 
-const ConfirmSwapModal: React.FC<
-  InjectedModalProps & ConfirmSwapModalProps
-> = ({
+const ConfirmSwapModal: React.FC<InjectedModalProps & ConfirmSwapModalProps> = ({
   trade,
   originalTrade,
   onAcceptChanges,
@@ -55,11 +50,8 @@ const ConfirmSwapModal: React.FC<
   txHash,
 }) => {
   const showAcceptChanges = useMemo(
-    () =>
-      Boolean(
-        trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)
-      ),
-    [originalTrade, trade]
+    () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
+    [originalTrade, trade],
   )
 
   const { t } = useTranslation()
@@ -89,30 +81,21 @@ const ConfirmSwapModal: React.FC<
   }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
-  const pendingText = t(
-    'Swapping %amountA% %symbolA% for %amountB% %symbolB%',
-    {
-      amountA: trade?.inputAmount?.toSignificant(6) ?? '',
-      symbolA: trade?.inputAmount?.currency?.symbol ?? '',
-      amountB: trade?.outputAmount?.toSignificant(6) ?? '',
-      symbolB: trade?.outputAmount?.currency?.symbol ?? '',
-    }
-  )
+  const pendingText = t('Swapping %amountA% %symbolA% for %amountB% %symbolB%', {
+    amountA: trade?.inputAmount?.toSignificant(6) ?? '',
+    symbolA: trade?.inputAmount?.currency?.symbol ?? '',
+    amountB: trade?.outputAmount?.toSignificant(6) ?? '',
+    symbolB: trade?.outputAmount?.currency?.symbol ?? '',
+  })
 
   const confirmationContent = useCallback(
     () =>
       swapErrorMessage ? (
-        <TransactionErrorContent
-          onDismiss={onDismiss}
-          message={swapErrorMessage}
-        />
+        <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
       ) : (
-        <ConfirmationModalContent
-          topContent={modalHeader}
-          bottomContent={modalBottom}
-        />
+        <ConfirmationModalContent topContent={modalHeader} bottomContent={modalBottom} />
       ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [onDismiss, modalBottom, modalHeader, swapErrorMessage],
   )
 
   return (

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { Trade, TradeType } from '@pancakeswap/sdk'
-import { Button, Text, ErrorIcon, ArrowDownIcon } from '@pancakeswap/uikit'
+import { Button, Text, ErrorIcon, ArrowDownIcon } from '@smartworld-libs/uikit'
 import { Field } from 'state/swap/actions'
 import { isAddress, shortenAddress } from 'utils'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from 'utils/prices'
@@ -22,10 +22,10 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const slippageAdjustedAmounts = useMemo(
-    () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
-    [trade, allowedSlippage],
-  )
+  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
+    trade,
+    allowedSlippage,
+  ])
   const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 

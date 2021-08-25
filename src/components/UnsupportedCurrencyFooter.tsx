@@ -1,12 +1,5 @@
 import { Currency, Token } from '@pancakeswap/sdk'
-import {
-  Button,
-  Text,
-  Modal,
-  useModal,
-  InjectedModalProps,
-  Link,
-} from '@pancakeswap/uikit'
+import { Button, Text, Modal, useModal, InjectedModalProps, Link } from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 import { AutoRow } from 'components/Layout/Row'
 import { AutoColumn } from 'components/Layout/Column'
@@ -50,21 +43,13 @@ const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
             token &&
             unsupportedTokens &&
             Object.keys(unsupportedTokens).includes(token.address) && (
-              <AutoColumn
-                key={token.address?.concat('not-supported')}
-                gap="10px"
-              >
+              <AutoColumn key={token.address?.concat('not-supported')} gap="10px">
                 <AutoRow gap="5px" align="center">
                   <CurrencyLogo currency={token} size="24px" />
                   <Text>{token.symbol}</Text>
                 </AutoRow>
                 {chainId && (
-                  <Link
-                    external
-                    small
-                    color="primaryDark"
-                    href={getBscScanLink(token.address, 'address', chainId)}
-                  >
+                  <Link external small color="primaryDark" href={getBscScanLink(token.address, 'address', chainId)}>
                     {token.address}
                   </Link>
                 )}
@@ -74,9 +59,8 @@ const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
         })}
         <AutoColumn gap="lg">
           <Text>
-            Some assets are not available through this interface because they
-            may not work well with our smart contract or we are unable to allow
-            trading for legal reasons.
+            Some assets are not available through this interface because they may not work well with our smart contract
+            or we are unable to allow trading for legal reasons.
           </Text>
         </AutoColumn>
       </AutoColumn>
@@ -84,14 +68,8 @@ const UnsupportedModal: React.FC<Props> = ({ currencies, onDismiss }) => {
   )
 }
 
-export default function UnsupportedCurrencyFooter({
-  currencies,
-}: {
-  currencies: (Currency | undefined)[]
-}) {
-  const [onPresentModal] = useModal(
-    <UnsupportedModal currencies={currencies} />
-  )
+export default function UnsupportedCurrencyFooter({ currencies }: { currencies: (Currency | undefined)[] }) {
+  const [onPresentModal] = useModal(<UnsupportedModal currencies={currencies} />)
 
   return (
     <DetailsFooter>

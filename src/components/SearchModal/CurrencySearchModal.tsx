@@ -10,7 +10,7 @@ import {
   InjectedModalProps,
   Heading,
   Button,
-} from '@pancakeswap/uikit'
+} from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 import usePrevious from 'hooks/usePreviousValue'
 import { TokenList } from '@uniswap/token-lists'
@@ -50,16 +50,14 @@ export default function CurrencySearchModal({
   otherSelectedCurrency,
   showCommonBases = false,
 }: CurrencySearchModalProps) {
-  const [modalView, setModalView] = useState<CurrencyModalView>(
-    CurrencyModalView.search
-  )
+  const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
       onDismiss()
       onCurrencySelect(currency)
     },
-    [onDismiss, onCurrencySelect]
+    [onDismiss, onCurrencySelect],
   )
 
   // for token import view
@@ -86,11 +84,7 @@ export default function CurrencySearchModal({
     [CurrencyModalView.importToken]: {
       title: t('Import Tokens'),
       onBack: () =>
-        setModalView(
-          prevView && prevView !== CurrencyModalView.importToken
-            ? prevView
-            : CurrencyModalView.search
-        ),
+        setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
     },
     [CurrencyModalView.importList]: {
       title: t('Import List'),
@@ -102,9 +96,7 @@ export default function CurrencySearchModal({
     <StyledModalContainer minWidth="320px">
       <ModalHeader>
         <ModalTitle>
-          {config[modalView].onBack && (
-            <ModalBackButton onBack={config[modalView].onBack} />
-          )}
+          {config[modalView].onBack && <ModalBackButton onBack={config[modalView].onBack} />}
           <Heading>{config[modalView].title}</Heading>
         </ModalTitle>
         <ModalCloseButton onDismiss={onDismiss} />
@@ -120,18 +112,9 @@ export default function CurrencySearchModal({
             setImportToken={setImportToken}
           />
         ) : modalView === CurrencyModalView.importToken && importToken ? (
-          <ImportToken
-            tokens={[importToken]}
-            handleCurrencySelect={handleCurrencySelect}
-          />
-        ) : modalView === CurrencyModalView.importList &&
-          importList &&
-          listURL ? (
-          <ImportList
-            list={importList}
-            listURL={listURL}
-            onImport={() => setModalView(CurrencyModalView.manage)}
-          />
+          <ImportToken tokens={[importToken]} handleCurrencySelect={handleCurrencySelect} />
+        ) : modalView === CurrencyModalView.importList && importList && listURL ? (
+          <ImportList list={importList} listURL={listURL} onImport={() => setModalView(CurrencyModalView.manage)} />
         ) : modalView === CurrencyModalView.manage ? (
           <Manage
             setModalView={setModalView}

@@ -1,7 +1,7 @@
 import Button from 'antd/lib/button'
 import useAuth from 'hooks/useAuth'
 import { useTranslation } from 'contexts/Localization'
-import { useWalletModal } from '@pancakeswap/uikit'
+import { useWalletModal } from '@smartworld-libs/uikit'
 
 const ConnectWalletButton = (props) => {
   const { t } = useTranslation()

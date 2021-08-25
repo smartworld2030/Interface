@@ -9,7 +9,7 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorWalletConnect,
   WalletConnectConnector,
 } from '@web3-react/walletconnect-connector'
-import { ConnectorNames, connectorLocalStorageKey } from '@pancakeswap/uikit'
+import { ConnectorNames, connectorLocalStorageKey } from '@smartworld-libs/uikit'
 import { connectorsByName } from 'utils/web3React'
 import { setupNetwork } from 'utils/wallet'
 import useToast from 'hooks/useToast'
@@ -32,10 +32,7 @@ const useAuth = () => {
             }
           } else {
             window.localStorage.removeItem(connectorLocalStorageKey)
-            if (
-              error instanceof NoEthereumProviderError ||
-              error instanceof NoBscProviderError
-            ) {
+            if (error instanceof NoEthereumProviderError || error instanceof NoBscProviderError) {
               toastError(t('Provider Error'), t('No provider was found'))
             } else if (
               error instanceof UserRejectedRequestErrorInjected ||
@@ -45,23 +42,17 @@ const useAuth = () => {
                 const walletConnector = connector as WalletConnectConnector
                 walletConnector.walletConnectProvider = null
               }
-              toastError(
-                t('Authorization Error'),
-                t('Please authorize to access your account')
-              )
+              toastError(t('Authorization Error'), t('Please authorize to access your account'))
             } else {
               toastError(error.name, error.message)
             }
           }
         })
       } else {
-        toastError(
-          t('Unable to find connector'),
-          t('The connector config is wrong')
-        )
+        toastError(t('Unable to find connector'), t('The connector config is wrong'))
       }
     },
-    [t, activate, toastError]
+    [t, activate, toastError],
   )
 
   const logout = useCallback(() => {

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Trade, TradeType } from '@pancakeswap/sdk'
-import { Button, Text, AutoRenewIcon } from '@pancakeswap/uikit'
+import { Button, Text, AutoRenewIcon } from '@smartworld-libs/uikit'
 import { Field } from 'state/swap/actions'
 import {
   computeSlippageAdjustedAmounts,
@@ -37,10 +37,10 @@ export default function SwapModalFooter({
   disabledConfirm: boolean
 }) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
-  const slippageAdjustedAmounts = useMemo(
-    () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
-    [allowedSlippage, trade],
-  )
+  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
+    allowedSlippage,
+    trade,
+  ])
   const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
   const severity = warningSeverity(priceImpactWithoutFee)
 

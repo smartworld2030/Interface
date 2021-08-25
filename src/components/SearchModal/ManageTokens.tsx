@@ -1,14 +1,6 @@
 import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import { Token } from '@pancakeswap/sdk'
-import {
-  Text,
-  Button,
-  CloseIcon,
-  IconButton,
-  LinkExternal,
-  Input,
-  Link,
-} from '@pancakeswap/uikit'
+import { Text, Button, CloseIcon, IconButton, LinkExternal, Input, Link } from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 import Row, { RowBetween, RowFixed } from 'components/Layout/Row'
 import { useToken } from 'hooks/Tokens'
@@ -81,25 +73,15 @@ export default function ManageTokens({
         <RowBetween key={token.address} width="100%">
           <RowFixed>
             <CurrencyLogo currency={token} size="20px" />
-            <Link
-              external
-              href={getBscScanLink(token.address, 'address', chainId)}
-              color="textSubtle"
-              ml="10px"
-            >
+            <Link external href={getBscScanLink(token.address, 'address', chainId)} color="textSubtle" ml="10px">
               {token.symbol}
             </Link>
           </RowFixed>
           <RowFixed>
-            <IconButton
-              variant="text"
-              onClick={() => removeToken(chainId, token.address)}
-            >
+            <IconButton variant="text" onClick={() => removeToken(chainId, token.address)}>
               <CloseIcon />
             </IconButton>
-            <LinkExternal
-              href={getBscScanLink(token.address, 'address', chainId)}
-            />
+            <LinkExternal href={getBscScanLink(token.address, 'address', chainId)} />
           </RowFixed>
         </RowBetween>
       ))
@@ -124,9 +106,7 @@ export default function ManageTokens({
               isWarning={!isAddressValid}
             />
           </Row>
-          {!isAddressValid && (
-            <Text color="failure">{t('Enter valid token address')}</Text>
-          )}
+          {!isAddressValid && <Text color="failure">{t('Enter valid token address')}</Text>}
           {searchToken && (
             <ImportRow
               token={searchToken}
@@ -139,10 +119,7 @@ export default function ManageTokens({
         {tokenList}
         <Footer>
           <Text bold color="textSubtle">
-            {userAddedTokens?.length}{' '}
-            {userAddedTokens.length === 1
-              ? t('Custom Token')
-              : t('Custom Tokens')}
+            {userAddedTokens?.length} {userAddedTokens.length === 1 ? t('Custom Token') : t('Custom Tokens')}
           </Text>
           {userAddedTokens.length > 0 && (
             <Button variant="tertiary" onClick={handleRemoveAll}>

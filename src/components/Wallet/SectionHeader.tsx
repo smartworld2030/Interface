@@ -4,7 +4,7 @@ import { Row, Col } from 'react-grid-system'
 import Button from 'antd/lib/button'
 import useAuth from 'hooks/useAuth'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useWalletModal } from '@pancakeswap/uikit'
+import { useWalletModal } from '@smartworld-libs/uikit'
 
 interface SectionHeaderProps {
   title: string

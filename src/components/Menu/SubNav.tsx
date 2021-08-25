@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Link, useLocation } from 'react-router-dom'
-import { ButtonMenu, ButtonMenuItem } from '@pancakeswap/uikit'
+import { ButtonMenu, ButtonMenuItem } from '@smartworld-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 
 const StyledNav = styled.nav`

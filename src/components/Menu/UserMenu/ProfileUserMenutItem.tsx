@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { Flex, Skeleton, UserMenuItem } from '@pancakeswap/uikit'
+import { Flex, Skeleton, UserMenuItem } from '@smartworld-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 
 interface ProfileUserMenuItemProps {
@@ -15,10 +15,7 @@ const Dot = styled.div`
   width: 8px;
 `
 
-const ProfileUserMenuItem: React.FC<ProfileUserMenuItemProps> = ({
-  isLoading,
-  hasProfile,
-}) => {
+const ProfileUserMenuItem: React.FC<ProfileUserMenuItemProps> = ({ isLoading, hasProfile }) => {
   const { t } = useTranslation()
 
   if (isLoading) {

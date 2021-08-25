@@ -1,4 +1,4 @@
-import { HelpIcon, useTooltip, Box, BoxProps } from '@pancakeswap/uikit'
+import { HelpIcon, useTooltip, Box, BoxProps } from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 
 interface Props extends BoxProps {

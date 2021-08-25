@@ -1,17 +1,6 @@
-import React, {
-  CSSProperties,
-  MutableRefObject,
-  useCallback,
-  useMemo,
-} from 'react'
-import {
-  Currency,
-  CurrencyAmount,
-  currencyEquals,
-  ETHER,
-  Token,
-} from '@pancakeswap/sdk'
-import { Text } from '@pancakeswap/uikit'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@pancakeswap/sdk'
+import { Text } from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 import { FixedSizeList } from 'react-window'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
@@ -30,11 +19,7 @@ import { isTokenOnList } from '../../utils'
 import ImportRow from './ImportRow'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token
-    ? currency.address
-    : currency === ETHER
-    ? 'ETHER'
-    : ''
+  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -53,11 +38,7 @@ const FixedContentRow = styled.div`
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
-  return (
-    <StyledBalanceText title={balance.toExact()}>
-      {balance.toSignificant(4)}
-    </StyledBalanceText>
-  )
+  return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
 
 const MenuItem = styled(RowBetween)<{ disabled: boolean; selected: boolean }>`
@@ -69,8 +50,7 @@ const MenuItem = styled(RowBetween)<{ disabled: boolean; selected: boolean }>`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled }) =>
-      !disabled && theme.colors.background};
+    background-color: ${({ theme, disabled }) => !disabled && theme.colors.background};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
@@ -108,16 +88,11 @@ function CurrencyRow({
       <Column>
         <Text bold>{currency.symbol}</Text>
         <Text color="textSubtle" small ellipsis maxWidth="200px">
-          {!isOnSelectedList && customAdded && 'Added by user •'}{' '}
-          {currency.name}
+          {!isOnSelectedList && customAdded && 'Added by user •'} {currency.name}
         </Text>
       </Column>
       <RowFixed style={{ justifySelf: 'flex-end' }}>
-        {balance ? (
-          <Balance balance={balance} />
-        ) : account ? (
-          <CircleLoader />
-        ) : null}
+        {balance ? <Balance balance={balance} /> : account ? <CircleLoader /> : null}
       </RowFixed>
     </MenuItem>
   )
@@ -147,15 +122,9 @@ export default function CurrencyList({
   breakIndex: number | undefined
 }) {
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH
-      ? [Currency.ETHER, ...currencies]
-      : currencies
+    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
     if (breakIndex !== undefined) {
-      formatted = [
-        ...formatted.slice(0, breakIndex),
-        undefined,
-        ...formatted.slice(breakIndex, formatted.length),
-      ]
+      formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
   }, [breakIndex, currencies, showETH])
@@ -171,32 +140,23 @@ export default function CurrencyList({
   const Row = useCallback(
     ({ data, index, style }) => {
       const currency: Currency = data[index]
-      const isSelected = Boolean(
-        selectedCurrency && currencyEquals(selectedCurrency, currency)
-      )
-      const otherSelected = Boolean(
-        otherCurrency && currencyEquals(otherCurrency, currency)
-      )
+      const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
+      const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
       const handleSelect = () => onCurrencySelect(currency)
 
       const token = wrappedCurrency(currency, chainId)
 
-      const showImport =
-        inactiveTokens &&
-        token &&
-        Object.keys(inactiveTokens).includes(token.address)
+      const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
 
       if (index === breakIndex || !data) {
         return (
           <FixedContentRow style={style}>
             <LightGreyCard padding="8px 12px" borderRadius="8px">
               <RowBetween>
-                <Text small>
-                  {t('Expanded results from inactive Token Lists')}
-                </Text>
+                <Text small>{t('Expanded results from inactive Token Lists')}</Text>
                 <QuestionHelper
                   text={t(
-                    "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+                    "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists.",
                   )}
                   ml="4px"
                 />
@@ -208,13 +168,7 @@ export default function CurrencyList({
 
       if (showImport && token) {
         return (
-          <ImportRow
-            style={style}
-            token={token}
-            showImportView={showImportView}
-            setImportToken={setImportToken}
-            dim
-          />
+          <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
       }
       return (
@@ -237,13 +191,10 @@ export default function CurrencyList({
       showImportView,
       breakIndex,
       t,
-    ]
+    ],
   )
 
-  const itemKey = useCallback(
-    (index: number, data: any) => currencyKey(data[index]),
-    []
-  )
+  const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])
 
   return (
     <FixedSizeList

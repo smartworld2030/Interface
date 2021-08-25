@@ -1,24 +1,11 @@
-import React, {
-  KeyboardEvent,
-  RefObject,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-} from 'react'
+import React, { KeyboardEvent, RefObject, useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import { Currency, ETHER, Token } from '@pancakeswap/sdk'
-import { Text, Input, Box } from '@pancakeswap/uikit'
+import { Text, Input, Box } from '@smartworld-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 import { FixedSizeList } from 'react-window'
 import useDebounce from 'hooks/useDebounce'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import {
-  useAllTokens,
-  useToken,
-  useIsUserAddedToken,
-  useFoundOnInactiveList,
-} from '../../hooks/Tokens'
+import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
 import Column, { AutoColumn } from '../Layout/Column'
 import Row from '../Layout/Row'
@@ -78,16 +65,13 @@ function CurrencySearch({
     return filteredTokens.sort(tokenComparator)
   }, [filteredTokens, tokenComparator])
 
-  const filteredSortedTokens = useSortedTokensByQuery(
-    sortedTokens,
-    debouncedQuery
-  )
+  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
       onCurrencySelect(currency)
     },
-    [onCurrencySelect]
+    [onCurrencySelect],
   )
 
   // manage focus on modal show
@@ -112,8 +96,7 @@ function CurrencySearch({
           handleCurrencySelect(ETHER)
         } else if (filteredSortedTokens.length > 0) {
           if (
-            filteredSortedTokens[0].symbol?.toLowerCase() ===
-              debouncedQuery.trim().toLowerCase() ||
+            filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
             filteredSortedTokens.length === 1
           ) {
             handleCurrencySelect(filteredSortedTokens[0])
@@ -121,15 +104,12 @@ function CurrencySearch({
         }
       }
     },
-    [filteredSortedTokens, handleCurrencySelect, debouncedQuery]
+    [filteredSortedTokens, handleCurrencySelect, debouncedQuery],
   )
 
   // if no results on main list, show option to expand into inactive
   const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
-  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(
-    inactiveTokens,
-    debouncedQuery
-  )
+  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
 
   return (
     <>
@@ -148,37 +128,22 @@ function CurrencySearch({
             />
           </Row>
           {showCommonBases && (
-            <CommonBases
-              chainId={chainId}
-              onSelect={handleCurrencySelect}
-              selectedCurrency={selectedCurrency}
-            />
+            <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
           )}
         </AutoColumn>
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
-            <ImportRow
-              token={searchToken}
-              showImportView={showImportView}
-              setImportToken={setImportToken}
-            />
+            <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
           </Column>
-        ) : filteredSortedTokens?.length > 0 ||
-          filteredInactiveTokens?.length > 0 ? (
+        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
           <Box margin="24px -24px">
             <CurrencyList
               height={390}
               showETH={showETH}
               currencies={
-                filteredInactiveTokens
-                  ? filteredSortedTokens.concat(filteredInactiveTokens)
-                  : filteredSortedTokens
+                filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
               }
-              breakIndex={
-                inactiveTokens && filteredSortedTokens
-                  ? filteredSortedTokens.length
-                  : undefined
-              }
+              breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}

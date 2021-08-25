@@ -1,11 +1,5 @@
-import {
-  ChainId,
-  Currency,
-  currencyEquals,
-  ETHER,
-  Token,
-} from '@pancakeswap/sdk'
-import { Text } from '@pancakeswap/uikit'
+import { ChainId, Currency, currencyEquals, ETHER, Token } from '@pancakeswap/sdk'
+import { Text } from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 import { useTranslation } from 'contexts/Localization'
 
@@ -16,8 +10,7 @@ import { AutoRow } from '../Layout/Row'
 import { CurrencyLogo } from '../Logo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid
-    ${({ theme, disable }) => (disable ? 'transparent' : theme.colors.dropdown)};
+  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.colors.dropdown)};
   border-radius: 10px;
   display: flex;
   padding: 6px;
@@ -25,8 +18,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) =>
-      !disable && theme.colors.background};
+    background-color: ${({ theme, disable }) => !disable && theme.colors.background};
   }
 
   background-color: ${({ theme, disable }) => disable && theme.colors.dropdown};
@@ -47,10 +39,7 @@ export default function CommonBases({
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontSize="14px">{t('Common bases')}</Text>
-        <QuestionHelper
-          text={t('These tokens are commonly paired with other tokens.')}
-          ml="4px"
-        />
+        <QuestionHelper text={t('These tokens are commonly paired with other tokens.')} ml="4px" />
       </AutoRow>
       <AutoRow gap="auto">
         <BaseWrapper
@@ -65,15 +54,9 @@ export default function CommonBases({
           <Text>BNB</Text>
         </BaseWrapper>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
-          const selected =
-            selectedCurrency instanceof Token &&
-            selectedCurrency.address === token.address
+          const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (
-            <BaseWrapper
-              onClick={() => !selected && onSelect(token)}
-              disable={selected}
-              key={token.address}
-            >
+            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
               <Text>{token.symbol}</Text>
             </BaseWrapper>

@@ -1,32 +1,18 @@
 import { Trade, TradeType } from '@pancakeswap/sdk'
-import { Text } from '@pancakeswap/uikit'
+import { Text } from '@smartworld-libs/uikit'
 import { Field } from 'state/swap/actions'
 import { useUserSlippageTolerance } from 'state/user/hooks'
-import {
-  computeSlippageAdjustedAmounts,
-  computeTradePriceBreakdown,
-} from 'utils/prices'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from 'utils/prices'
 import { AutoColumn } from 'components/Layout/Column'
 import QuestionHelper from 'components/QuestionHelper'
 import { RowBetween, RowFixed } from 'components/Layout/Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 
-function TradeSummary({
-  trade,
-  allowedSlippage,
-}: {
-  trade: Trade
-  allowedSlippage: number
-}) {
-  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(
-    trade
-  )
+function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(
-    trade,
-    allowedSlippage
-  )
+  const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   return (
     <AutoColumn style={{ padding: '0 16px' }}>
@@ -43,12 +29,9 @@ function TradeSummary({
         <RowFixed>
           <Text fontSize="14px">
             {isExactIn
-              ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${
-                  trade.outputAmount.currency.symbol
-                }` ?? '-'
-              : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${
-                  trade.inputAmount.currency.symbol
-                }` ?? '-'}
+              ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
+                '-'
+              : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ?? '-'}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -83,11 +66,7 @@ function TradeSummary({
           />
         </RowFixed>
         <Text fontSize="14px">
-          {realizedLPFee
-            ? `${realizedLPFee.toSignificant(4)} ${
-                trade.inputAmount.currency.symbol
-              }`
-            : '-'}
+          {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
         </Text>
       </RowBetween>
     </AutoColumn>

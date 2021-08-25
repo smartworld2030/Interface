@@ -1,4 +1,4 @@
-import { Flex, UserMenuItem, WarningIcon } from '@pancakeswap/uikit'
+import { Flex, UserMenuItem, WarningIcon } from '@smartworld-libs/uikit'
 import { useTranslation } from 'contexts/Localization'
 
 interface WalletUserMenuItemProps {
@@ -6,10 +6,7 @@ interface WalletUserMenuItemProps {
   onPresentWalletModal: () => void
 }
 
-const WalletUserMenuItem: React.FC<WalletUserMenuItemProps> = ({
-  hasLowBnbBalance,
-  onPresentWalletModal,
-}) => {
+const WalletUserMenuItem: React.FC<WalletUserMenuItemProps> = ({ hasLowBnbBalance, onPresentWalletModal }) => {
   const { t } = useTranslation()
 
   return (

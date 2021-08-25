@@ -1,11 +1,4 @@
-import {
-  BlockIcon,
-  CheckmarkCircleIcon,
-  Flex,
-  Link,
-  OpenNewIcon,
-  RefreshIcon,
-} from '@pancakeswap/uikit'
+import { BlockIcon, CheckmarkCircleIcon, Flex, Link, OpenNewIcon, RefreshIcon } from '@smartworld-libs/uikit'
 import styled from 'styled-components'
 import { TransactionDetails } from 'state/transactions/reducer'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
@@ -43,8 +36,7 @@ const renderIcon = (txn: TransactionDetails) => {
     return <RefreshIcon spin width="24px" />
   }
 
-  return txn.receipt?.status === 1 ||
-    typeof txn.receipt?.status === 'undefined' ? (
+  return txn.receipt?.status === 1 || typeof txn.receipt?.status === 'undefined' ? (
     <CheckmarkCircleIcon color="success" width="24px" />
   ) : (
     <BlockIcon color="failure" width="24px" />

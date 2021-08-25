@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
-import { Button, Text, Link, Flex, Checkbox, Message } from '@pancakeswap/uikit'
+import { Button, Text, Link, Flex, Checkbox, Message } from '@smartworld-libs/uikit'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Layout/Column'
 import { RowBetween, RowFixed } from 'components/Layout/Row'
@@ -69,9 +69,7 @@ function ImportList({ listURL, list, onImport }: ImportProps) {
           <Card padding="12px 20px">
             <RowBetween>
               <RowFixed>
-                {list.logoURI && (
-                  <ListLogo logoURI={list.logoURI} size="40px" />
-                )}
+                {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}
                 <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
                   <RowFixed>
                     <Text bold mr="6px">
@@ -98,23 +96,16 @@ function ImportList({ listURL, list, onImport }: ImportProps) {
 
           <Message variant="danger">
             <Flex flexDirection="column">
-              <Text
-                fontSize="20px"
-                textAlign="center"
-                color={theme.colors.failure}
-                mb="16px"
-              >
+              <Text fontSize="20px" textAlign="center" color={theme.colors.failure} mb="16px">
                 {t('Import at your own risk')}
               </Text>
               <Text color={theme.colors.failure} mb="8px">
                 {t(
-                  'By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one.'
+                  'By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one.',
                 )}
               </Text>
               <Text bold color={theme.colors.failure} mb="16px">
-                {
-                  typeof 'If you purchase a token from this list, you may not be able to sell it back.'
-                }
+                {typeof 'If you purchase a token from this list, you may not be able to sell it back.'}
               </Text>
               <Flex alignItems="center">
                 <Checkbox
@@ -135,10 +126,7 @@ function ImportList({ listURL, list, onImport }: ImportProps) {
             {t('Import')}
           </Button>
           {addError ? (
-            <Text
-              color="failure"
-              style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}
-            >
+            <Text color="failure" style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
               {addError}
             </Text>
           ) : null}

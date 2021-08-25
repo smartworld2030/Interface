@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { Box, Button, Flex, Text } from '@pancakeswap/uikit'
+import { Box, Button, Flex, Text } from '@smartworld-libs/uikit'
 import { AppDispatch } from 'state'
 import { useAllTransactions } from 'state/transactions/hooks'
 import { useTranslation } from 'contexts/Localization'
@@ -24,12 +24,7 @@ const WalletTransactions: React.FC = () => {
   return (
     <Box minHeight="120px">
       <Flex alignItems="center" justifyContent="space-between" mb="24px">
-        <Text
-          color="secondary"
-          fontSize="12px"
-          textTransform="uppercase"
-          fontWeight="bold"
-        >
+        <Text color="secondary" fontSize="12px" textTransform="uppercase" fontWeight="bold">
           {t('Recent Transactions')}
         </Text>
         {sortedTransactions.length > 0 && (
@@ -39,9 +34,7 @@ const WalletTransactions: React.FC = () => {
         )}
       </Flex>
       {sortedTransactions.length > 0 ? (
-        sortedTransactions.map((txn) => (
-          <TransactionRow key={txn.hash} txn={txn} />
-        ))
+        sortedTransactions.map((txn) => <TransactionRow key={txn.hash} txn={txn} />)
       ) : (
         <Text textAlign="center">{t('No recent transactions')}</Text>
       )}

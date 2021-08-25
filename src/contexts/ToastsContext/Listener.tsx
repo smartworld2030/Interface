@@ -1,4 +1,4 @@
-import { ToastContainer } from '@pancakeswap/uikit'
+import { ToastContainer } from '@smartworld-libs/uikit'
 import useToast from 'hooks/useToast'
 
 const ToastListener = () => {

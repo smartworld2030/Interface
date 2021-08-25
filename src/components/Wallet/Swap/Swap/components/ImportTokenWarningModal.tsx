@@ -1,5 +1,5 @@
 import { Token } from '@pancakeswap/sdk'
-import { Modal, InjectedModalProps } from '@pancakeswap/uikit'
+import { Modal, InjectedModalProps } from '@smartworld-libs/uikit'
 import ImportToken from 'components/SearchModal/ImportToken'
 
 interface Props extends InjectedModalProps {
@@ -7,11 +7,7 @@ interface Props extends InjectedModalProps {
   onCancel: () => void
 }
 
-const ImportTokenWarningModal: React.FC<Props> = ({
-  tokens,
-  onDismiss,
-  onCancel,
-}) => {
+const ImportTokenWarningModal: React.FC<Props> = ({ tokens, onDismiss, onCancel }) => {
   return (
     <Modal
       title="Import Token"

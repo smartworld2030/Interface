@@ -1,4 +1,4 @@
-import { Text, ErrorIcon } from '@pancakeswap/uikit'
+import { Text, ErrorIcon } from '@smartworld-libs/uikit'
 import styled, { css } from 'styled-components'
 import { AutoColumn } from 'components/Layout/Column'
 
