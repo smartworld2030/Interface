@@ -1,18 +1,31 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import useDebounce from 'hooks/useDebounce'
 import { updateBankStates } from './actions'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useMultiCallMultipleData } from 'state/multicall/hooks'
 import { useBankContract, useBtcPriceContract } from 'hooks/useContract'
+import {
+  MultiCallMultipleData,
+  singleContractMultiCallRequest,
+  multiCallMultipleData,
+  resConverter,
+} from 'state/multicall/hooks'
+import { getMulticallContract } from 'utils/contractHelpers'
+import useBlockNumber from 'state/application/hooks'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 
 export default function Updater(): null {
   const dispatch = useDispatch()
-  const { chainId } = useActiveWeb3React()
   const bankContract = useBankContract()
   const tokenPrice = useBtcPriceContract()
+  const { chainId, account } = useActiveWeb3React()
+  const multiContract = getMulticallContract()
+  const latestBlockNumber = useBlockNumber()
+  const windowVisible = useIsWindowVisible()
 
-  const multicalls = useMemo(
+  const [data, setData] = useState({})
+
+  const calls = useMemo(
     () => [
       {
         ifs: bankContract.interface,
@@ -30,25 +43,29 @@ export default function Updater(): null {
     [bankContract, tokenPrice],
   )
 
-  const results = useMultiCallMultipleData(multicalls)
+  useEffect(() => {
+    if (!latestBlockNumber || !windowVisible) return
+    async function multiCallRequest() {
+      const results = await multiCallMultipleData(multiContract, calls, { requireSuccess: false })
+      setData(results)
+    }
+    if (calls) {
+      multiCallRequest()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calls, windowVisible, latestBlockNumber])
 
   const compiledStates = useMemo(() => {
-    if (!Object.keys(results).length) return undefined
-    return Object.keys(results).reduce(
+    if (!Object.keys(data).length) return undefined
+    return Object.keys(data).reduce(
       (items, method) =>
-        results[method] && {
+        data[method] && {
           ...items,
-          [method]:
-            Object.keys(results[method]).length === 1
-              ? results[method].toString()
-              : Object.keys(results[method]).reduce(
-                  (res, key) => key.length > 1 && { ...res, [key]: results[method][key].toString() },
-                  {},
-                ),
+          [method]: resConverter(data[method]),
         },
       {},
     )
-  }, [results])
+  }, [data])
 
   const states = useDebounce(compiledStates, 500)
 

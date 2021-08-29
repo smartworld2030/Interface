@@ -18,7 +18,7 @@ export const DEFAULT_INVEST_LIST_TOKENS: ProjectChainToken = {
   56: [
     ['0xbBe476b50D857BF41bBd1EB02F777cb9084C1564', 8, 'STT', 'Smart World Token - Stock'],
     ['0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC', 8, 'STTS', 'Smart World Token'],
-    ['0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c', 18, 'BTC', 'Binance-Peg BTCB Token'],
+    ['0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTC', 'Binance-Peg BTCB Token'],
   ],
   97: [
     ['0x75Bea6460fff60FF789F88f7FE005295B8901455', 8, 'STT', 'Smart World Token - Stock'],

@@ -1,4 +1,3 @@
-import Spin from 'antd/lib/spin'
 import { connect } from 'react-redux'
 import { AppState } from '../../../_types'
 import { Row, Col } from 'react-grid-system'
@@ -16,14 +15,7 @@ type IProps = PoolProps & ReturnType<typeof mapStateToProps>
 const Pool: React.FC<IProps> = ({ isMobile, error, poolLoading }) => {
   console.log(usePool())
   return (
-    <Spin
-      style={{
-        textAlign: 'center',
-        height: 150,
-      }}
-      spinning={poolLoading}
-      tip={error ? error : 'Waiting...'}
-    >
+    <>
       <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
         <Col md={12} lg={6}>
           <DepositSection isMobile={isMobile} />
@@ -35,7 +27,7 @@ const Pool: React.FC<IProps> = ({ isMobile, error, poolLoading }) => {
           <DetailSection isMobile={isMobile} />
         </Col>
       </Row>
-    </Spin>
+    </>
   )
 }
 const mapStateToProps = (state: AppState) => {

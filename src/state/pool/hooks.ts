@@ -20,10 +20,10 @@ export function useBankBalances(): BankData['totalSatoshi'] {
   return useSelector((state: AppState) => state.bank[chainId ?? -1]?.totalSatoshi)
 }
 
-export function useBankSatoshi(): { btc: string; bnb: string; stts: string } {
+export function useBankSatoshi(): { btc: string; bnb: string; stts: string; stt: string } {
   const { btcToSatoshi, bnbToSatoshi, sttsToSatoshi } = useBankStates()
 
-  return { btc: btcToSatoshi, bnb: bnbToSatoshi, stts: sttsToSatoshi }
+  return { btc: btcToSatoshi, bnb: bnbToSatoshi, stts: sttsToSatoshi, stt: useSttPrice() }
 }
 
 export default useBankStates

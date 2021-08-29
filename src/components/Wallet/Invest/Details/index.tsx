@@ -7,14 +7,27 @@ import copy from 'copy-to-clipboard'
 import QRCode from 'react-qr-code'
 import Colors from '../../../../Theme/Colors'
 import { successHandler } from '../../../../_helpers/alert'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useBankDollars, useSttPrice } from 'state/bank/hooks'
+import { useUserInvestDetails } from 'state/invest/hooks'
 
 interface ReferralSectionProps {}
 
 export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
-  let address, account, tokens, prices, dollar
+  const { account } = useActiveWeb3React()
+  const {
+    users: { refPercent },
+    calculateInterest: { referral, hourly },
+    userBalances: { satoshi },
+  } = useUserInvestDetails()
+  const { stt } = useBankDollars()
+  const sttPrice = useSttPrice()
+
   const [done, setDone] = useState(false)
   const { pathname } = useLocation()
-  const link = `${window.location.origin}${pathname}?ref=${address}`
+  const link = `${window.location.origin}${pathname}?ref=${account}`
+
+  const value = (((+referral + +hourly) / 10 ** 8) * Number(stt)).toFixed()
 
   const copyHandler = () => {
     if (!done) {
@@ -23,10 +36,9 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
       setDone(true)
     }
   }
-  const calcSatoshi = () => ((account.referral + account.hourly) / 10 ** 8) * prices.STT
+  const calcSatoshi = () => ((+referral + +hourly) / 10 ** 8) * +sttPrice
 
-  const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
-  const calcHourly = () => account.depositDetails.reduce((items, item) => items + Number(item.reward), 0) / 10 ** 8
+  // const calcHourly = () => depositDetails.reduce((items, item) => items + Number(item.reward), 0) / 10 ** 8
 
   return (
     <Row
@@ -53,25 +65,25 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
         <>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              <TokenValue title="Referral percent" precision={2} token="%" value={account.percent / 250} />
-              <TokenValue value={calcHourly()} precision={2} title="Hourly reward" />
+              <TokenValue title="Referral percent" precision={2} token="%" value={+refPercent / 250} />
+              {/* <TokenValue value={calcHourly()} precision={2} title="Hourly reward" /> */}
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
               <TokenValue title="Rewards(Satoshi)" precision={0} token="SATS" value={calcSatoshi()} />
-              <TokenValue value={calcDollar()} precision={2} title="Rewards(Dollar)" token="$" />
+              <TokenValue value={value} precision={2} title="Rewards(Dollar)" token="$" />
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              <ReferralButton width={90} onClick={copyHandler} disable={account.satoshi === 0} />
+              <ReferralButton width={90} onClick={copyHandler} disable={satoshi === '0'} />
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              <TokenValue token="SATS" precision={0} value={account.satoshi} title="Total investment" />
-              <TokenValue value={tokens.STT} token="STT" precision={0} title="Total rewards" />
+              <TokenValue token="SATS" precision={0} value={satoshi} title="Total investment" />
+              {/* <TokenValue value={tokens.STT} token="STT" precision={0} title="Total rewards" /> */}
             </Row>
           </Col>
         </>

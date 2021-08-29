@@ -1,5 +1,6 @@
+import { DetailedButton } from '@smartworld-libs/uikit'
+import useTheme from 'hooks/useTheme'
 import { useSpring, animated as a } from 'react-spring'
-import Colors from '../../../Theme/Colors'
 
 interface CircleProps {
   width: number
@@ -10,62 +11,49 @@ interface CircleProps {
 }
 
 const TokenCircle: React.FC<CircleProps> = ({ width, active, token, info, onClick }) => {
-  const half = width / 2
-  const r = half - 5
-  const { opacity, transform } = useSpring({
+  const {
+    theme: { colors },
+  } = useTheme()
+
+  const { transform, opacity } = useSpring({
     opacity: active ? 1 : 0,
-    transform: `rotatey(${active ? 180 : 0}deg) translateX(-35px)`,
+    transform: `perspective(600px) rotateY(${active ? 180 : 0}deg)`,
     config: { mass: 5, tension: 500, friction: 80 },
   })
-
   return (
-    <svg height={width} width={width}>
-      <g onClick={() => onClick(token)}>
-        <a.g
-          style={{
-            opacity: opacity.to((o: any) => 1 - o),
-            transform: transform.to((t) => `translateX(35px) ${t}`),
-          }}
+    <div style={{ position: 'relative', width, height: width }} onClick={() => onClick(token)}>
+      <a.div style={{ position: 'absolute', top: 0, left: 0, opacity: opacity.to((o) => 1 - o), transform }}>
+        <DetailedButton
+          bottomIcon={info && info !== 'Infinity' ? info : 0}
+          bottomFontSize="10px"
+          variant="secondary"
+          scale="lg"
+          shape="circle"
         >
-          <circle
-            cx={half}
-            cy={half}
-            r={r}
-            stroke={active ? Colors.green : Colors.grey}
-            strokeWidth="2.5"
-            fill={Colors.background}
-          />
-
-          <text textAnchor="middle" dominantBaseline="middle" x="50%" y="53%" fill="white" fontSize="15">
-            {token === 'BTCB' ? 'BTC' : token}
-          </text>
-          <text textAnchor="middle" x="50%" y="80%" fill="white" fontSize="7">
-            {info && info !== 'Infinity' ? info : 0}
-          </text>
-        </a.g>
-        <a.g
-          style={{
-            opacity: opacity,
-            transform: transform.to((t) => `translateX(35px) rotatey(180deg) ${t}`),
-          }}
+          {token}
+        </DetailedButton>
+      </a.div>
+      <a.div
+        style={{
+          opacity,
+          transform,
+          rotateY: '180deg',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}
+      >
+        <DetailedButton
+          bottomIcon={info && info !== 'Infinity' ? info : 0}
+          bottomFontSize="10px"
+          scale="lg"
+          shape="circle"
+          style={{ backgroundColor: colors.secondary }}
         >
-          <circle
-            cx={half}
-            cy={half}
-            r={r}
-            stroke={active ? Colors.green : Colors.grey}
-            strokeWidth="2.5"
-            fill={Colors.background}
-          />
-          <text textAnchor="middle" x="50%" y="53%" fill="white" dominantBaseline="middle" fontSize="15">
-            {token === 'BTCB' ? 'BTC' : token}
-          </text>
-          <text textAnchor="middle" x="50%" y="80%" fill="white" fontSize="7">
-            {info && info !== 'Infinity' ? info : 0}
-          </text>
-        </a.g>
-      </g>
-    </svg>
+          {token}
+        </DetailedButton>
+      </a.div>
+    </div>
   )
 }
 export default TokenCircle

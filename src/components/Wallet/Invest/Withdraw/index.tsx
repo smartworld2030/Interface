@@ -1,115 +1,69 @@
 import { Row } from 'react-grid-system'
-import Colors from '../../../../Theme/Colors'
-import { formaterNumber, roundDecimals } from '../../../../_helpers/api'
+import { useUserInvestDetails } from 'state/invest/hooks'
+import { withdrawInterest } from '_actions/invest.actions'
+import { WithdrawCircle, Flex, Text, TooltipText } from '@smartworld-libs/uikit'
+import { useBankDollars } from 'state/bank/hooks'
 
 interface WithdrawCircleProps {
   width: number
 }
 
 const WithdrawSection: React.FC<WithdrawCircleProps> = ({ width }) => {
-  let latestWithdraw, referral, hourly, withdrawInterest
-  const half = width / 2
-  const r = half - 10
-  const c = 2 * Math.PI * r
-  const period = 3600
-  const secPast = latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
+  const {
+    calculateInterest: { referral, hourly },
+    users: { latestWithdraw },
+  } = useUserInvestDetails()
+  const { stt } = useBankDollars()
 
-  const secRemain = period - secPast
-  const pastRadius = c * (secPast / period)
+  const period = 3600
+  const minPast = latestWithdraw !== '0' ? (Date.now() / 1000 - +latestWithdraw) % period : 0
+  const percent = minPast / 100
+  const value = (((+referral + +hourly) / 10 ** 8) * Number(stt)).toFixed()
+
+  const currencyValues = !Number.isNaN(parseFloat(value))
+    ? '~' +
+      parseFloat(value).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    : '0.00'
+
   return (
     <Row direction="column" justify="around" align="center" style={{ height: '100%' }}>
-      <svg height={width} width={width}>
-        <defs>
-          <clipPath id="cut-off-middle">
-            <rect x={0} y={half * 0.55} width={width} height={half * 0.9} />
-          </clipPath>
-        </defs>
-        <circle cx={half} cy={half} r={r} fill={Colors.background} />
-        {/* <circle cx={half} cy={half} r={r - 14} fill="white" /> */}
-        {/* <circle
-          cx={half}
-          cy={half}
-          r={r}
-          fill={Colors.background}
-          clipPath="url(#cut-off-middle)"
-        /> */}
-        <circle
-          cx={half}
-          cy={half}
-          r={r}
-          strokeLinecap="round"
-          stroke={Colors.green}
-          strokeWidth={6}
-          fill="none"
-          strokeDashoffset={c * 0.25}
-          strokeDasharray={`${pastRadius} ${c - pastRadius}`}
-        >
-          {latestWithdraw !== 0 && (
-            <>
-              <animate
-                id="remains"
-                attributeName="stroke-dasharray"
-                values={`${pastRadius} ${c - pastRadius};${c} 0`}
-                dur={secRemain}
-              />
-              <animate
-                id="hourly"
-                begin="remains.end"
-                attributeName="stroke-dasharray"
-                values={`0 ${c};${c} 0`}
-                dur={period}
-                repeatCount="indefinite"
-              />
-            </>
-          )}
-        </circle>
-        <text textAnchor="middle" dominantBaseline="middle" x={half} y={width * 0.17} fontSize="11" fill="white">
-          REWARD
-        </text>
-        <text textAnchor="middle" x={half} y={width * 0.26} fontSize="14" fill="white">
-          <tspan>{roundDecimals(formaterNumber(hourly, 'STT'), 2)}</tspan>
-          <tspan fill={Colors.green}> STT</tspan>
-        </text>
-        <text textAnchor="middle" dominantBaseline="middle" x={half} y={width * 0.77} fontSize="14" fill="white">
-          <tspan>{roundDecimals(formaterNumber(referral, 'STT'), 2)}</tspan>
-          <tspan fill={Colors.green}> STT</tspan>
-        </text>
-        <text textAnchor="middle" dominantBaseline="middle" x={half} y={width * 0.85} fontSize="11" fill="white">
-          REFERRAL
-        </text>
-        <g onClick={referral + hourly > 0 ? () => withdrawInterest() : undefined}>
-          <rect
-            x={30}
-            y={r * 0.87}
-            rx="2"
-            ry="2"
-            width={r * 1.65}
-            height={r * 0.445}
-            strokeWidth="1"
-            radius="5"
-            fill="none"
-            stroke="#434343"
-          />
-          <text textAnchor="middle" fill={Colors.green} x={half} y={half + 6} fontSize={width / 12}>
-            WITHDRAW
-          </text>
-          <rect
-            className="withdraw-button"
-            x={30}
-            y={r * 0.87}
-            rx="2"
-            ry="2"
-            width={r * 1.65}
-            height={r * 0.445}
-            strokeWidth="1"
-            radius="5"
-            fill="none"
-            stroke="#434343"
-          />
-        </g>
-      </svg>
+      <WithdrawCircle
+        borderColor="transparent"
+        progressSize={5}
+        percent={percent}
+        totalValue={currencyValues}
+        totalValueUnit="$"
+        topElement={
+          <>
+            <TooltipText fontSize="8px">HOURLY</TooltipText>
+            <SttBalance balance={hourly} />
+          </>
+        }
+        bottomElement={
+          <>
+            <SttBalance balance={referral} />
+            <TooltipText fontSize="8px">REFERRAL</TooltipText>
+          </>
+        }
+        size={width}
+        onClick={referral + hourly > '0' ? () => withdrawInterest() : undefined}
+      />
     </Row>
   )
 }
+
+const SttBalance: React.FC<{ balance: string }> = ({ balance }) => (
+  <Flex justifyContent="center">
+    <Text fontWeight="bold" fontSize="15px">
+      {(+balance / 10 ** 8).toFixed()}
+    </Text>
+    <Text fontWeight="bold" color="secondary" ml="5px">
+      STT
+    </Text>
+  </Flex>
+)
 
 export default WithdrawSection

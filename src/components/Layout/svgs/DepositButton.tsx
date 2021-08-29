@@ -1,32 +1,16 @@
-import { Button } from 'antd'
-
+import { Button } from '@smartworld-libs/uikit'
 import Colors from '../../../Theme/Colors'
 
 interface DepositButtonProps {
-  width: number
   done: boolean
   loading: boolean
   disable?: boolean
   onClick: () => void
 }
 
-export const DepositButton: React.FC<DepositButtonProps> = ({
-  width,
-  done,
-  loading,
-  disable,
-  onClick,
-}) => {
+export const DepositButton: React.FC<DepositButtonProps> = ({ done, loading, disable, onClick }) => {
   return (
-    <Button
-      shape="circle"
-      type="default"
-      style={{
-        height: width,
-        width: width,
-      }}
-      onClick={disable ? undefined : onClick}
-    >
+    <Button shape="circle" scale="ml" variant="secondary" onClick={disable ? undefined : onClick}>
       <svg
         viewBox="0 0 100 100"
         opacity={loading || done ? '1' : disable ? '1' : '0.6'}

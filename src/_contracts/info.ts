@@ -2,7 +2,7 @@ const info = {
   address: {
     '0xbbe476b50d857bf41bbd1eb02f777cb9084c1564': { name: 'stt', network: 56 },
     '0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec': { name: 'stts', network: 56 },
-    '0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c': { name: 'btcb', network: 56 },
+    '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c': { name: 'btcb', network: 56 },
     '0x75Bea6460fff60FF789F88f7FE005295B8901455': { name: 'stt', network: 97 },
     '0xbfd0ac6cd15712e0a697bda40897cdc54b06d7ef': { name: 'stts', network: 97 },
     '0x3c26729bb1cf37d18efdf3bb957f5e0de5c2cb12': { name: 'btcb', network: 97 },
@@ -25,7 +25,7 @@ const info = {
   56: {
     STT: '0xbBe476b50D857BF41bBd1EB02F777cb9084C1564',
     STTS: '0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC',
-    BTCB: '0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c',
+    BTCB: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
     POOL: '0x98cf1b38af1446702F30A9933A3e20aB8DE4E1B8',
   },
   97: {

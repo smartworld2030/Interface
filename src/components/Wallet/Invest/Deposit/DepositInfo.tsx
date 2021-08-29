@@ -1,11 +1,11 @@
 import { Row, Col } from 'react-grid-system'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import { DepositButton } from '../../../Layout/svgs/DepositButton'
-import Colors from '../../../../Theme/Colors'
 import { useBankDollars } from 'state/bank/hooks'
-import { useInvestMax, useUserInfo } from 'state/invest/hooks'
+import { useInvestMax, useUserInvestInfo } from 'state/invest/hooks'
 import { useUserInvest } from 'hooks/useInvest'
-import { truncate } from '_helpers/api'
+import { useDispatch } from 'react-redux'
+import { investmentDeposit } from '_actions/invest.actions'
 
 interface DepositInfoProps {
   token: string
@@ -16,18 +16,19 @@ interface DepositInfoProps {
 const DepositInfo: React.FC<DepositInfoProps> = ({ token, prices, value }) => {
   const dollar = useBankDollars()
   const maxPercent = useInvestMax()
-  const account = useUserInfo()
+  const account = useUserInvestInfo()
+  const dispatch = useDispatch()
 
   const depositHandler = () => {
     // if (!loading && !confirmed) {
-    //   console.log(token, value)
-    //   investmentDeposit(token, value)
+    console.log(token, value)
+    dispatch(investmentDeposit(token, value))
     // }
   }
 
   const calcSatoshi = () => +prices[token.toLowerCase()] * value
 
-  const calcDollar = () => (calcSatoshi() / 10 ** 8) * +dollar.btc
+  const calcDollar = () => value * +dollar[token.toLowerCase()]
 
   const calcSTT = () => calcSatoshi() / 2.5 / +prices.stt
 
@@ -65,20 +66,12 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, prices, value }) => {
         </Row>
       </Col>
       <Col xs={12} width="100%">
-        {/*
         <Row align="center" justify="around" direction="column">
-           {confirmed && <p style={{ color: Colors.green }}>Confirmed!</p>}
-          {loading && <p style={{ color: Colors.green }}>Waiting...</p>}
-          {error && <p style={{ color: Colors.red }}>{error}</p>}
-          <DepositButton
-            width={90}
-            onClick={depositHandler}
-            done={confirmed}
-            loading={loading}
-            disable={disableHandler()}
-          /> 
+          {/* <p style={{ color: Colors.green }}>Confirmed!</p>
+          <p style={{ color: Colors.green }}>Waiting...</p>
+          <p style={{ color: Colors.red }}>{error}</p>} */}
+          <DepositButton onClick={depositHandler} done={false} loading={false} disable={disableHandler()} />
         </Row>
-          */}
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">

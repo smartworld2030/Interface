@@ -9,20 +9,14 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../_types'
 import { swapContract } from '../../../_actions/wallet.actions'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import {
-  convertNumbers2English,
-  formatToString,
-  truncate,
-} from '../../../_helpers/api'
+import { convertNumbers2English, formatToString, truncate } from '../../../_helpers/api'
 import { BigNumber } from '@ethersproject/bignumber'
 import { requestSwap } from '../../../_actions/swap.actions'
 import Colors from '../../../Theme/Colors'
 
 interface IProps {}
 
-type SttSwapProps = IProps &
-  ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>
+type SttSwapProps = IProps & ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
 let tokenTimer
 let secondTimer
@@ -79,17 +73,12 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
           .STTtoSTTSInfo(bigNumber ? bigNumber : big, 0)
           .then((res) => {
             params.forEach((param) => {
-              if (param !== 'slippage')
-                values[param] = truncate(formatUnits(res[param], 8), 4)
+              if (param !== 'slippage') values[param] = truncate(formatUnits(res[param], 8), 4)
             })
             values.decimals = 8
             setResult({ ...values, token: 'STTS' })
-            const value = bigNumber
-              ? truncate(formatUnits(bigNumber, 8), 4)
-              : truncate(formatUnits(res.allowed, 8), 4)
-            bigNumber
-              ? setInput1({ value, big: bigNumber })
-              : setInput2({ value, big: res.allowed })
+            const value = bigNumber ? truncate(formatUnits(bigNumber, 8), 4) : truncate(formatUnits(res.allowed, 8), 4)
+            bigNumber ? setInput1({ value, big: bigNumber }) : setInput2({ value, big: res.allowed })
           })
           .catch((err) => {
             console.log(err)
@@ -119,21 +108,11 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
     inputHandler(truncate(formatToString(tokens[token]), 4), index)
   }
   const swapButtonHandler = () => {
-    requestSwap('safeSTTSwap', [
-      input1.big,
-      result.price,
-      100,
-      Math.floor(Date.now() / 1000) + 180,
-    ])
+    requestSwap('safeSTTSwap', [input1.big, result.price, 100, Math.floor(Date.now() / 1000) + 180])
   }
 
   return (
-    <Row
-      direction="column"
-      justify="around"
-      style={{ minHeight: 240 }}
-      gutterWidth={4}
-    >
+    <Row direction="column" justify="around" style={{ minHeight: 240 }} gutterWidth={4}>
       <Col xs={12}>
         <Input
           onChange={({ target }) => inputHandler(target.value, 0)}
@@ -141,11 +120,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
           value={input1.value}
           suffix="STT"
           addonAfter={
-            <span
-              style={{ color: Colors.green }}
-              onClick={() => maxHandler('STT', 0)}
-              className="input-max-button"
-            >
+            <span style={{ color: Colors.green }} onClick={() => maxHandler('STT', 0)} className="input-max-button">
               MAX
             </span>
           }
@@ -157,11 +132,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
         </Button>
       </Col>
       <Col xs={12}>
-        <Input
-          onChange={({ target }) => inputHandler(target.value, 1)}
-          value={input2.value}
-          suffix="STTS"
-        />
+        <Input onChange={({ target }) => inputHandler(target.value, 1)} value={input2.value} suffix="STTS" />
       </Col>
       <Col xs={12}>
         <Row justify="between" gutterWidth={-20}>
@@ -187,9 +158,7 @@ const SttSwap: React.FC<SttSwapProps> = ({ tokens, requestSwap }) => {
         <Col xs={6}>
           <Button
             onClick={swapButtonHandler}
-            disabled={
-              input2.value === '0' || input1.value === '0' || !!!input1.value
-            }
+            disabled={input2.value === '0' || input1.value === '0' || !!!input1.value}
           >
             Swap STT for STTS
           </Button>

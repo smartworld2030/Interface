@@ -1,7 +1,8 @@
+// @ts-nocheck
 import { connect } from 'react-redux'
 import { Col, Row } from 'react-grid-system'
 import { AppState } from '../../../_types'
-import Button from 'antd/lib/button'
+import { IconButton } from '@smartworld-libs/uikit'
 import {
   GithubOutlined,
   MediumSquareFilled,
@@ -15,18 +16,18 @@ import {
 } from '@ant-design/icons'
 import { TelegramIcon } from './TelegramIcon'
 import { CmcIcon } from './CmcIcon'
-interface IProps {
+
+interface InfoProps {
   isMobile: boolean
 }
-
-type InfoProps = IProps & ReturnType<typeof mapStateToProps>
 
 const Info: React.FC<InfoProps> = () => {
   return (
     <Row justify="around" align="center" direction="column">
       <Row justify="around" align="center" style={{ minHeight: 100 }}>
-        <Button
-          type="primary"
+        <IconButton
+          as="a"
+          variant="primary"
           shape="circle"
           className="whitepaper"
           target="_blank"
@@ -34,111 +35,119 @@ const Info: React.FC<InfoProps> = () => {
           href="https://smartworld.app/assets/whitepaper.pdf"
         >
           <FileSearchOutlined />
-        </Button>
+        </IconButton>
       </Row>
-      <Row
-        justify="around"
-        align="center"
-        style={{ minHeight: 150, width: '100%' }}
-      >
+      <Row justify="around" align="center" style={{ minHeight: 150, width: '100%' }}>
         <Col xs={12} md={2}></Col>
         <Col xs={12} md={4}>
           <Col xs={12}>
             <Row justify="around">
-              <Button
-                type="primary"
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<FileDoneOutlined />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://bscscan.com/address/0xbBe476b50D857BF41bBd1EB02F777cb9084C1564"
-              />
-              <Button
-                type="primary"
+              >
+                <FileDoneOutlined />
+              </IconButton>
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<CmcIcon />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://coinmarketcap.com/"
-              />
-              <Button
-                type="primary"
+              >
+                <CmcIcon />
+              </IconButton>
+              <IconButton
+                as="a"
+                variant="text"
                 shape="circle"
-                icon={<SwapOutlined />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-              />
-              <Button
-                type="primary"
+              >
+                <SwapOutlined />
+              </IconButton>
+              <IconButton as="a" variant="primary" shape="circle" scale="lg" href="mailto:info@smartworld.app" />
+              <IconButton
+                as="a"
+                variant="pria<MailOutlined /></IconButton>ry"
                 shape="circle"
-                icon={<MailOutlined />}
-                size="large"
-                href="mailto:info@smartworld.app"
-              />
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<GithubOutlined />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://github.com/smartworld2030"
-              />
+              >
+                <GithubOutlined />
+              </IconButton>
             </Row>
           </Col>
         </Col>
         <Col xs={12} md={4}>
           <Col xs={12}>
             <Row justify="around">
-              <Button
-                type="primary"
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<TelegramIcon />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://t.me/smart_world_project"
-              />
-              <Button
-                type="primary"
+              >
+                <TelegramIcon />
+              </IconButton>
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<TwitterOutlined />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://twitter.com/smart_world_app"
-              />
-              <Button
-                type="primary"
+              >
+                <TwitterOutlined />
+              </IconButton>
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<MediumSquareFilled />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://smartworldapp.medium.com/"
-              />
-              <Button
-                type="primary"
+              >
+                <MediumSquareFilled />
+              </IconButton>
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<InstagramOutlined />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://www.instagram.com/smartworld.app/"
-              />
-              <Button
-                type="primary"
+              >
+                <InstagramOutlined />
+              </IconButton>
+              <IconButton
+                as="a"
+                variant="primary"
                 shape="circle"
-                icon={<GlobalOutlined />}
-                size="large"
+                scale="lg"
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://h5aet-waaaa-aaaab-qaamq-cai.raw.ic0.app/user/Smart_world_project"
-              />
+              >
+                <GlobalOutlined />
+              </IconButton>
             </Row>
           </Col>
         </Col>
@@ -148,15 +157,4 @@ const Info: React.FC<InfoProps> = () => {
   )
 }
 
-const mapStateToProps = (state: AppState) => {
-  const { tokens, error, address } = state.account
-  const { chainId } = state.wallet
-  return {
-    chainId,
-    address,
-    tokens,
-    error,
-  }
-}
-
-export default connect(mapStateToProps)(Info)
+export default Info

@@ -1,12 +1,10 @@
 import { BalanceInput } from '@smartworld-libs/uikit'
 import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-grid-system'
-import { useBankSatoshi } from 'state/bank/hooks'
+import { useBankDollars, useBankSatoshi } from 'state/bank/hooks'
 import { useInvestTokenBalances } from 'state/wallet/hooks'
-import { removeError } from '../../../../_actions/invest.actions'
-import { convertNumbers2English, percentToValue, truncate, valueToPercent } from '../../../../_helpers/api'
-import DepositCircle from '../../../Layout/svgs/DepositCircle'
 import TokenCircle from '../../../Layout/svgs/TokenCircle'
+import { truncate } from '../../../../_helpers/api'
 import DepositInfo from './DepositInfo'
 
 interface DepositSectionProps {
@@ -16,37 +14,78 @@ interface DepositSectionProps {
 export const tokenNames = ['STTS', 'BNB', 'BTC']
 
 export const DepositSection: React.FC<DepositSectionProps> = ({ isMobile }) => {
+  const dollar = useBankDollars()
   const prices = useBankSatoshi()
   const tokens = useInvestTokenBalances()
-  const error = {}
+
   const [token, setToken] = useState('STTS')
-  const [value, setValue] = useState<string>()
+  const [editingUnit, setEditingUnit] = useState<string | 'USD'>(token)
+  const [values, setValues] = useState({
+    [token]: tokens[token] ? tokens[token] : '',
+    USD: `${tokens[token] * dollar[token]}`,
+  })
+
+  const conversionUnit = editingUnit === token ? 'USD' : token
 
   useEffect(() => {
+    setEditingUnit(token)
+    setValues({
+      [token]: '',
+      USD: '',
+    })
     return () => {
-      setValue(undefined)
+      setValues({
+        [token]: '',
+        USD: '',
+      })
     }
   }, [token])
 
   const minimumAmount = (t: string) =>
     truncate((500000 / Number(prices[t.toLowerCase()])).toString(), t === 'STTS' ? 1 : 3, t !== 'BTC')
 
-  const maxHandler = () => {
-    console.log(tokens)
-    setValue(tokens[token])
+  const currencyValues = !Number.isNaN(parseFloat(values[conversionUnit]))
+    ? '~' +
+      parseFloat(values[conversionUnit]).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+    : '0.00'
+
+  const handleInputChange = (input: string) => {
+    const inputAsFloat = parseFloat(input)
+    if (editingUnit !== 'USD') {
+      setValues({
+        [token]: input,
+        USD: Number.isNaN(inputAsFloat) ? '' : `${inputAsFloat * dollar[token.toLowerCase()]}`,
+      })
+    } else {
+      setValues({
+        [token]: Number.isNaN(inputAsFloat) ? '' : `${inputAsFloat / dollar[token.toLowerCase()]}`,
+        USD: input,
+      })
+    }
   }
 
-  const percentHandler = (per: number) => {
-    if (error) removeError()
-    const percent = percentToValue(tokens[token], per)
-    setValue(percent && percent !== 'NaN' ? percent : '0')
+  const switchEditingUnits = () => {
+    const editingUnitAfterChange = editingUnit === token ? 'USD' : token
+    // This is needed to persist same value as shown for currencyValue after switching
+    // otherwise user will see lots of decimals
+    const valuesAfterChange = { ...values }
+    valuesAfterChange[editingUnitAfterChange] = !Number.isNaN(parseFloat(values[conversionUnit]))
+      ? parseFloat(values[conversionUnit]).toFixed(2)
+      : ''
+    setValues(valuesAfterChange)
+    setEditingUnit(editingUnitAfterChange)
   }
 
-  const inputHandler = (val: string) => {
-    if (error) removeError()
-    val = convertNumbers2English(val)
-    if (val.length <= 20 && /^\d*\.?\d*$/.test(val))
-      setValue(val === '00' ? Number(val).toString() : val === '.' ? '0.' : val)
+  const balanceValues = () => {
+    const inputAsFloat = parseFloat(tokens?.[token])
+    if (editingUnit !== 'USD') {
+      return tokens?.[token]
+    } else {
+      return Number.isNaN(inputAsFloat) ? '0' : `${inputAsFloat * dollar[token.toLowerCase()]}`
+    }
   }
 
   return (
@@ -61,23 +100,25 @@ export const DepositSection: React.FC<DepositSectionProps> = ({ isMobile }) => {
       <Col md={4}>
         <Row justify="around" align="center" style={{ height: '100%' }}>
           <BalanceInput
-            width={isMobile ? 210 : 190}
-            unit={token}
-            value={value}
-            currencyValue="100"
-            currencyUnit="USD"
-            switchEditingUnits={() => console.log()}
-            placeholder={tokens?.[token]?.toString()}
-            onUserInput={inputHandler}
-            maxButton={maxHandler}
-            // percent={valueToPercent(value, tokens?.[token])}
-            // inputHandler={inputHandler}
-            // percentHandler={percentHandler}
+            value={values[editingUnit]}
+            maxValue={balanceValues()}
+            onUserInput={handleInputChange}
+            unit={editingUnit}
+            currencyValue={currencyValues}
+            currencyUnit={conversionUnit}
+            placeholder={balanceValues()}
+            size={isMobile ? 230 : 210}
+            borderColor="transparent"
+            progressColor={balanceValues() === '0' ? 'transparent' : undefined}
+            borderSize={2}
+            knobSize={12}
+            disabled={balanceValues() === '0'}
+            switchEditingUnits={switchEditingUnits}
           />
         </Row>
       </Col>
       <Col md={6}>
-        <DepositInfo token={token} value={Number(value ?? 0)} prices={prices} />
+        <DepositInfo token={token} value={Number(values[token] ?? 0)} prices={prices} />
       </Col>
     </Row>
   )

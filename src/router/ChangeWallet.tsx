@@ -3,26 +3,18 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../_types'
-import { Col } from 'antd/lib/grid'
 import { RowBody } from '../components/Layout/divs/Divs'
 import { StyledDiv } from '../components/Layout/divs/Sections'
 import { changeToMain, startOnBoarding } from '../_actions/wallet.actions'
-import Typography from 'antd/lib/typography'
-import Button from 'antd/lib/button'
+import { Button, Text } from '@smartworld-libs/uikit'
 import { tokenPrices } from '../_actions/bank.actions'
+import { Col } from 'react-grid-system'
 
-type IChangeWallet = { isMobile: boolean } & ReturnType<
-  typeof mapDispatchToProps
-> &
-  ReturnType<typeof mapStateToProps>
+type IChangeWallet = { isMobile: boolean } & ReturnType<typeof mapDispatchToProps> & ReturnType<typeof mapStateToProps>
 
 let timer
 
-const ChangeWallet: React.FC<IChangeWallet> = ({
-  error,
-  changeToMain,
-  startOnBoarding,
-}) => {
+const ChangeWallet: React.FC<IChangeWallet> = ({ error, changeToMain, startOnBoarding }) => {
   useEffect(() => {
     clearInterval(timer)
     tokenPrices()
@@ -36,20 +28,16 @@ const ChangeWallet: React.FC<IChangeWallet> = ({
   }, [])
   return (
     <RowBody>
-      <Col
-        xs={{ span: 22 }}
-        lg={{ span: 7 }}
-        style={{ textAlign: 'center', paddingTop: 50 }}
-      >
-        <Typography style={{ padding: 50 }}>{error.msg}</Typography>
+      <Col xs={22} lg={7} style={{ textAlign: 'center', paddingTop: 50 }}>
+        <Text style={{ padding: 50 }}>{error.msg}</Text>
         {error.code === 401 && (
-          <Button type="primary" onClick={() => startOnBoarding()}>
+          <Button variant="primary" onClick={() => startOnBoarding()}>
             Install MetaMask
           </Button>
         )}
         {error.code === 301 && (
           <StyledDiv>
-            <Button type="primary" onClick={() => changeToMain()}>
+            <Button variant="primary" onClick={() => changeToMain()}>
               Connect
             </Button>
           </StyledDiv>

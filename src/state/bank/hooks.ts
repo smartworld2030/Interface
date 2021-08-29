@@ -26,12 +26,14 @@ export function useBankSatoshi(): { btc: string; bnb: string; stts: string; stt:
   return { btc: btcToSatoshi, bnb: bnbToSatoshi, stts: sttsToSatoshi, stt: sttPrice }
 }
 
-export function useBankDollars(): { btc: string; bnb: string; stts: string } {
+export function useBankDollars(): { btc: string; bnb: string; stts: string; stt: string } {
   const { bnbToSatoshi, sttsToSatoshi, latestAnswer } = useBankStates()
+  const sttPrice = useSttPrice()
   const btc = (+latestAnswer / 10 ** 8).toFixed(2)
+  const stt = ((+sttPrice * +btc) / 10 ** 8).toFixed(4)
   const bnb = ((+bnbToSatoshi / 10 ** 8) * +btc).toFixed(2)
   const stts = ((+sttsToSatoshi / 10 ** 8) * +btc).toFixed(2)
-  return { btc, bnb, stts }
+  return { btc, bnb, stts, stt }
 }
 
 export default useBankStates

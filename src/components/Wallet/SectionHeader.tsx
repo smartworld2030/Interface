@@ -1,10 +1,8 @@
 import React from 'react'
-import Title from 'antd/lib/typography/Title'
 import { Row, Col } from 'react-grid-system'
-import Button from 'antd/lib/button'
+import { Text, Button, useWalletModal } from '@smartworld-libs/uikit'
 import useAuth from 'hooks/useAuth'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { useWalletModal } from '@smartworld-libs/uikit'
 
 interface SectionHeaderProps {
   title: string
@@ -19,13 +17,14 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
     <Row justify="between" align="center">
       <Col></Col>
       <Col>
-        <Title style={{ textAlign: 'center', margin: 0 }} level={5}>
+        <Text size="10" style={{ textAlign: 'center', margin: 0 }}>
           {title}
-        </Title>
+        </Text>
       </Col>
       <Col>
         <Button
-          type="link"
+          variant="secondary"
+          scale="xs"
           style={{ float: 'right', margin: 0 }}
           onClick={() => (account ? logout() : onPresentConnectModal())}
         >

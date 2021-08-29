@@ -22,7 +22,7 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
       }
     await axios
       .get(
-        `https://api.nomics.com/v1/currencies/ticker?key=${process.env.REACT_APP_NOMICS_API}&ids=BTC,BNB&interval=1h`
+        `https://api.nomics.com/v1/currencies/ticker?key=${process.env.REACT_APP_NOMICS_API}&ids=BTC,BNB&interval=1h`,
       )
       .then(
         ({ data }) =>
@@ -35,29 +35,25 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
                 isUp: Number(item['1h']?.price_change) > 0,
               },
             }),
-            apiPrices
-          ))
+            apiPrices,
+          )),
+      )
+      .then(() =>
+        axios.get(`https://api.pancakeswap.info/api/v2/tokens/0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec`).then(
+          ({ data }) =>
+            (apiPrices = {
+              ...apiPrices,
+              STTS: {
+                token: data.data.symbol,
+                price: truncate(data.data.price, 2),
+              },
+            }),
+        ),
       )
       .then(() =>
         axios
           .get(
-            `https://api.pancakeswap.info/api/v2/tokens/0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec`
-          )
-          .then(
-            ({ data }) =>
-              (apiPrices = {
-                ...apiPrices,
-                STTS: {
-                  token: data.data.symbol,
-                  price: truncate(data.data.price, 2),
-                },
-              })
-          )
-      )
-      .then(() =>
-        axios
-          .get(
-            `https://api.bscscan.com/api?module=account&action=balance&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
+            `https://api.bscscan.com/api?module=account&action=balance&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`,
           )
           .then(({ data }) => {
             const balance = truncate(formatEther(data.result), 2)
@@ -71,12 +67,12 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
                 price: truncate(price + '', 2),
               },
             ]
-          })
+          }),
       )
       .then(() =>
         axios
           .get(
-            `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
+            `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`,
           )
           .then(({ data }) => {
             const balance = truncate(formatEther(data.result), 2)
@@ -90,12 +86,12 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
                 price: truncate(price + '', 2),
               },
             ]
-          })
+          }),
       )
       .then(() =>
         axios
           .get(
-            `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`
+            `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=0x88469567a9e6b2dae2d8ea7d8c77872d9a0d43ec&address=0xbbe476b50d857bf41bbd1eb02f777cb9084c1564&tag=latest&apikey=${process.env.REACT_APP_BSCSCAN_API}`,
           )
           .then(({ data }) => {
             const balance = truncate(roundDecimalsString(data.result, 8), 2)
@@ -115,15 +111,13 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
                 token: 'STT',
                 price: truncate(
                   (Number(apiPrices.BTC.price) / 10 ** 8) *
-                    Math.floor(
-                      Number(bank.total) / Number(apiPrices.BTC.price)
-                    ) +
+                    Math.floor(Number(bank.total) / Number(apiPrices.BTC.price)) +
                     '',
-                  5
+                  5,
                 ),
               },
             }
-          })
+          }),
       )
 
     setBankTotal(bank)
@@ -165,12 +159,11 @@ export const PriceFeed: React.FC<PriceFeedProps> = () => {
               <>
                 {items}
                 <p>
-                  {item} :
-                  <span className="price-value">{prices[item].price}$</span>
+                  {item} :<span className="price-value">{prices[item].price}$</span>
                 </p>
               </>
             ),
-            []
+            [],
           )}
       </div>
     </Marquee>

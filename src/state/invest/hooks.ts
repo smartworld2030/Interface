@@ -14,23 +14,23 @@ export function useInvestMax(): number {
   return useSelector((state: AppState) => +state.invest[chainId ?? -1]?.maxPercent)
 }
 
-export function useUserDetails(): InvestData {
+export function useUserInvestDetails(): InvestData {
   return useInvestStates()
 }
 
-export function useUserInfo(): InvestData['users'] {
+export function useUserInvestInfo(): InvestData['users'] {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.invest[chainId ?? -1]?.users)
 }
 
-export function useUserInterest(): InvestData['calculateInterest'] {
+export function useUserInvestInterest(): InvestData['calculateInterest'] {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.invest[chainId ?? -1]?.calculateInterest)
 }
 
-export function useUserPercent(): InvestData['calculatePercent'] {
+export function useUserInvestPercent(): InvestData['calculatePercent'] {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.invest[chainId ?? -1]?.calculatePercent)

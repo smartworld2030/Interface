@@ -285,10 +285,8 @@ export function useSingleCallMultipleMethod(
         )
       : []
   }, [contract, fragments, inputs])
-
   const results = useCallsData(calls, options)
   const latestBlockNumber = useBlockNumber()
-  console.log(calls, results, latestBlockNumber)
 
   return useMemo(() => {
     return results.map((result, i) => toCallState(result, contract?.interface, fragments[i], latestBlockNumber))
@@ -317,70 +315,56 @@ export interface MultiCall {
 interface MulticallOptions {
   requireSuccess?: boolean
 }
+
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multiCalls chunk of calls to make
  */
-export function useMultiCallMultipleData(
+export async function multiCallMultipleData(
+  multiContract: Contract,
   multiCalls: MultiCallMultipleData[],
   options: MulticallOptions = { requireSuccess: false },
-): { [key: string]: string | string[] } {
+): Promise<{ [key: string]: string | string[] }> {
   const { requireSuccess } = options
-  const [states, setStates] = useState({})
-  const latestBlockNumber = useBlockNumber()
-  const multiContract = getMulticallContract()
-  const windowVisible = useIsWindowVisible()
 
-  useEffect(() => {
-    let callCounter = 0
-    if (!latestBlockNumber || !windowVisible) return
-    async function multiCallRequest() {
-      const calls: MultiCall[] = multiCalls.reduce(
-        (calls, { ifs, address, methods, args }) => [
-          ...calls,
-          ...methods.reduce(
-            (items, method, i) => [
-              ...items,
-              {
-                target: address.toLowerCase(),
-                callData: ifs.encodeFunctionData(method, args[i]),
-              },
-            ],
-            [],
-          ),
+  let callCounter = 0
+
+  const calls: MultiCall[] = multiCalls.reduce(
+    (calls, { ifs, address, methods, args }) => [
+      ...calls,
+      ...methods.reduce(
+        (items, method, i) => [
+          ...items,
+          {
+            target: address.toLowerCase(),
+            callData: ifs.encodeFunctionData(method, args[i]),
+          },
         ],
         [],
-      )
-      try {
-        const multiCall = calls.map(({ target, callData }) => [target, callData])
-        const data = await multiContract.tryAggregate(requireSuccess, multiCall)
-        setStates(
-          multiCalls.reduce(
-            (items, { ifs, methods }) => ({
-              ...items,
-              ...methods.reduce(
-                (its, method) => ({
-                  ...its,
-                  [method]: ifs.decodeFunctionResult(method, data[callCounter++].returnData),
-                }),
-                {},
-              ),
-            }),
-            {},
-          ),
-        )
-      } catch (error) {
-        console.log(error)
-        setStates({})
-      }
-    }
-    if (multiCalls) {
-      multiCallRequest()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [multiCalls, windowVisible, latestBlockNumber])
-
-  return states
+      ),
+    ],
+    [],
+  )
+  try {
+    const multiCall = calls.map(({ target, callData }) => [target, callData])
+    const data = await multiContract.tryAggregate(requireSuccess, multiCall)
+    return multiCalls.reduce(
+      (items, { ifs, methods }) => ({
+        ...items,
+        ...methods.reduce(
+          (its, method) => ({
+            ...its,
+            [method]: ifs.decodeFunctionResult(method, data[callCounter++].returnData),
+          }),
+          {},
+        ),
+      }),
+      {},
+    )
+  } catch (error) {
+    console.log(error)
+    return {}
+  }
 }
 
 /**
@@ -411,7 +395,7 @@ export function useMultiCallSingleData(
   return states
 }
 
-export async function multiCallRequest(multiContract, multiCalls, requireSuccess) {
+export async function multiCallRequest(multiContract, multiCalls: MultiCallSingleData[], requireSuccess) {
   let callCounter = 0
 
   const calls: MultiCall[] = multiCalls.reduce(
@@ -435,12 +419,12 @@ export async function multiCallRequest(multiContract, multiCalls, requireSuccess
     const data = await multiContract.tryAggregate(requireSuccess, multiCall)
 
     return multiCalls.reduce(
-      (items, { name, ifs, methods }) => ({
+      (items, { name, ifs, methods }, i) => ({
         ...items,
         ...methods.reduce(
           (its, method) => ({
             ...its,
-            [name]: ifs.decodeFunctionResult(method, data[callCounter++].returnData),
+            [name ? name : method + i]: ifs.decodeFunctionResult(method, data[callCounter++].returnData),
           }),
           {},
         ),
@@ -452,3 +436,37 @@ export async function multiCallRequest(multiContract, multiCalls, requireSuccess
     return {}
   }
 }
+
+export async function singleContractMultiCallRequest(
+  multiContract: Contract,
+  multiCalls: MultiCallMultipleData,
+  requireSuccess: boolean,
+) {
+  const calls: MultiCall[] = multiCalls.methods.reduce(
+    (items, method, i) => [
+      ...items,
+      {
+        target: multiCalls.address.toLowerCase(),
+        callData: multiCalls.ifs.encodeFunctionData(method, multiCalls.args[i]),
+      },
+    ],
+    [],
+  )
+  try {
+    const multiCall = calls.map(({ target, callData }) => [target, callData])
+    const data = await multiContract.tryAggregate(requireSuccess, multiCall)
+
+    return multiCalls.methods.reduce(
+      (its, method, i) => [...its, multiCalls.ifs.decodeFunctionResult(method, data[i].returnData)],
+      [],
+    )
+  } catch (error) {
+    console.log(error)
+    return []
+  }
+}
+
+export const resConverter = (data: { [key: string]: string }) =>
+  Object.keys(data).length === 1
+    ? data.toString()
+    : Object.keys(data).reduce((res, key) => key.length > 1 && { ...res, [key]: data[key].toString() }, {})

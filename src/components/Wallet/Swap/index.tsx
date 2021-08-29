@@ -5,7 +5,6 @@ import { AppState } from '_types'
 import BnbSwap from './BnbSwap'
 import SttSwap from './SttSwap'
 import { PriceValue } from './PriceValue'
-import Spin from 'antd/lib/spin'
 import { FACTORY_ADDRESS, Token, WETH, Fetcher, Route } from '@pancakeswap/sdk'
 import { provider } from '_actions/wallet.actions'
 import info from '_contracts/info'
@@ -16,23 +15,9 @@ interface IProps {
 
 type SwapProps = IProps & ReturnType<typeof mapStateToProps>
 
-const Swap: React.FC<SwapProps> = ({
-  isMobile,
-  chainId,
-  tokens,
-  prices,
-  dollar,
-  error,
-  swapLoading,
-}) => {
+const Swap: React.FC<SwapProps> = ({ isMobile, chainId, tokens, prices, dollar, error, swapLoading }) => {
   const fetchData = async () => {
-    const STTS = new Token(
-      chainId,
-      info[chainId].STTS,
-      8,
-      'Smart World Token - Stock',
-      'STTS'
-    )
+    const STTS = new Token(chainId, info[chainId].STTS, 8, 'Smart World Token - Stock', 'STTS')
 
     console.log(STTS, WETH[chainId], FACTORY_ADDRESS)
     // note that you may want/need to handle this async code differently,
@@ -49,19 +34,8 @@ const Swap: React.FC<SwapProps> = ({
     fetchData()
   }, [])
   return (
-    <Spin
-      style={{
-        textAlign: 'center',
-        height: 150,
-      }}
-      spinning={swapLoading}
-      tip={error ? error : 'Loading...'}
-    >
-      <Row
-        justify="around"
-        style={{ minHeight: isMobile ? 750 : 300 }}
-        direction={isMobile ? 'column' : 'row'}
-      >
+    <>
+      <Row justify="around" style={{ minHeight: isMobile ? 750 : 300 }} direction={isMobile ? 'column' : 'row'}>
         <Col xs={12}>
           <Row justify="around">
             {Object.keys(tokens)
@@ -69,14 +43,8 @@ const Swap: React.FC<SwapProps> = ({
               .map(
                 (token) =>
                   token !== 'BTCB' && (
-                    <PriceValue
-                      token={token}
-                      prices={prices}
-                      value={tokens[token]}
-                      dollar={dollar}
-                      key={token}
-                    />
-                  )
+                    <PriceValue token={token} prices={prices} value={tokens[token]} dollar={dollar} key={token} />
+                  ),
               )}
           </Row>
         </Col>
@@ -87,7 +55,7 @@ const Swap: React.FC<SwapProps> = ({
           <SttSwap />
         </Col>
       </Row>
-    </Spin>
+    </>
   )
 }
 

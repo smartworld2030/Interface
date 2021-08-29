@@ -5,7 +5,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { updateBankStates } from './actions'
 import useBlockNumber from 'state/application/hooks'
 import { useBankContract, useBtcPriceContract, useMulticallContract } from 'hooks/useContract'
-import { useMultiCallMultipleData } from 'state/multicall/hooks'
+import { multiCallMultipleData } from 'state/multicall/hooks'
 
 export default function Updater(): null {
   const dispatch = useDispatch()
@@ -30,7 +30,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (!latestBlockNumber || !chainId || !multicallContract) return
-    useMultiCallMultipleData(multicalls).then((results) => {
+    multiCallMultipleData(multicalls).then((results) => {
       const states = Object.keys(results).reduce(
         (items, method) =>
           results[method] && {

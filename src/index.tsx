@@ -43,7 +43,7 @@ function Blocklist({ children }: { children: ReactNode }) {
 
 const ThemeProviderWrapper = (props) => {
   const [isDark] = useThemeManager()
-  return <ThemeProvider theme={isDark ? light : dark} {...props} />
+  return <ThemeProvider theme={isDark ? dark : light} {...props} />
 }
 
 const Providers: React.FC = ({ children }) => {

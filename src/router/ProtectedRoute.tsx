@@ -2,7 +2,6 @@ import { connect } from 'react-redux'
 import ChangeWallet from './ChangeWallet'
 import { AppState } from '../_types'
 import { supportedChain } from '../_helpers/constants'
-import Spin from 'antd/lib/spin'
 
 interface ParentProps {
   children: React.ReactNode
@@ -23,14 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   isMobile,
 }) => (
-  <Spin
-    style={{
-      textAlign: 'center',
-      height: 150,
-    }}
-    spinning={waiting || loading}
-    tip={error.code === 0 ? 'Loading...' : error.msg}
-  >
+  <>
     {active && needLogin && supportedChain(chainId) ? (
       children
     ) : supportedChain(chainId) ? (
@@ -38,7 +30,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     ) : (
       <ChangeWallet isMobile={isMobile} />
     )}
-  </Spin>
+  </>
 )
 
 const mapStateToProps = (state: AppState) => {
