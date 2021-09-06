@@ -1,5 +1,4 @@
 import { DetailedButton } from '@smartworld-libs/uikit'
-import useTheme from 'hooks/useTheme'
 import { useSpring, animated as a } from 'react-spring'
 
 interface CircleProps {
@@ -11,10 +10,6 @@ interface CircleProps {
 }
 
 const TokenCircle: React.FC<CircleProps> = ({ width, active, token, info, onClick }) => {
-  const {
-    theme: { colors },
-  } = useTheme()
-
   const { transform, opacity } = useSpring({
     opacity: active ? 1 : 0,
     transform: `perspective(600px) rotateY(${active ? 180 : 0}deg)`,
@@ -25,7 +20,7 @@ const TokenCircle: React.FC<CircleProps> = ({ width, active, token, info, onClic
       <a.div style={{ position: 'absolute', top: 0, left: 0, opacity: opacity.to((o) => 1 - o), transform }}>
         <DetailedButton
           bottomIcon={info && info !== 'Infinity' ? info : 0}
-          bottomFontSize="10px"
+          bottomFontSize="9px"
           variant="secondary"
           scale="lg"
           shape="circle"
@@ -45,10 +40,9 @@ const TokenCircle: React.FC<CircleProps> = ({ width, active, token, info, onClic
       >
         <DetailedButton
           bottomIcon={info && info !== 'Infinity' ? info : 0}
-          bottomFontSize="10px"
+          bottomFontSize="9px"
           scale="lg"
           shape="circle"
-          style={{ backgroundColor: colors.secondary }}
         >
           {token}
         </DetailedButton>

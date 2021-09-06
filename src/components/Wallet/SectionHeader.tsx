@@ -3,6 +3,7 @@ import { Row, Col } from 'react-grid-system'
 import { Text, Button, useWalletModal } from '@smartworld-libs/uikit'
 import useAuth from 'hooks/useAuth'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import Menu from 'components/Menu'
 
 interface SectionHeaderProps {
   title: string
@@ -15,7 +16,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
 
   return (
     <Row justify="between" align="center">
-      <Col></Col>
+      <Col>{/* <Menu /> */}</Col>
       <Col>
         <Text size="10" style={{ textAlign: 'center', margin: 0 }}>
           {title}

@@ -55,14 +55,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, prices, value }) => {
     >
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
-          <TokenValue title="Number of tokens" precision={token === 'STTS' ? 0 : 4} token={token} value={value} />
-          <TokenValue title="Price(Satoshi)" token="SATS" precision={0} value={calcSatoshi()} />
+          {/* <TokenValue title="Number of tokens" precision={token === 'STTS' ? 0 : 4} token={token} value={value} />
+          <TokenValue title="Price(Satoshi)" token="SATS" precision={0} value={calcSatoshi()} /> */}
         </Row>
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
-          <TokenValue title="Price(Smart Bits)" token="STB" precision={1} value={calcSatoshi() / 100} />
-          <TokenValue title="Price(Dollar)" precision={2} token="$" value={calcDollar()} />
+          {/* <TokenValue title="Price(Smart Bits)" token="STB" precision={1} value={calcSatoshi() / 100} />
+          <TokenValue title="Price(Dollar)" precision={2} token="$" value={calcDollar()} /> */}
         </Row>
       </Col>
       <Col xs={12} width="100%">
@@ -75,7 +75,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, prices, value }) => {
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
-          <TokenValue value={calcSTT()} precision={0} title="Invetment reward" />
+          {/* <TokenValue value={calcSTT()} precision={0} title="Invetment reward" />
           <TokenValue
             value={+account.refPercent / 250}
             precision={3}
@@ -83,7 +83,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({ token, prices, value }) => {
             title="Referral percent"
             double={calcPercent() / 250 < 0.001 ? 0 : calcPercent() / 250}
             doubled
-          />
+          /> */}
         </Row>
       </Col>
     </Row>

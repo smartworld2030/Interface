@@ -5,6 +5,7 @@ import WithdrawSection from './Withdraw'
 import DepositSection from './Deposit'
 import DetailSection from './Details'
 import { usePool } from 'hooks/usePool'
+import { Flex } from '@smartworld-libs/uikit'
 
 interface PoolProps {
   isMobile: boolean
@@ -12,11 +13,10 @@ interface PoolProps {
 
 type IProps = PoolProps & ReturnType<typeof mapStateToProps>
 
-const Pool: React.FC<IProps> = ({ isMobile, error, poolLoading }) => {
-  console.log(usePool())
+const Pool: React.FC<IProps> = ({ isMobile }) => {
   return (
     <>
-      <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
+      <Flex justifyContent="between" height={isMobile ? 880 : 300}>
         <Col md={12} lg={6}>
           <DepositSection isMobile={isMobile} />
         </Col>
@@ -26,7 +26,7 @@ const Pool: React.FC<IProps> = ({ isMobile, error, poolLoading }) => {
         <Col md={6} lg={3}>
           <DetailSection isMobile={isMobile} />
         </Col>
-      </Row>
+      </Flex>
     </>
   )
 }

@@ -1,5 +1,5 @@
 import Colors from '../../../Theme/Colors'
-import Button from 'antd/lib/button'
+import { Button } from '@smartworld-libs/uikit'
 
 interface ReferralPolygonProps {
   width: number
@@ -7,21 +7,9 @@ interface ReferralPolygonProps {
   onClick: () => void
 }
 
-const ReferralButton: React.FC<ReferralPolygonProps> = ({
-  width,
-  disable,
-  onClick,
-}) => {
+const ReferralButton: React.FC<ReferralPolygonProps> = ({ disable, onClick }) => {
   return (
-    <Button
-      shape="circle"
-      type="default"
-      style={{
-        height: width,
-        width: width,
-      }}
-      onClick={disable ? undefined : onClick}
-    >
+    <Button shape="circle" scale="ml" variant="secondary" onClick={disable ? undefined : onClick}>
       <svg
         viewBox="0 0 100 100"
         focusable="false"

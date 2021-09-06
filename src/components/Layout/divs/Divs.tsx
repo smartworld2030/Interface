@@ -32,7 +32,6 @@ export const AbsoluteBody = styled(({ height, width, ...props }: AbsoluteDivProp
   width: ${({ width }) => width + 'px'};
   z-index: 10;
   top: 0;
-  left: 16px;
 `
 
 export const FlexDiv = styled.div`

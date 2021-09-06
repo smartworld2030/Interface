@@ -7,7 +7,7 @@ import GlobalSettings from './GlobalSettings'
 
 const Menu = (props) => {
   const { isDark, toggleTheme } = useTheme()
-  const { currentLanguage, setLanguage, t } = useTranslation()
+  const { currentLanguage, setLanguage } = useTranslation()
 
   return (
     <UikitMenu

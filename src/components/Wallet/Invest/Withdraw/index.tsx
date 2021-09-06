@@ -31,7 +31,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({ width }) => {
   return (
     <Row direction="column" justify="around" align="center" style={{ height: '100%' }}>
       <WithdrawCircle
-        borderColor="transparent"
         progressSize={5}
         percent={percent}
         totalValue={currencyValues}
@@ -49,7 +48,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({ width }) => {
           </>
         }
         size={width}
-        onClick={referral + hourly > '0' ? () => withdrawInterest() : undefined}
+        onClick={+referral + +hourly > 0 ? () => withdrawInterest() : undefined}
       />
     </Row>
   )

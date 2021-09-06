@@ -2,19 +2,24 @@ import { truncate } from '../../_helpers/api'
 import Marquee from 'react-fast-marquee'
 import { AppState } from '../../_types'
 import { connect } from 'react-redux'
+import { useBankDollars } from 'state/bank/hooks'
+import { useBankBalances, useBankSatoshi } from 'state/pool/hooks'
 
 interface ChainPriceFeedProps {}
 
-type IProps = ChainPriceFeedProps & ReturnType<typeof mapStateToProps>
+type IProps = ChainPriceFeedProps
 
-export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
-  const calcBTC = (value) => value / prices.BTCB
+export const ChainPriceFeed: React.FC<IProps> = () => {
+  const { btc: $btc } = useBankDollars()
+  const prices = useBankSatoshi()
+  const { stts, bnb, btc } = useBankBalances()
+  const total = stts + bnb + btc
 
-  const calcBtcPrice = (value) =>
-    Math.round(calcBTC(value) * dollar.BTC).toLocaleString('en')
+  const calcBTC = (value) => value / +$btc
 
-  const calcDollar = (token, cut = 2) =>
-    truncate(((prices[token] / 10 ** 8) * dollar.BTC).toString(), cut)
+  const calcBtcPrice = (value) => Math.round(calcBTC(value) * +$btc).toLocaleString('en')
+
+  const calcDollar = (token, cut = 2) => truncate(((prices[token] / 10 ** 8) * +$btc).toString(), cut)
 
   return prices && total ? (
     <Marquee gradient={false}>
@@ -32,7 +37,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
           </p>
           STT:
           <p className="price-value">
-            {prices.STT}
+            {prices.stt}
             <span>SATS</span>
           </p>
           STTS:
@@ -60,15 +65,5 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
     </Marquee>
   ) : null
 }
-const mapStateToProps = (state: AppState) => {
-  const { tokens } = state.account
-  const { prices, dollar, total } = state.bank
-  return {
-    total,
-    tokens,
-    prices,
-    dollar,
-  }
-}
 
-export default connect(mapStateToProps)(ChainPriceFeed)
+export default ChainPriceFeed

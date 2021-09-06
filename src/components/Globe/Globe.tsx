@@ -24,7 +24,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
           lat: +lat,
           lng: +lng,
           pop: +pop,
-        }))
+        })),
       )
       .then(setPopData)
   }, []) // [] mean
@@ -38,9 +38,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
     }
   }, [])
 
-  const weightColor = d3
-    .scaleSequentialSqrt(d3.interpolateYlOrRd)
-    .domain([0, 1e7])
+  const weightColor = d3.scaleSequentialSqrt(d3.interpolateYlOrRd).domain([0, 1e7])
 
   return (
     <div style={{ position: 'relative' }}>
@@ -70,7 +68,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
           left: 5,
         }}
       >
-        <SmartWorldAddress />
+        {/* <SmartWorldAddress /> */}
       </div>
     </div>
   )

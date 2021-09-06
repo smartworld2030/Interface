@@ -47,7 +47,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
       direction="column"
       style={{
         width: '100%',
-        height: '100%',
+
         margin: 'auto',
         textAlign: 'center',
       }}
@@ -62,31 +62,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({}) => {
           style={{ position: 'relative' }}
         />
       ) : (
-        <>
-          <Col xs={12} width="100%">
-            <Row align="center" justify="around">
-              <TokenValue title="Referral percent" precision={2} token="%" value={+refPercent / 250} />
-              {/* <TokenValue value={calcHourly()} precision={2} title="Hourly reward" /> */}
-            </Row>
-          </Col>
-          <Col xs={12} width="100%">
-            <Row align="center" justify="around">
-              <TokenValue title="Rewards(Satoshi)" precision={0} token="SATS" value={calcSatoshi()} />
-              <TokenValue value={value} precision={2} title="Rewards(Dollar)" token="$" />
-            </Row>
-          </Col>
-          <Col xs={12} width="100%">
-            <Row align="center" justify="around">
-              <ReferralButton width={90} onClick={copyHandler} disable={satoshi === '0'} />
-            </Row>
-          </Col>
-          <Col xs={12} width="100%">
-            <Row align="center" justify="around">
-              <TokenValue token="SATS" precision={0} value={satoshi} title="Total investment" />
-              {/* <TokenValue value={tokens.STT} token="STT" precision={0} title="Total rewards" /> */}
-            </Row>
-          </Col>
-        </>
+        <ReferralButton width={90} onClick={copyHandler} disable={satoshi === '0'} />
       )}
     </Row>
   )
