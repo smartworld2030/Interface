@@ -5,16 +5,16 @@ import { SttLogo } from './SttLogo'
 export const sizeCalculator = (width: number) => {
   const half = width / 2
   let quarter = half / 2
-  let eighth = quarter / 2
+  let eighth = quarter / 1.6
   const height = 170
   let fristHeight = height
   let secondHeight = height
   let querylimiter = true
   if (width < 600) {
     quarter = half / 1.2
-    eighth = quarter / 1.6
+    eighth = quarter / 1.3
     fristHeight = height - 40
-    secondHeight = height - 15
+    secondHeight = height - 25
     querylimiter = false
   }
   const linkArray = [
@@ -39,14 +39,36 @@ export const sizeCalculator = (width: number) => {
       icon: <SttLogo width={45} x={half - eighth - 23} y={secondHeight - 74} />,
     },
     {
-      positionX: half,
+      positionX: half - (width < 600 ? 45 : 50),
       positionY: height - 10,
       size: 35,
       link: '/invest',
       text: '',
       textPos: height - 66,
       number: 1,
-      icon: <InvestLogo width={70} x={half - 35} y={height - 81} />,
+      icon: (
+        <InvestLogo
+          width={70}
+          x={half - (width < 600 ? 80 : 85)}
+          y={height - 81}
+        />
+      ),
+    },
+    {
+      positionX: half + (width < 600 ? 45 : 50),
+      positionY: height - 10,
+      size: 35,
+      link: '/invest02',
+      text: '',
+      textPos: height - 66,
+      number: 1,
+      icon: (
+        <InvestLogo
+          width={70}
+          x={half + (width < 600 ? 10 : 15)}
+          y={height - 81}
+        />
+      ),
     },
     {
       positionX: half + eighth,

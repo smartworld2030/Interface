@@ -12,7 +12,7 @@ interface GlobeProps {
   width: number
 }
 
-const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
+const ReactGlobe: React.FC<GlobeProps> = ({ height, width, children }) => {
   const globeEl = useRef()
   const [popData, setPopData] = useState([])
 
@@ -64,13 +64,13 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width }) => {
         style={{
           position: 'absolute',
           overflowX: 'hidden',
-          width: width * 0.98,
+          width: 'calc(100% - 10px)',
           zIndex: 100,
-          bottom: 0,
+          bottom: 2,
           left: 5,
         }}
       >
-        <SmartWorldAddress />
+        {children ? children : <SmartWorldAddress />}
       </div>
     </div>
   )

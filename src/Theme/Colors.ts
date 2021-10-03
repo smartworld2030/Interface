@@ -6,5 +6,6 @@ const Colors = {
   red: '#ff1d4e',
   text: 'white',
   secondText: '#ffffff73',
+  transparentBackground: 'rgb(13 18 26 / 85%)',
 }
 export default Colors

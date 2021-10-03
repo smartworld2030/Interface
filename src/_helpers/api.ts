@@ -16,7 +16,7 @@ export const convertNumbers2English = (string: string) =>
 
 export const deadline = (min: any) => Math.floor(Date.now() / 1000) + min * 60
 
-export const bytesFormater = (balance: any) => parseInt(balance._hex)
+export const bytesFormater = (balance: any) => parseInt(balance?._hex)
 
 export const bytesFormaterString = (balance: any) =>
   utils.formatUnits(balance, 0)

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import Investment from '../components/Wallet/Invest'
+import Investment02 from '../components/Wallet/Invest02'
 import Swap from '../components/Wallet/Swap'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
@@ -15,19 +16,23 @@ import { Container, Row, Col } from 'react-grid-system'
 import Typography from 'antd/lib/typography'
 import { tokenPrices, bankTotalSatoshi } from '../_actions/bank.actions'
 import { investInformation } from '../_actions/invest.actions'
+import { invest02Information } from '../_actions/invest02.actions'
 import { poolInformation } from '../_actions/pool.actions'
 import {
   initialization,
   investContract,
+  invest02Contract,
   poolContract,
 } from '../_actions/wallet.actions'
 import Pool from '../components/Wallet/Pool'
 import Logo from '../assets/Logo.png'
+import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
 
 interface IProps {
   isMobile: boolean
   height: number
   width: number
+  detailHandler: () => void
 }
 
 type AppRouterProps = IProps &
@@ -36,6 +41,7 @@ type AppRouterProps = IProps &
 
 const Titles = {
   '/invest': 'INVESTMENT',
+  '/invest02': 'INVESTMENT02',
   '/info': 'INFORMATION',
   '/pool': 'POOL',
   '/swap': 'SWAP',
@@ -48,6 +54,7 @@ let timer
 let routeTimer
 
 export const AppRouter: React.FC<AppRouterProps> = ({
+  detailHandler,
   isMobile,
   address,
   height,
@@ -58,6 +65,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   poolInformation,
   bankTotalSatoshi,
   investInformation,
+  invest02Information,
 }) => {
   const location = useLocation()
   const { pathname } = location
@@ -93,6 +101,9 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         case '/invest':
           if (investContract) investInformation()
           break
+        case '/invest02':
+          if (invest02Contract) invest02Information()
+          break
         case '/swap':
           break
         default:
@@ -109,7 +120,13 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     return () => {
       clearInterval(routeTimer)
     }
-  }, [pathname, address, poolInformation, investInformation])
+  }, [
+    pathname,
+    address,
+    poolInformation,
+    invest02Information,
+    investInformation,
+  ])
 
   const transitions = useTransition(location, {
     key: pathname,
@@ -126,13 +143,16 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         height,
       }}
     >
-      <Row justify="between" align="center">
-        <Col xs={12}>
+      <Row justify="center" align="center">
+        <Col>
           <Typography.Title
-            style={{ textAlign: 'center', margin: 0 }}
+            style={{ textAlign: 'center', margin: 0, position: 'relative' }}
             level={5}
           >
             {Titles[pathname]}
+            {Titles[pathname] === 'INVESTMENT02' && (
+              <ExclamationTriangle onClick={detailHandler} />
+            )}
           </Typography.Title>
         </Col>
         <Col
@@ -157,6 +177,15 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                       needLogin
                     >
                       <Investment isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path="/invest02">
+                    <ProtectedRoute
+                      isMobile={isMobile}
+                      height={height}
+                      needLogin
+                    >
+                      <Investment02 isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
                   <Route exact path={['/pool', '/freeze']}>
@@ -245,6 +274,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),
   investInformation: bindActionCreators(investInformation, dispatch),
+  invest02Information: bindActionCreators(invest02Information, dispatch),
   accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
 })
 

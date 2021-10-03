@@ -25,6 +25,7 @@ const erc20 = {
     'STTS-BNB': 18,
     totalStts: 8,
     liquidity: 18,
+    totalAmount: 8,
   },
   abi: [
     'function name() view returns (string)',

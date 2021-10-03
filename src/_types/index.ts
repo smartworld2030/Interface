@@ -4,6 +4,7 @@ import { DefaultBankState, BankActionTypes } from './bank.types'
 import { SnackActionTypes } from './snackbar.types'
 import { DefaultWalletState, WalletActionTypes } from './wallet.types'
 import { InvestActionTypes, DefaultInvestState } from './invest.types'
+import { Invest02ActionTypes, DefaultInvest02State } from './invest02.types'
 import { SwapActionTypes, DefaultSwapState } from './swap.types'
 import { DefaultPoolState, PoolActionTypes } from './pool.types'
 
@@ -29,6 +30,7 @@ export const FAILURE = {
 
 export type AppActions =
   | InvestActionTypes
+  | Invest02ActionTypes
   | PoolActionTypes
   | UserActionTypes
   | BankActionTypes
@@ -44,6 +46,7 @@ export type AppState = {
   account: DefaultUserState
   wallet: DefaultWalletState
   invest: DefaultInvestState
+  invest02: DefaultInvest02State
   swap: DefaultSwapState
   pool: DefaultPoolState
 }

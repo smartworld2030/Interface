@@ -5,7 +5,7 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
 import { Row, Col } from 'react-grid-system'
 import { useLocation } from 'react-router-dom'
-import { investInformation } from '../../../../_actions/invest.actions'
+import { invest02Information } from '../../../../_actions/invest02.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import copy from 'copy-to-clipboard'
@@ -23,8 +23,6 @@ type ReferralSectionProps = IProps &
 export const DetailSection: React.FC<ReferralSectionProps> = ({
   address,
   account,
-  prices,
-  dollar,
 }) => {
   const [selected, setSeleted] = useState(-1)
   const [done, setDone] = useState(false)
@@ -38,10 +36,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       setDone(true)
     }
   }
-  const calcSatoshi = () =>
-    ((account.referral + account.hourly) / 10 ** 8) * prices.STT
-
-  const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
+  const calcDollar = () => (account.referral + account.hourly) / 10 ** 8
 
   return (
     <Row
@@ -70,9 +65,9 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
             <Row align="center" justify="around">
               <TokenValue
                 title="Referral percent"
-                precision={2}
+                precision={3}
                 token="%"
-                value={account.percent / 250}
+                value={account.refPercent / 1000}
               />
               <TokenValue
                 value={
@@ -82,7 +77,8 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   ) /
                   10 ** 8
                 }
-                precision={2}
+                token="$"
+                precision={3}
                 title="Hourly reward"
               />
             </Row>
@@ -91,14 +87,14 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
             <Row align="center" justify="around">
               <TokenValue
                 value={calcDollar()}
-                precision={2}
+                precision={3}
                 title="Rewards(Dollar)"
                 token="$"
               />
               <TokenValue
-                token="SATS"
+                token="$"
                 precision={0}
-                value={account.satoshi}
+                value={account.totalAmount}
                 title="Total investment"
               />
             </Row>
@@ -108,49 +104,61 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
               <ReferralButton
                 width={90}
                 onClick={copyHandler}
-                disable={account.satoshi === 0}
+                disable={account.totalAmount === 0}
               />
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              <Row direction="column">
-                <p className="ant-statistic-title">Deposit details</p>
-                <Row align="center" justify="around">
-                  {account.depositDetails.map((item, i) => {
-                    const endTime = new Date(item.endTime * 1000)
-                    const startTime = new Date(item.endTime * 1000)
-                    startTime.setFullYear(startTime.getFullYear() - 2)
-                    return selected === i ? (
-                      <p
-                        className="deposit-items"
-                        onClick={() => setSeleted(-1)}
-                        key={i}
-                      >
-                        <LeftRetangle />
-                        Hourly reward:{' '}
-                        {truncate((item.reward / 10 ** 8).toString(), 2)} STT
-                        <br />
-                        <LeftRetangle />
-                        Start: {startTime.toDateString()}
-                        <LeftRetangle />
-                        End: {endTime.toDateString()}
-                      </p>
-                    ) : (
-                      selected === -1 && (
+              {account.depositDetails.length ? (
+                <Row direction="column">
+                  <p className="ant-statistic-title">Deposit details</p>
+                  <Row align="center" justify="around">
+                    {account.depositDetails.map((item, i) => {
+                      const endTime = new Date(item.endTime * 1000)
+                      const startTime = new Date(item.endTime * 1000)
+                      startTime.setFullYear(startTime.getFullYear() - 2)
+                      return selected === i ? (
                         <p
                           className="deposit-items"
-                          onClick={() => setSeleted(i)}
+                          onClick={() => setSeleted(-1)}
                           key={i}
                         >
                           <LeftRetangle />
-                          {i + 1}
+                          Amount:{' '}
+                          {truncate(
+                            (
+                              (item.reward * item.period) /
+                              2 /
+                              10 ** 8
+                            ).toString(),
+                            2
+                          )}{' '}
+                          $
+                          <br />
+                          <LeftRetangle />
+                          Start: {startTime.toDateString()}
+                          <LeftRetangle />
+                          End: {endTime.toDateString()}
                         </p>
+                      ) : (
+                        selected === -1 && (
+                          <p
+                            className="deposit-items"
+                            onClick={() => setSeleted(i)}
+                            key={i}
+                          >
+                            <LeftRetangle />
+                            {i + 1}
+                          </p>
+                        )
                       )
-                    )
-                  })}
+                    })}
+                  </Row>
                 </Row>
-              </Row>
+              ) : (
+                <></>
+              )}
             </Row>
           </Col>
         </>
@@ -160,21 +168,17 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { address, tokens, error } = state.account
-  const { account } = state.invest
-  const { prices, dollar } = state.bank
+  const { address, tokens } = state.account
+  const { account } = state.invest02
   return {
     account,
     address,
     tokens,
-    prices,
-    dollar,
-    error,
   }
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  investInformation: bindActionCreators(investInformation, dispatch),
+  invest02Information: bindActionCreators(invest02Information, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailSection)

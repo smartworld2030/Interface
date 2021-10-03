@@ -36,7 +36,7 @@ export const DetailSection: React.FC<IProps> = ({
 }) => {
   const [done, setDone] = useState(false)
   const { pathname } = useLocation()
-  const link = `https://ewktx-7qaaa-aaaad-qakkq-cai.ic.fleek.co${pathname}?ref=${address}`
+  const link = `${window.location.origin}${pathname}?ref=${address}`
 
   const copyHandler = () => {
     if (!done) {

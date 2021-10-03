@@ -39,7 +39,7 @@ export type InvestInfo = {
 }
 
 type DepositDetail = {
-  reward: string
+  reward: number
   endTime: number
 }
 

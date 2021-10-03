@@ -21,14 +21,15 @@ import { onBoard } from '../_helpers/api'
 import erc20 from '../_contracts/erc20'
 import bank from '../_contracts/bank'
 import invest from '../_contracts/invest'
+import invest02 from '../_contracts/invest02'
 import pool from '../_contracts/pool'
 import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
 import { accountTokenBalances } from './account.actions'
-import { INVEST_RESET } from '../_types/invest.types'
 import tokenPrice from '../_contracts/tokenPrice'
 import swap from '../_contracts/swap'
 import { ISmartWorld } from '../_types/ISmartWorld'
 import { ISmartInvest } from '../_types/ISmartInvest'
+import { ISmartInvest02 } from '../_types/ISmartInvest02'
 import { ISmartSwap } from '../_types/ISmartSwap'
 import { ISmartPool } from '../_types/ISmartPool'
 
@@ -40,6 +41,7 @@ export let signer: providers.JsonRpcSigner
 export let tokenContract: ContractObject
 export let priceContract: PriceContract
 export let investContract: ISmartInvest
+export let invest02Contract: ISmartInvest02
 export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
 export let poolContract: ISmartPool
@@ -77,6 +79,11 @@ export const initialization = () => (
             invest.abi,
             signer
           ) as ISmartInvest
+          invest02Contract = new Contract(
+            invest02.address[chainId],
+            invest02.abi,
+            signer
+          ) as ISmartInvest02
           bankContract = new Contract(
             erc20.address[chainId].stt,
             bank.abi,
@@ -140,9 +147,6 @@ export const initialization = () => (
   const accountHandler = (account?: string) => {
     dispatch({
       type: ACCOUNT_LOGOUT,
-    })
-    dispatch({
-      type: INVEST_RESET,
     })
     clearTimeout(timer)
     if (account) {
