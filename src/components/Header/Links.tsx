@@ -35,7 +35,7 @@ export const sizeCalculator = (width: number) => {
       link: '/pool',
       text: '',
       textPos: secondHeight - 55,
-      number: 2,
+      number: 3,
       icon: <SttLogo width={45} x={half - eighth - 23} y={secondHeight - 74} />,
     },
     {
@@ -61,7 +61,7 @@ export const sizeCalculator = (width: number) => {
       link: '/invest02',
       text: '',
       textPos: height - 66,
-      number: 1,
+      number: 2,
       icon: (
         <InvestLogo
           width={70}
@@ -77,7 +77,7 @@ export const sizeCalculator = (width: number) => {
       link: '/swap',
       text: '',
       textPos: secondHeight - 55,
-      number: 2,
+      number: 3,
       icon: (
         <SwapLogo width={42} x={half + eighth - 21} y={secondHeight - 70} />
       ),
