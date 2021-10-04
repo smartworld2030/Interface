@@ -73,8 +73,11 @@ export const investment02Deposit = (token: string, value: number) => async (
 
   const requestDeposit = async () => {
     const strValue = (value * 10 ** info.decimals[token]).toFixed().toString()
-    console.log(account.referrer)
-    if (account.referrer !== info.addressZero) {
+    console.log(account)
+    if (
+      utils.isAddress(account.referrer) &&
+      account.referrer !== info.addressZero
+    ) {
       if (token === 'STTS')
         dispatch(
           requestInvest02('updateStts', [
@@ -239,11 +242,14 @@ export const readInvest02 = async (method: any, items: any[], args: any) =>
     invest02Contract[method](...args)
       .then((res) => {
         const array: any[] = []
-        items.map((item: string) =>
-          items.length > 1
+        console.log(items, res)
+        items.map((item: string) => {
+          return item === 'referrer'
+            ? (array[item] = res[item])
+            : items.length > 1
             ? (array[item] = formaterNumber(res[item], item))
             : (array[item] = bytesFormater(res[item]))
-        )
+        })
         resolve(array)
       })
       .catch((err) => reject(err))
