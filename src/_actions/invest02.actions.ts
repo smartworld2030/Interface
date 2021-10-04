@@ -73,9 +73,10 @@ export const investment02Deposit = (token: string, value: number) => async (
 
   const requestDeposit = async () => {
     const strValue = (value * 10 ** info.decimals[token]).toFixed().toString()
+    console.log(account.referrer)
     if (
       utils.isAddress(account.referrer) &&
-      account.referrer !== info.addressZero
+      account.referrer === info.addressZero
     ) {
       if (token === 'STTS')
         dispatch(
