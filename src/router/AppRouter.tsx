@@ -150,9 +150,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
             level={5}
           >
             {Titles[pathname]}
-            {Titles[pathname] === 'INVESTMENT' && (
-              <ExclamationTriangle color="yellow" />
-            )}
             {Titles[pathname] === 'INVESTMENT02' && (
               <ExclamationTriangle onClick={detailHandler} />
             )}

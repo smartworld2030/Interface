@@ -8,7 +8,6 @@ import info from '../../../_contracts/info'
 import { Col, Row } from 'react-grid-system'
 import bank from '../../../_contracts/bank'
 import { tooShorter } from '../../../_helpers/constants'
-import { useLocation } from 'react-router-dom'
 
 const { Paragraph, Link } = Typography
 
