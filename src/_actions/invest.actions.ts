@@ -73,18 +73,12 @@ export const investmentDeposit = (token: string, value: number) => async (
 
   const requestDeposit = async () => {
     const strValue = (value * 10 ** info.decimals[token]).toFixed().toString()
+    let error = ''
     console.log(strValue, info.decimals[token])
     if (accountInfo.id > 0) {
-      if (token === 'STTS')
-        dispatch(
-          requestInvest('updateStts', [
-            (Number(strValue) - 100000).toString(),
-          ]) as any
-        )
-      else if (token === 'BTCB')
-        dispatch(requestInvest('updateBtcb', [strValue]) as any)
-      else if (token === 'BNB')
-        dispatch(requestInvest('updateBnb', [{ value: strValue }]) as any)
+      error = 'Update is temporarily unavailable!'
+      dispatch({ type: INVEST_MESSAGES, payload: { error } })
+      errorHandler(error)
     } else {
       let refInfo = utils.isAddress(referrer)
         ? ((await readInvest('users', ['id'], [referrer])) as { id: number })
@@ -104,7 +98,7 @@ export const investmentDeposit = (token: string, value: number) => async (
             requestInvest('investBnb', [referrer, { value: strValue }]) as any
           )
       } else {
-        const error = 'No valid referrer found!'
+        error = 'No valid referrer found!'
         dispatch({ type: INVEST_MESSAGES, payload: { error } })
         errorHandler(error)
       }

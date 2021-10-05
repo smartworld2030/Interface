@@ -2,7 +2,7 @@ import Table from 'antd/lib/table'
 import React, { useState } from 'react'
 import { CloseSquareOutlined } from '@ant-design/icons'
 import { Row, Col } from 'react-grid-system'
-import Colors from '../../../Theme/Colors'
+import Colors from '../Theme/Colors'
 import Switch from 'antd/lib/switch'
 
 export function referralPercent(value) {
@@ -89,7 +89,7 @@ const data = (withStts: boolean) =>
     const reward = totalReward(withStts ? amount : amount * 0.75) + ' $'
     const period =
       rewardPeriod(withStts ? amount : amount * 0.75).toFixed(2) + ' Month'
-    console.log(period)
+
     return {
       key,
       amount: amount + ' $',

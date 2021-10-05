@@ -1,10 +1,12 @@
 import React from 'react'
 
 interface ExclamationTriangleProps {
-  onClick: () => void
+  color?: string
+  onClick?: () => void
 }
 
 export const ExclamationTriangle: React.FC<ExclamationTriangleProps> = ({
+  color = 'rgb(26, 226, 133)',
   onClick,
 }) => {
   return (
@@ -14,7 +16,7 @@ export const ExclamationTriangle: React.FC<ExclamationTriangleProps> = ({
       aria-label="exclamation"
       className="anticon anticon-exclamation"
       style={{
-        color: 'rgb(26, 226, 133)',
+        color,
       }}
     >
       <svg

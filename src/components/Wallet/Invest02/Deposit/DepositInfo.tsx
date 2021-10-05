@@ -7,9 +7,9 @@ import { TokenValue } from '../../../Layout/typography/Tokens'
 import { DepositButton } from '../../../Layout/svgs/DepositButton'
 import { connect } from 'react-redux'
 import { investment02Deposit } from '../../../../_actions/invest02.actions'
-import { rewardPercent, rewardPeriod } from '../DepositTable'
+import { rewardPercent, rewardPeriod } from '../../../../router/DepositTable'
 import Colors from '../../../../Theme/Colors'
-import { referralPercent } from '../DepositTable'
+import { referralPercent } from '../../../../router/DepositTable'
 
 interface IProps {
   token: string

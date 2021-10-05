@@ -135,9 +135,15 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { loggedIn, error } = state.account
   const { prices, dollar } = state.bank
-  const { investLoading, confirmed, account, maxPercent } = state.invest
+  const {
+    investLoading,
+    confirmed,
+    account,
+    error: investError,
+    maxPercent,
+  } = state.invest
   return {
-    error,
+    error: error || investError,
     prices,
     dollar,
     account,

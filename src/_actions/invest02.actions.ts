@@ -242,7 +242,6 @@ export const readInvest02 = async (method: any, items: any[], args: any) =>
     invest02Contract[method](...args)
       .then((res) => {
         const array: any[] = []
-        console.log(items, res)
         items.map((item: string) => {
           return item === 'referrer'
             ? (array[item] = res[item])

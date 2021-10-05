@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import Globe from './components/Globe/Globe'
 import { Header } from './components/Header'
 import AppRouter from './router/AppRouter'
-import DepositTable from './components/Wallet/Invest02/DepositTable'
+import DepositTable from './router/DepositTable'
 
 let setTime: NodeJS.Timeout
 
@@ -56,8 +56,8 @@ class App extends Component<AppProps, AppStates> {
     return (
       <Router>
         <Header width={appWidth} />
-        <Globe height={globeHeight} width={appWidth}>
-          {showDetail && <DepositTable clickHandler={this.setShowDetail} />}
+        <Globe height={globeHeight} width={appWidth} showDetail={showDetail}>
+          <DepositTable clickHandler={this.setShowDetail} />
         </Globe>
         <AppRouter
           isMobile={isMobile}

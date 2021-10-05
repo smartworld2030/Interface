@@ -8,6 +8,7 @@ import info from '../../../_contracts/info'
 import { Col, Row } from 'react-grid-system'
 import bank from '../../../_contracts/bank'
 import { tooShorter } from '../../../_helpers/constants'
+import { useLocation } from 'react-router-dom'
 
 const { Paragraph, Link } = Typography
 
@@ -16,6 +17,7 @@ interface SmartWorldAddressProps {}
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
 const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
+  const { pathname } = useLocation()
   const [account, setAccount] = useState('0x...')
 
   useEffect(() => {
@@ -65,6 +67,22 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
       style={{ fontSize: 10, width: '100%' }}
     >
       <Col xs={11} style={{ margin: 'auto' }}>
+        {pathname === '/invest' && (
+          <Row
+            direction="column"
+            align="center"
+            style={{
+              textAlign: 'center',
+              background: Colors.transparentBackground,
+            }}
+          >
+            <h2>Update is not available!</h2>
+            <Paragraph>
+              It’s impossible to increase the personal investment in this part
+              The investment update is in the investment plan2
+            </Paragraph>
+          </Row>
+        )}
         <Row justify="between">
           <Link
             onClick={() =>

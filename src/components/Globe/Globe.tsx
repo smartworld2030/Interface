@@ -10,9 +10,15 @@ import SmartWorldAddress from '../Wallet/Main/ListTokens'
 interface GlobeProps {
   height: number
   width: number
+  showDetail: boolean
 }
 
-const ReactGlobe: React.FC<GlobeProps> = ({ height, width, children }) => {
+const ReactGlobe: React.FC<GlobeProps> = ({
+  height,
+  width,
+  children,
+  showDetail,
+}) => {
   const globeEl = useRef()
   const [popData, setPopData] = useState([])
 
@@ -70,7 +76,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({ height, width, children }) => {
           left: 5,
         }}
       >
-        {children ? children : <SmartWorldAddress />}
+        {showDetail && children ? children : <SmartWorldAddress />}
       </div>
     </div>
   )
