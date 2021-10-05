@@ -17,7 +17,6 @@ interface SmartWorldAddressProps {}
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
 const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
-  const { pathname } = useLocation()
   const [account, setAccount] = useState('0x...')
 
   useEffect(() => {
@@ -67,7 +66,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
       style={{ fontSize: 10, width: '100%' }}
     >
       <Col xs={11} style={{ margin: 'auto' }}>
-        {pathname === '/invest' && (
+        {/* {pathname === '/invest' && (
           <Row
             direction="column"
             align="center"
@@ -82,7 +81,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
               The investment update is in the investment plan2
             </Paragraph>
           </Row>
-        )}
+        )} */}
         <Row justify="between">
           <Link
             onClick={() =>
