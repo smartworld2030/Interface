@@ -46,7 +46,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   const minimumAmount = (t: string) => {
     return truncate(
       hundredDollar(prices[t]).toString(),
-      t === 'STTS' ? 1 : 3,
+      t === 'STTS' ? 1 : 4,
       t !== 'BTCB'
     )
   }
