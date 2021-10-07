@@ -84,19 +84,9 @@ export const investmentDeposit = (token: string, value: number) => async (
         ? ((await readInvest('users', ['id'], [referrer])) as { id: number })
         : { id: 0 }
       if (refInfo.id > 0) {
-        if (token === 'STTS')
-          dispatch(
-            requestInvest('investStts', [
-              referrer,
-              (Number(strValue) - 100000).toString(),
-            ]) as any
-          )
-        else if (token === 'BTCB') {
-          dispatch(requestInvest('investBtcb', [referrer, strValue]) as any)
-        } else if (token === 'BNB')
-          dispatch(
-            requestInvest('investBnb', [referrer, { value: strValue }]) as any
-          )
+        error = 'Transaction not processed!'
+        dispatch({ type: INVEST_MESSAGES, payload: { error } })
+        errorHandler(error)
       } else {
         error = 'No valid referrer found!'
         dispatch({ type: INVEST_MESSAGES, payload: { error } })
