@@ -116,8 +116,9 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   <Row align="center" justify="around">
                     {account.depositDetails.map((item, i) => {
                       const endTime = new Date(item.endTime * 1000)
-                      const startTime = new Date(item.endTime * 1000)
-                      startTime.setFullYear(startTime.getFullYear() - 2)
+                      const startTime = new Date(
+                        (item.endTime - item.period * 60 * 60) * 1000
+                      )
                       return selected === i ? (
                         <p
                           className="deposit-items"
