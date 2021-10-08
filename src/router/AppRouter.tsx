@@ -150,6 +150,9 @@ export const AppRouter: React.FC<AppRouterProps> = ({
             level={5}
           >
             {Titles[pathname]}
+            {Titles[pathname] === 'INVESTMENT' && (
+              <ExclamationTriangle onClick={detailHandler} />
+            )}
             {Titles[pathname] === 'INVESTMENT02' && (
               <ExclamationTriangle onClick={detailHandler} />
             )}
@@ -207,7 +210,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                     </ProtectedRoute>
                   </Route>
                   <Route path="/">
-                    <Redirect to="/invest" />
+                    <Redirect to="/invest02" />
                   </Route>
                 </Switch>
               </animated.div>

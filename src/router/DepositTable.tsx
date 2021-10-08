@@ -1,9 +1,11 @@
 import Table from 'antd/lib/table'
+import Typography from 'antd/lib/typography'
 import React, { useState } from 'react'
 import { CloseSquareOutlined } from '@ant-design/icons'
 import { Row, Col } from 'react-grid-system'
 import Colors from '../Theme/Colors'
 import Switch from 'antd/lib/switch'
+import { useLocation } from 'react-router-dom'
 
 export function referralPercent(value) {
   return value < 1000
@@ -107,6 +109,8 @@ interface DepositTableProps {
 
 const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
   const [withStts, setWithStts] = useState(true)
+  const { pathname } = useLocation()
+
   return (
     <Row
       direction="column"
@@ -131,20 +135,33 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
           INFORMATION
         </Col>
         <Col xs={4} style={{ textAlign: 'right' }}>
-          <Switch
-            checkedChildren="STTS"
-            unCheckedChildren="BNB/BTC"
-            onChange={setWithStts}
-            defaultChecked={withStts}
-          />
+          {pathname !== '/invest' && (
+            <Switch
+              checkedChildren="STTS"
+              unCheckedChildren="BNB/BTC"
+              onChange={setWithStts}
+              defaultChecked={withStts}
+            />
+          )}
         </Col>
       </Row>
-      <Table
-        columns={columns}
-        dataSource={data(withStts)}
-        pagination={false}
-        scroll={{ y: 240 }}
-      />
+      {pathname === '/invest' ? (
+        <Typography.Paragraph
+          style={{ textAlign: 'center', padding: '0 10px' }}
+        >
+          we will be paid the whole off your initial investment
+          <br />
+          we really appreciate for your cooperation in that plan You can
+          participate in the next plan if you want
+        </Typography.Paragraph>
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={data(withStts)}
+          pagination={false}
+          scroll={{ y: 240 }}
+        />
+      )}
     </Row>
   )
 }
