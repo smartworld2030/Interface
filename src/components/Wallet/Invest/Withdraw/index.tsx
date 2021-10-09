@@ -3,10 +3,8 @@ import { Row } from 'react-grid-system'
 import { connect } from 'react-redux'
 import Colors from '../../../../Theme/Colors'
 import { formaterNumber, roundDecimals } from '../../../../_helpers/api'
-import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
-import { withdrawInterest } from '../../../../_actions/invest.actions'
 
 interface IProps {
   width: number
@@ -20,7 +18,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   latestWithdraw,
   referral,
   hourly,
-  withdrawInterest,
 }) => {
   const half = width / 2
   const r = half - 10
@@ -177,8 +174,8 @@ const mapStateToProps = (state: AppState) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  withdrawInterest: bindActionCreators(withdrawInterest, dispatch),
-})
+const mapDispatchToProps = (
+  dispatch: ThunkDispatch<any, any, AppActions>
+) => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithdrawSection)
