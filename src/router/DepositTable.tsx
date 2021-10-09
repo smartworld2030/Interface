@@ -111,7 +111,20 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
   const [withStts, setWithStts] = useState(true)
   const { pathname } = useLocation()
 
-  return (
+  return pathname === '/invest' ? (
+    <Row
+      direction="column"
+      align="center"
+      style={{ background: Colors.transparentBackground }}
+    >
+      <Typography.Paragraph style={{ textAlign: 'center', padding: '0 10px' }}>
+        we will be paid the whole off your initial investment
+        <br />
+        we really appreciate for your cooperation in that plan You can
+        participate in the next plan if you want
+      </Typography.Paragraph>
+    </Row>
+  ) : (
     <Row
       direction="column"
       align="center"
@@ -145,23 +158,13 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
           )}
         </Col>
       </Row>
-      {pathname === '/invest' ? (
-        <Typography.Paragraph
-          style={{ textAlign: 'center', padding: '0 10px' }}
-        >
-          we will be paid the whole off your initial investment
-          <br />
-          we really appreciate for your cooperation in that plan You can
-          participate in the next plan if you want
-        </Typography.Paragraph>
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={data(withStts)}
-          pagination={false}
-          scroll={{ y: 240 }}
-        />
-      )}
+
+      <Table
+        columns={columns}
+        dataSource={data(withStts)}
+        pagination={false}
+        scroll={{ y: 240 }}
+      />
     </Row>
   )
 }
