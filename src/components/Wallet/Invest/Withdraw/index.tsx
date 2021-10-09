@@ -124,9 +124,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
         >
           REFERRAL
         </text>
-        <g
-          onClick={referral + hourly > 0 ? () => withdrawInterest() : undefined}
-        >
+        <g onClick={referral + hourly > 0 ? () => {} : undefined}>
           <rect
             x={30}
             y={r * 0.87}
