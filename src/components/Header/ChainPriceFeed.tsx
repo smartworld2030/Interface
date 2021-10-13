@@ -21,20 +21,10 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
     <Marquee gradient={false}>
       <div style={{ display: 'inline-flex', padding: '0 10', fontSize: 13 }}>
         <div>
-          Smart World Balance(BTC):
-          <p className="price-value">
-            {truncate(calcBTC(total).toString(), 4)}
-            <span> BTC</span>
-          </p>
           Smart World Balance(Dollar):
           <p className="price-value">
             {calcBtcPrice(total)}
             <span>$</span>
-          </p>
-          STT:
-          <p className="price-value">
-            {prices.STT}
-            <span>SATS</span>
           </p>
           STTS:
           <p className="price-value">
@@ -53,7 +43,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
           </p>
           Minimum Investment:
           <p className="price-value">
-            {calcBtcPrice(500000)}
+            {100}
             <span>$</span>
           </p>
         </div>

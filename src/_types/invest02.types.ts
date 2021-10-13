@@ -41,6 +41,8 @@ export type Invest02Info = {
 type DepositDetail = {
   period: number
   reward: number
+  startTime: number
+  amount: number
   endTime: number
 }
 

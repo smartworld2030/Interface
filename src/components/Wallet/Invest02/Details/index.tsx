@@ -116,9 +116,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   <Row align="center" justify="around">
                     {account.depositDetails.map((item, i) => {
                       const endTime = new Date(item.endTime * 1000)
-                      const startTime = new Date(
-                        (item.endTime - item.period * 60 * 60) * 1000
-                      )
+                      const startTime = new Date(item.startTime * 1000)
                       return selected === i ? (
                         <p
                           className="deposit-items"
@@ -127,15 +125,10 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                         >
                           <LeftRetangle />
                           Amount:{' '}
-                          {truncate(
-                            (
-                              (item.reward * item.period) /
-                              2 /
-                              10 ** 8
-                            ).toString(),
-                            2
-                          )}{' '}
-                          $
+                          {truncate((item.amount / 10 ** 8).toString(), 2)} $
+                          <LeftRetangle />
+                          Hourtly:{' '}
+                          {truncate((item.reward / 10 ** 8).toString(), 4)} $
                           <br />
                           <LeftRetangle />
                           Start: {startTime.toDateString()}

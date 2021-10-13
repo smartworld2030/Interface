@@ -182,7 +182,7 @@ export const invest02Information = (address?: string) => async (
             deps.map((_, i) =>
               readInvest02Items(
                 'userDepositDetails',
-                ['period', 'reward', 'endTime'],
+                ['period', 'reward', 'endTime', 'amount', 'startTime'],
                 [address, i]
               )
             )

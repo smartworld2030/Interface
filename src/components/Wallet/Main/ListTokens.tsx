@@ -65,22 +65,6 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
       style={{ fontSize: 10, width: '100%' }}
     >
       <Col xs={11} style={{ margin: 'auto' }}>
-        {/* {pathname === '/invest' && (
-          <Row
-            direction="column"
-            align="center"
-            style={{
-              textAlign: 'center',
-              background: Colors.transparentBackground,
-            }}
-          >
-            <h2>Update is not available!</h2>
-            <Paragraph>
-              It’s impossible to increase the personal investment in this part
-              The investment update is in the investment plan2
-            </Paragraph>
-          </Row>
-        )} */}
         <Row justify="between">
           <Link
             onClick={() =>

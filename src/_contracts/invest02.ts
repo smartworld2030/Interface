@@ -1,6 +1,6 @@
 const invest = {
   address: {
-    56: '0xC31D7B8ddba18b4773e41913E60C5f01029f7c0B',
+    56: '0x59FD37b88780a7F5be75f0A5B9afeA7cf94eF0ff',
     97: '0x15dA682a2e9de3E0E2946F0f0D40675Da16DB4AE',
   },
   abi: [
@@ -31,9 +31,8 @@ const invest = {
     'function withdrawInterest() public returns (bool)',
     'function calculateInterest(address sender) public view returns (uint256 hourly,uint256 referral,uint256 requestTime)',
     'function calculateHourly(address sender, uint256 time) public view returns (uint256 hourly)',
-    'function userBalances(address user) public view returns (uint256 bnb,uint256 btcb,uint256 stts,uint256 satoshi)',
     'function userDepositNumber(address user) public view returns (uint256)',
-    'function userDepositDetails(address user, uint256 index) public view returns (uint256 period,uint256 reward,uint256 endTime)',
+    'function userDepositDetails(address user, uint256 index) public view returns (uint256 amount,uint256 period,uint256 reward,uint256 startTime,uint256 endTime)',
     'function userExpired(address user) public view returns (bool)',
   ],
 }

@@ -48,8 +48,8 @@ const Titles = {
   '/stb': 'STB',
 }
 
-const priceDelay = 30
-const detailsDelay = 60
+const priceDelay = 10
+const detailsDelay = 30
 let timer
 let routeTimer
 
