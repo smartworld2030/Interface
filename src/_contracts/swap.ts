@@ -1,7 +1,7 @@
 const swap = {
   address: {
     56: '0x8a8Aed2b785D8664906b4d53aC0c3b3a0cf69bF4',
-    97: '0xc86336b646Df1583d8527DEb35a63603B6dC1eC5',
+    97: '0x39FB428e740519C8FCd09Be21ba59032B2e063F9',
   },
   decimals: { bnb: 18, stts: 8 },
   abi: [

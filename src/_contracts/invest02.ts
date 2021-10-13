@@ -1,7 +1,7 @@
 const invest = {
   address: {
     56: '0xC31D7B8ddba18b4773e41913E60C5f01029f7c0B',
-    97: '0x9fB8C5a61a9e6C7aFa42c692F79C6a0DCC7BdA75',
+    97: '0x15dA682a2e9de3E0E2946F0f0D40675Da16DB4AE',
   },
   abi: [
     'event UpdateUser(address indexed user, uint256 value)',
