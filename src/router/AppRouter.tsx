@@ -20,6 +20,7 @@ import { poolInformation } from '../_actions/pool.actions'
 import {
   initialization,
   invest02Contract,
+  investContract,
   poolContract,
 } from '../_actions/wallet.actions'
 import Pool from '../components/Wallet/Pool'
@@ -98,7 +99,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
           if (poolContract) poolInformation()
           break
         case '/invest':
-          if (invest02Contract) investInformation()
+          if (investContract) investInformation()
           break
         case '/invest02':
           if (invest02Contract) invest02Information()
