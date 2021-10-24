@@ -25,6 +25,7 @@ import {
 import Pool from '../components/Wallet/Pool'
 import Logo from '../assets/Logo.png'
 import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
+import { investInformation } from '../_actions/invest.actions'
 
 interface IProps {
   isMobile: boolean
@@ -62,6 +63,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   tokenPrices,
   poolInformation,
   bankTotalSatoshi,
+  investInformation,
   invest02Information,
 }) => {
   const location = useLocation()
@@ -96,6 +98,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
           if (poolContract) poolInformation()
           break
         case '/invest':
+          if (invest02Contract) investInformation()
           break
         case '/invest02':
           if (invest02Contract) invest02Information()
@@ -116,7 +119,13 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     return () => {
       clearInterval(routeTimer)
     }
-  }, [pathname, address, poolInformation, invest02Information])
+  }, [
+    pathname,
+    address,
+    poolInformation,
+    investInformation,
+    invest02Information,
+  ])
 
   const transitions = useTransition(location, {
     key: pathname,
@@ -264,6 +273,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   tokenPrices: bindActionCreators(tokenPrices, dispatch),
   bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),
+  investInformation: bindActionCreators(investInformation, dispatch),
   invest02Information: bindActionCreators(invest02Information, dispatch),
   accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
 })

@@ -17,7 +17,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
   const calcDollar = (token, cut = 2) =>
     truncate(
       ((prices[token] / 10 ** 8) * dollar.BTC).toString(),
-      token === 'STTS' ? 3 : cut
+      token === 'STTS' ? 4 : cut
     )
 
   return prices && total ? (
