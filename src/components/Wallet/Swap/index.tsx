@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Row, Col } from 'react-grid-system'
 import { AppState } from '../../../_types'
 import BnbSwap from './BnbSwap'
-// import SttSwap from './SttSwap'
 import { PriceValue } from './PriceValue'
 import Spin from 'antd/lib/spin'
 
@@ -32,7 +31,7 @@ const Swap: React.FC<SwapProps> = ({
     >
       <Row
         justify="around"
-        style={{ minHeight: isMobile ? 750 : 300 }}
+        style={{ minHeight: 300 }}
         direction={isMobile ? 'column' : 'row'}
       >
         <Col xs={12}>
@@ -56,9 +55,6 @@ const Swap: React.FC<SwapProps> = ({
         <Col xs={12} md={4}>
           <BnbSwap />
         </Col>
-        {/* <Col xs={12} md={4}>
-          <SttSwap />
-        </Col> */}
       </Row>
     </Spin>
   )
