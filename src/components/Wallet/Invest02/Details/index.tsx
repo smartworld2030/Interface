@@ -127,7 +127,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                           Amount:{' '}
                           {truncate((item.amount / 10 ** 8).toString(), 2)} $
                           <LeftRetangle />
-                          Hourtly:{' '}
+                          Hourly:{' '}
                           {truncate((item.reward / 10 ** 8).toString(), 4)} $
                           <br />
                           <LeftRetangle />

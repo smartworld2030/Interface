@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Row, Col } from 'react-grid-system'
 import { AppState } from '../../../_types'
 import BnbSwap from './BnbSwap'
-import SttSwap from './SttSwap'
+// import SttSwap from './SttSwap'
 import { PriceValue } from './PriceValue'
 import Spin from 'antd/lib/spin'
 
@@ -41,7 +41,7 @@ const Swap: React.FC<SwapProps> = ({
               .reverse()
               .map(
                 (token) =>
-                  token !== 'BTCB' && (
+                  ['STT', 'BTCB'].includes(token) && (
                     <PriceValue
                       token={token}
                       prices={prices}
@@ -56,9 +56,9 @@ const Swap: React.FC<SwapProps> = ({
         <Col xs={12} md={4}>
           <BnbSwap />
         </Col>
-        <Col xs={12} md={4}>
+        {/* <Col xs={12} md={4}>
           <SttSwap />
-        </Col>
+        </Col> */}
       </Row>
     </Spin>
   )

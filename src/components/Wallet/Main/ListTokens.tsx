@@ -8,6 +8,7 @@ import info from '../../../_contracts/info'
 import { Col, Row } from 'react-grid-system'
 import bank from '../../../_contracts/bank'
 import { tooShorter } from '../../../_helpers/constants'
+import notification from 'antd/lib/notification'
 
 const { Paragraph, Link } = Typography
 
@@ -50,13 +51,6 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
     let image = 'https://i.postimg.cc/4yxyZ24s/Smart-World-Stock.png'
     requestAddToken({ address, symbol, decimals, image })
   }
-  const addSttToWallet = () => {
-    let address = info[chainId].STT
-    let symbol = 'STT'
-    let decimals = info.decimals.STT
-    let image = 'https://i.postimg.cc/Ssqj1NwX/Smart-World-Token.png'
-    requestAddToken({ address, symbol, decimals, image })
-  }
 
   return (
     <Row
@@ -78,9 +72,9 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
               {account}
             </Paragraph>
           </Link>
-          <Link onClick={() => addSttToWallet()}>
+          <Link onClick={() => addSttsToWallet()}>
             <Paragraph>
-              {tokens.STT ? truncate(tokens.STT.toString(), 2) : 0} STT
+              {tokens.STTS ? truncate(tokens.STTS.toString(), 2) : 0} STTS
               <RightEmptyRetangle />
             </Paragraph>
           </Link>
@@ -109,9 +103,28 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
               <RightRetangle />
             </Paragraph>
           </Link>
-          <Link onClick={() => addSttsToWallet()}>
+          <Link
+            onClick={() => {
+              if (navigator.clipboard)
+                navigator.clipboard.writeText(info[chainId].STTS)
+              else {
+                var textField = document.createElement('textarea')
+                textField.innerText = info[chainId].STTS
+                document.body.appendChild(textField)
+                textField.select()
+                document.execCommand('copy')
+                textField.remove()
+              }
+              notification.success({
+                message: 'STTS address Copied!',
+                placement: 'bottomRight',
+                duration: 2,
+                closeIcon: <div></div>,
+              })
+            }}
+          >
             <Paragraph>
-              {tokens.STTS ? truncate(tokens.STTS.toString(), 2) : 0} STTS
+              Copy STTS
               <RightEmptyRetangle />
             </Paragraph>
           </Link>

@@ -15,7 +15,10 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
     Math.round(calcBTC(value) * dollar.BTC).toLocaleString('en')
 
   const calcDollar = (token, cut = 2) =>
-    truncate(((prices[token] / 10 ** 8) * dollar.BTC).toString(), cut)
+    truncate(
+      ((prices[token] / 10 ** 8) * dollar.BTC).toString(),
+      token === 'STTS' ? 3 : cut
+    )
 
   return prices && total ? (
     <Marquee gradient={false}>
@@ -41,7 +44,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
             {100}
             <span>$</span>
           </p>
-          Smart World Balance(Dollar):
+          Smart World Balance:
           <p className="price-value">
             {calcBtcPrice(total)}
             <span>$</span>

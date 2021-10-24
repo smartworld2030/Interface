@@ -15,12 +15,10 @@ import ProtectedRoute from './ProtectedRoute'
 import { Container, Row, Col } from 'react-grid-system'
 import Typography from 'antd/lib/typography'
 import { tokenPrices, bankTotalSatoshi } from '../_actions/bank.actions'
-import { investInformation } from '../_actions/invest.actions'
 import { invest02Information } from '../_actions/invest02.actions'
 import { poolInformation } from '../_actions/pool.actions'
 import {
   initialization,
-  investContract,
   invest02Contract,
   poolContract,
 } from '../_actions/wallet.actions'
@@ -64,7 +62,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   tokenPrices,
   poolInformation,
   bankTotalSatoshi,
-  investInformation,
   invest02Information,
 }) => {
   const location = useLocation()
@@ -99,7 +96,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
           if (poolContract) poolInformation()
           break
         case '/invest':
-          if (investContract) investInformation()
           break
         case '/invest02':
           if (invest02Contract) invest02Information()
@@ -120,13 +116,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     return () => {
       clearInterval(routeTimer)
     }
-  }, [
-    pathname,
-    address,
-    poolInformation,
-    invest02Information,
-    investInformation,
-  ])
+  }, [pathname, address, poolInformation, invest02Information])
 
   const transitions = useTransition(location, {
     key: pathname,
@@ -274,7 +264,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   tokenPrices: bindActionCreators(tokenPrices, dispatch),
   bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),
-  investInformation: bindActionCreators(investInformation, dispatch),
   invest02Information: bindActionCreators(invest02Information, dispatch),
   accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
 })
