@@ -40,7 +40,7 @@ const Swap: React.FC<SwapProps> = ({
               .reverse()
               .map(
                 (token) =>
-                  ['STT', 'BTCB'].includes(token) && (
+                  ['STTS', 'BNB'].includes(token) && (
                     <PriceValue
                       token={token}
                       prices={prices}
