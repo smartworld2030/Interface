@@ -147,13 +147,19 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
             [item.token]: item.price,
           }
       }, {})
+      const sttsBalance = await tokenContract.STTS.balanceOf(
+        tokenContract.STT.address
+      )
       const latestPrice = await priceContract.latestAnswer()
       const BTC = formaterNumber(latestPrice, 8)
+      const STTS = formaterNumber(sttsBalance, 8)
+      console.log(STTS)
       dispatch({
         type: TOKEN_PRICE_SUCCESS,
         payload: {
           prices,
           dollar: { BTC },
+          tokens: { STTS },
         },
       })
     })

@@ -62,6 +62,7 @@ export function bankReducer(
         bankLoading: false,
         prices: { ...state.prices, ...action.payload.prices },
         dollar: { ...state.dollar, ...action.payload.dollar },
+        tokens: { ...state.tokens, ...action.payload.tokens },
       }
     case TOKEN_PRICE_FAILURE:
       return { ...state, bankLoading: false }

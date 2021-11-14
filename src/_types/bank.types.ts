@@ -28,10 +28,10 @@ export type DoloarPrices = {
   BTC: number
 }
 export type TokenBalances = {
-  STT: number
-  STTS: number
-  BTCB: number
-  BNB: number
+  STT?: number
+  STTS?: number
+  BTCB?: number
+  BNB?: number
 }
 
 export type TokenPrices = {
@@ -51,6 +51,7 @@ export type TokenPriceSuccessAction = {
   payload: {
     prices: TokenPrices
     dollar: DoloarPrices
+    tokens: TokenBalances
   }
 }
 

@@ -8,7 +8,12 @@ interface ChainPriceFeedProps {}
 
 type IProps = ChainPriceFeedProps & ReturnType<typeof mapStateToProps>
 
-export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
+export const ChainPriceFeed: React.FC<IProps> = ({
+  prices,
+  dollar,
+  total,
+  STTS,
+}) => {
   const calcBTC = (value) => value / prices.BTCB
 
   const calcBtcPrice = (value) =>
@@ -26,7 +31,8 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
         <div>
           STTS:
           <p className="price-value">
-            {calcDollar('STTS')}
+            {/* {calcDollar('STTS')} */}
+            0.0700
             <span>$</span>
           </p>
           BTC:
@@ -44,11 +50,16 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
             {100}
             <span>$</span>
           </p>
-          Smart World Balance:
+          Smart World TVL:
           <p className="price-value">
             {calcBtcPrice(total)}
             <span>$</span>
           </p>
+          {/* Smart World Staked STTS:
+          <p className="price-value">
+            {STTS?.toLocaleString(undefined, { maximumSignificantDigits: 7 })}
+            <span>STTS</span>
+          </p> */}
         </div>
       </div>
     </Marquee>
@@ -56,12 +67,18 @@ export const ChainPriceFeed: React.FC<IProps> = ({ prices, dollar, total }) => {
 }
 const mapStateToProps = (state: AppState) => {
   const { tokens } = state.account
-  const { prices, dollar, total } = state.bank
+  const {
+    prices,
+    dollar,
+    total,
+    tokens: { STTS },
+  } = state.bank
   return {
     total,
     tokens,
     prices,
     dollar,
+    STTS,
   }
 }
 
