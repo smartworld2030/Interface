@@ -12,7 +12,6 @@ import {
   POOL_ACCOUNT_SUCCESS,
   POOL_MESSAGES,
   POOL_TRANSACTION_READY,
-  CurrentPrice,
   PoolAccountInfo,
 } from '../_types/pool.types'
 import {
@@ -52,7 +51,9 @@ export const requestPool = (method: any, args: any) => (
           }, 5000)
           successHandler('Transaction Confirmed', null, transaction.hash)
           dispatch(poolInformation() as any)
-          dispatch(accountTokenBalances(['BTCB', 'STT', 'STTS']) as any)
+          dispatch(
+            accountTokenBalances(['BTCB', 'STT', 'STTS', 'LPTOKEN']) as any
+          )
         })
       }
     })
@@ -69,7 +70,7 @@ export const poolUnfreeze = () => async (
   const address = getState().account.address
 
   const { stts, minStts, minBnb } = (await readPool(
-    'userUnfreezeInfo',
+    'unfreezeInfo',
     ['stts', 'bnb', 'minStts', 'minBnb'],
     [address, 0],
     false
@@ -84,15 +85,21 @@ export const poolUnfreeze = () => async (
   }
 }
 
-export const poolFreeze = () => async (
+export const poolUnfreezeLP = () => async (dispatch: Dispatch<AppActions>) => {
+  dispatch(requestPool('unfreezeLP', []) as any)
+}
+
+export const poolFreeze = (stts: string) => async (
   dispatch: Dispatch<AppActions>,
   getState: () => AppState
 ) => {
   const chainId = getState().wallet.chainId
   const address = getState().account.address
   const referrer = getState().router.location.query.ref
+  const percent = getState().router.location.query.percent
 
   const account: any = await readPool('users', ['referrer'], [address])
+  const backupRef: any = await poolContract.owner()
 
   const allowance = await tokenContract.STTS.allowance(
     address,
@@ -101,18 +108,19 @@ export const poolFreeze = () => async (
 
   const requestDeposit = async () => {
     const { bnb, minStts, minBnb } = (await readPool(
-      'userFreezeInfo',
-      ['stts', 'bnb', 'minStts', 'minBnb'],
-      [address, 0],
+      'freezeInfo',
+      ['bnb', 'minStts', 'minBnb'],
+      [stts, 0],
       false
     )) as any
-    console.log(bnb, minStts, minBnb)
+    console.log(stts, bnb, minStts, minBnb)
     if (
       utils.isAddress(account.referrer) &&
       account.referrer !== info.addressZero
     ) {
       dispatch(
         requestPool('updateFreeze', [
+          stts,
           minStts,
           minBnb,
           deadline(3),
@@ -120,11 +128,15 @@ export const poolFreeze = () => async (
         ]) as any
       )
     } else {
-      let isRef = utils.isAddress(referrer)
-      if (isRef) {
+      let isRef = utils.isAddress(referrer) || utils.isAddress(backupRef)
+      const per = referrer ? Number(percent) * 100 : 10000
+      if (isRef && !isNaN(per)) {
+        const ref = referrer || backupRef
         dispatch(
           requestPool('freeze', [
-            referrer,
+            ref,
+            per,
+            stts,
             minStts,
             minBnb,
             deadline(3),
@@ -132,7 +144,7 @@ export const poolFreeze = () => async (
           ]) as any
         )
       } else {
-        const error = 'No valid referrer found!'
+        const error = 'Invalid referral link!'
         dispatch({ type: POOL_MESSAGES, payload: { error } })
         errorHandler(error)
       }
@@ -143,6 +155,59 @@ export const poolFreeze = () => async (
     dispatch({ type: POOL_METHOD_REQUEST, payload: { method: 'approve' } })
 
     tokenContract.STTS.approve(info[chainId].POOL, constants.MaxUint256)
+      .then((transaction) => {
+        provider.once(transaction.hash, (_) => {
+          requestDeposit()
+        })
+      })
+      .catch((err) => {
+        dispatch({ type: POOL_METHOD_FAILURE, payload: err })
+        errorHandler(err)
+      })
+  } else requestDeposit()
+}
+
+export const poolFreezeLP = (lptoken: string) => async (
+  dispatch: Dispatch<AppActions>,
+  getState: () => AppState
+) => {
+  const chainId = getState().wallet.chainId
+  const address = getState().account.address
+  const referrer = getState().router.location.query.ref
+  const percent = getState().router.location.query.percent
+
+  const backupRef: any = await poolContract.owner()
+  const account: any = await readPool('users', ['referrer'], [address])
+
+  const allowance = await tokenContract.LPTOKEN.allowance(
+    address,
+    info[chainId].POOL
+  )
+
+  const requestDeposit = async () => {
+    if (
+      utils.isAddress(account.referrer) &&
+      account.referrer !== info.addressZero
+    ) {
+      dispatch(requestPool('updateFreezeLP', [lptoken]) as any)
+    } else {
+      let isRef = utils.isAddress(referrer) || utils.isAddress(backupRef)
+      const per = referrer ? Number(percent) * 100 : 10000
+      if (isRef && !isNaN(per)) {
+        const ref = referrer || backupRef
+        dispatch(requestPool('freezeLP', [ref, per, lptoken]) as any)
+      } else {
+        const error = 'Invalid referral link!'
+        dispatch({ type: POOL_MESSAGES, payload: { error } })
+        errorHandler(error)
+      }
+    }
+  }
+
+  if (bytesFormater(allowance) === 0) {
+    dispatch({ type: POOL_METHOD_REQUEST, payload: { method: 'approve' } })
+
+    tokenContract.LPTOKEN.approve(info[chainId].POOL, constants.MaxUint256)
       .then((transaction) => {
         provider.once(transaction.hash, (_) => {
           requestDeposit()
@@ -167,23 +232,21 @@ export const poolInformation = (address?: string) => async (
 ) => {
   if (!address) address = getState().account.address
   dispatch({ type: POOL_ACCOUNT_REQUEST })
-  const currentPrice = (await readPool(
-    'freezePrice',
+
+  const currentPrice = (await poolContract.sttsToBnbPrice())
+    .div(10 ** 8)
+    .toNumber()
+  const lpAmounts = await readPool(
+    ['calculateLiquidityValue'],
     ['stts', 'bnb'],
-    []
-  )) as CurrentPrice
+    ['1000000000000000000']
+  )
 
   let account: PoolAccountInfo = (await readPool(
     'users',
-    ['referrer', 'liquidity', 'totalStts', 'latestWithdraw'],
+    ['referrer', 'liquidity', 'refAmounts', 'refPercent', 'latestWithdraw'],
     [address]
   )) as any
-
-  account.update = (await readPool(
-    'userFreezeInfo',
-    ['stts', 'bnb'],
-    [address, 0]
-  )) as CurrentPrice
 
   if (account.liquidity > 0) {
     const items = [
@@ -198,51 +261,62 @@ export const poolInformation = (address?: string) => async (
         args: [address],
       },
       {
-        name: 'userExpireTime',
-        tokens: ['expires'],
-        args: [address],
-      },
-      {
         name: 'calculateDaily',
         tokens: ['nextReward'],
         args: [address, Math.floor(Date.now() / 1000) + 86400],
       },
-      {
-        name: 'userExpired',
-        tokens: ['expired'],
-        args: [address],
-        format: false,
-      },
     ]
 
     Promise.all(
-      items.map((item) =>
-        readPoolItems(item.name, item.tokens, item.args, item.format)
-      )
+      items.map((item) => readPoolItems(item.name, item.tokens, item.args))
     )
       .then((data: any) => {
         data.forEach((its) =>
           its.map((info) => (account[info.item] = info.value))
         )
-        dispatch({
-          type: POOL_ACCOUNT_SUCCESS,
-          payload: {
-            account,
-            currentPrice,
-          },
-        })
+        if (account.deposits > 0) {
+          const deps = Array.from(Array(account.deposits))
+          Promise.all(
+            deps.map((_, i) =>
+              readPoolItems(
+                'userDepositDetails',
+                ['startTime', 'reward'],
+                [address, i]
+              )
+            )
+          ).then((deposits: any) => {
+            account.depositDetails = []
+            deposits.forEach((item, i) =>
+              item.map(
+                (info) =>
+                  (account.depositDetails[i] = {
+                    ...account.depositDetails[i],
+                    [info.item]: info.value,
+                  })
+              )
+            )
+            dispatch({
+              type: POOL_ACCOUNT_SUCCESS,
+              payload: {
+                account,
+                currentPrice,
+                lpAmounts,
+              },
+            })
+          })
+        }
       })
       .catch((err) => {
         errorHandler(err)
         dispatch({
           type: POOL_ACCOUNT_FAILURE,
-          payload: { error: err, currentPrice },
+          payload: { error: err, currentPrice, lpAmounts },
         })
       })
   } else {
     dispatch({
       type: POOL_ACCOUNT_FAILURE,
-      payload: { error: '', currentPrice, account },
+      payload: { error: '', currentPrice, lpAmounts, account },
     })
   }
 }
@@ -289,17 +363,17 @@ export const readPool = async (
   new Promise((resolve, reject) =>
     poolContract[method](...args)
       .then((res) => {
-        const array: any = {}
+        const obj: any = {}
         items.map((item: string) =>
           format && items.length > 1
-            ? (array[item] = utils.isAddress(res[item])
+            ? (obj[item] = utils.isAddress(res[item])
                 ? res[item]
                 : formaterNumber(res[item], item))
-            : (array[item] = utils.isAddress(res[item])
+            : (obj[item] = utils.isAddress(res[item])
                 ? res[item]
                 : bytesFormaterString(res[item]))
         )
-        resolve(array)
+        resolve(obj)
       })
       .catch((err) => reject(err))
   )

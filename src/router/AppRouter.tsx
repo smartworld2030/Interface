@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
@@ -27,12 +27,13 @@ import Pool from '../components/Wallet/Pool'
 import Logo from '../assets/Logo.png'
 import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
 import { investInformation } from '../_actions/invest.actions'
+import Countdown from 'react-countdown'
 
 interface IProps {
   isMobile: boolean
-  height: number
   width: number
   detailHandler: () => void
+  globeHeight: (arg: number) => void
 }
 
 type AppRouterProps = IProps &
@@ -53,20 +54,24 @@ const detailsDelay = 30
 let timer
 let routeTimer
 
+const deadline = new Date('May 16, 2022 12:46:54 PM')
+
 export const AppRouter: React.FC<AppRouterProps> = ({
   detailHandler,
   isMobile,
   address,
-  height,
   width,
   active,
   init,
+  globeHeight,
   tokenPrices,
   poolInformation,
   bankTotalSatoshi,
   investInformation,
   invest02Information,
 }) => {
+  const [height, setHeight] = useState(0)
+  const hTimer = useRef<NodeJS.Timeout>(null)
   const location = useLocation()
   const { pathname } = location
 
@@ -135,26 +140,66 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
   })
 
+  const getHeight = (ref: HTMLDivElement) => {
+    if (ref) {
+      const { height } = ref.getBoundingClientRect()
+      clearTimeout(hTimer.current)
+      hTimer.current = setTimeout(() => {
+        setHeight(height)
+        globeHeight(height + 500)
+      }, 500)
+    }
+  }
+
   return (
     <Container
       fluid
       style={{
+        position: 'absolute',
+        top: 470,
+        left: 0,
         width,
         height,
       }}
     >
       <Row justify="center" align="center">
         <Col>
-          <Typography.Title
-            style={{ textAlign: 'center', margin: 0, position: 'relative' }}
-            level={5}
-          >
-            {Titles[pathname]}
-            {Titles[pathname] === 'INVESTMENT02' ||
-            Titles[pathname] === 'INVESTMENT' ? (
-              <ExclamationTriangle onClick={detailHandler} />
-            ) : null}
-          </Typography.Title>
+          <Row justify="between" style={{ width: '100%', margin: 0 }}>
+            <Row style={{ width: width / 3 }} justify="start">
+              {Titles[pathname] === 'POOL' && <Countdown date={deadline} />}
+            </Row>
+            <Row justify="center" style={{ width: width / 3 }}>
+              <Typography.Title
+                style={{ margin: 0, position: 'relative' }}
+                level={5}
+              >
+                {Titles[pathname]}
+                {Titles[pathname] === 'INVESTMENT02' ||
+                Titles[pathname] === 'INVESTMENT' ||
+                Titles[pathname] === 'POOL' ? (
+                  <ExclamationTriangle onClick={detailHandler} />
+                ) : null}
+              </Typography.Title>
+            </Row>
+            <Row style={{ width: width / 3 }} justify="end">
+              {Titles[pathname] === 'POOL' && (
+                <Typography.Link
+                  href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+                  target="_blank"
+                >
+                  Liquidity Pool
+                </Typography.Link>
+              )}
+              {Titles[pathname] === 'SWAP' && (
+                <Typography.Link
+                  href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+                  target="_blank"
+                >
+                  PanckakeSwap
+                </Typography.Link>
+              )}
+            </Row>
+          </Row>
         </Col>
         <Col
           xs={12}
@@ -169,7 +214,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
               height={isMobile ? undefined : 300}
               width={width - 32}
             >
-              <animated.div key={key} style={style}>
+              <animated.div key={key} style={style} ref={getHeight}>
                 <Switch location={item}>
                   <Route exact path="/invest">
                     <ProtectedRoute

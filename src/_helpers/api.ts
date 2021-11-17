@@ -49,11 +49,14 @@ export const roundDecimals = (value: number, decimal: number = 2) =>
 export const roundDecimalsString = (value: number, decimal: number = 2) =>
   Math.round(value / 10 ** decimal).toString()
 
+export const roundMulDecimalsString = (value: number, decimal: number = 2) =>
+  Math.round(value * 10 ** decimal).toString()
+
 export const percentToValue = (val: number, per: number) =>
   ((val * per) / 100).toString()
 
-export const valueToPercent = (val: number, max: number) =>
-  roundDecimals((val / max) * 100)
+export const valueToPercent = (val: number | string, max: number) =>
+  roundDecimals((Number(val) / max) * 100)
 
 export const truncate = (str: string, decimals: number, ceil = false) => {
   if (str.includes('.')) {

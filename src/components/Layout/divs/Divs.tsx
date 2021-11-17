@@ -32,6 +32,7 @@ export const AbsoluteBody = styled(
   ({ height, width, ...props }: AbsoluteDivProps) => <div {...props} />
 )`
   height: ${({ height }) => (height ? height + 'px' : '')};
+  min-height: 300px;
   text-align: center;
   position: absolute;
   width: ${({ width }) => width + 'px'};

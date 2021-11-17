@@ -40,9 +40,13 @@ const ReactGlobe: React.FC<GlobeProps> = ({
     if (globeEl?.current) {
       globeEl.current.controls().autoRotate = true
       globeEl.current.controls().autoRotateSpeed = 0.3
-      globeEl.current.camera().setViewOffset(100, 100, 0, -18, 100, 100)
+      globeEl.current.pointOfView({
+        altitude: width < 768 ? 10 : 5,
+      })
+      globeEl.current.camera().setViewOffset(100, 100, 0, height / 55, 100, 100)
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height])
 
   const weightColor = d3
     .scaleSequentialSqrt(d3.interpolateYlOrRd)
@@ -72,7 +76,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({
           overflowX: 'hidden',
           width: 'calc(100% - 10px)',
           zIndex: 100,
-          bottom: 2,
+          bottom: height - 470,
           left: 5,
         }}
       >

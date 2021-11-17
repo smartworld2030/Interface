@@ -19,6 +19,7 @@ type WithdrawCircleProps = IProps &
 const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   width,
   latestWithdraw,
+  refAmounts,
   referral,
   daily,
   withdrawInterest,
@@ -32,11 +33,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
 
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
-
-  const calcDaily = () => (daily > 0 ? (daily / 10 ** 8).toFixed(8) : 0)
-
-  const formatedDaily = () =>
-    calcDaily() > 1 ? (daily / 10 ** 8).toFixed(2) : calcDaily()
 
   return (
     <Row
@@ -99,8 +95,8 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           fontSize="14"
           fill="white"
         >
-          <tspan>{formatedDaily()}</tspan>
-          <tspan fill={Colors.green}> STT</tspan>
+          <tspan>{roundDecimals(formaterNumber(daily, 'STTS'), 2)}</tspan>
+          <tspan fill={Colors.green}> STTS</tspan>
         </text>
         <text
           textAnchor="middle"
@@ -110,8 +106,10 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           fontSize="14"
           fill="white"
         >
-          <tspan>{roundDecimals(formaterNumber(referral, 'STT'), 2)}</tspan>
-          <tspan fill={Colors.green}> STT</tspan>
+          <tspan>
+            {roundDecimals(formaterNumber(referral + refAmounts, 'STTS'), 2)}
+          </tspan>
+          <tspan fill={Colors.green}> STTS</tspan>
         </text>
         <text
           textAnchor="middle"
@@ -124,7 +122,11 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           REFERRAL
         </text>
         <g
-          onClick={referral + daily > 0 ? () => withdrawInterest() : undefined}
+          onClick={
+            refAmounts + referral + daily > 0
+              ? () => withdrawInterest()
+              : undefined
+          }
         >
           <rect
             x={30}
@@ -168,12 +170,13 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
 
 const mapStateToProps = (state: AppState) => {
   const { error, tokens } = state.account
-  const { daily, referral, latestWithdraw } = state.pool.account
+  const { daily, referral, refAmounts, latestWithdraw } = state.pool.account
   return {
     error,
     tokens,
     daily,
     referral,
+    refAmounts,
     latestWithdraw,
   }
 }

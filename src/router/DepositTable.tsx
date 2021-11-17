@@ -111,7 +111,39 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
   const [withStts, setWithStts] = useState(true)
   const { pathname } = useLocation()
 
-  return pathname === '/invest' ? (
+  return pathname === '/pool' ? (
+    <Row
+      direction="column"
+      align="center"
+      style={{ background: Colors.transparentBackground }}
+    >
+      <Typography.Title
+        level={3}
+        style={{ textAlign: 'center', padding: '0 10px' }}
+      >
+        The Liquidity Provider Pool
+      </Typography.Title>
+      <ul style={{ textAlign: 'left', padding: '10px 20px' }}>
+        <li>* The minimum investment is one STTS.</li>
+        <li>* You need BNB as much as you want to invest on STTS.</li>
+        <li>
+          * You will be received 0/05 percent of your invested STTS daily.
+        </li>
+        <li>* You can withdraw your total invested amount anytime.</li>
+        <li>
+          * The referral profit will be paid on one level and 10 percent of your
+          introduced individuals profit is considered as the referral for you.
+        </li>
+        <li>
+          * You can define how much of 10 percent will be belonged to you or the
+          person whom you introduced by the referral button.
+        </li>
+        <li>
+          * 100 percent mode means the entire issued profit belongs to you.
+        </li>
+      </ul>
+    </Row>
+  ) : pathname === '/invest' ? (
     <Row
       direction="column"
       align="center"
@@ -158,7 +190,6 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
           )}
         </Col>
       </Row>
-
       <Table
         columns={columns}
         dataSource={data(withStts)}

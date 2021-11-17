@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import { bindActionCreators } from 'redux'
 import { Row, Col } from 'react-grid-system'
@@ -6,12 +7,12 @@ import { AppActions, AppState } from '../../../../_types'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import { DepositButton } from '../../../Layout/svgs/DepositButton'
 import { connect } from 'react-redux'
-import { poolFreeze, poolUnfreeze } from '../../../../_actions/pool.actions'
+import { poolFreeze, poolFreezeLP } from '../../../../_actions/pool.actions'
 import Colors from '../../../../Theme/Colors'
 
 interface IProps {
   token: string
-  values: { stts: number; bnb: number }
+  values: { stts: string; bnb: string; lptoken: string }
 }
 type DepositInfoProps = IProps &
   ReturnType<typeof mapStateToProps> &
@@ -22,15 +23,18 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   tokens,
   dollar,
   values,
-  account,
+  token,
   error,
   loading,
   confirmed,
   poolFreeze,
+  poolFreezeLP,
 }) => {
   const freezeHandler = () => {
     if (!loading && !confirmed) {
-      poolFreeze()
+      if (token === 'STTS-BNB') poolFreeze((values.stts * 10 ** 8).toFixed())
+      if (token === 'LPTOKEN')
+        poolFreezeLP((values.lptoken * 10 ** 18).toFixed())
     }
   }
 
@@ -39,10 +43,11 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
 
   const disableHandler = () =>
+    values.stts === '' ||
     !!error ||
-    (values.stts === 0 && !account.expired) ||
-    tokens.STTS < values.stts ||
-    tokens.BNB < values.bnb
+    (token === 'STTS-BNB' &&
+      (tokens.STTS < values.stts || tokens.BNB < values.bnb)) ||
+    (token === 'LPTOKEN' && tokens.LPTOKEN < values.lptoken)
 
   return (
     <Row
@@ -66,7 +71,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
           />
           <TokenValue
             title="Number of BNB"
-            precision={8}
+            precision={5}
             token="BNB"
             value={values.bnb}
           />
@@ -74,12 +79,6 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
-          <TokenValue
-            title="Price(Satoshi)"
-            token="SATS"
-            precision={0}
-            value={calcSatoshi()}
-          />
           <TokenValue
             title="Price(Dollar)"
             precision={2}
@@ -105,12 +104,11 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
           <TokenValue
-            value="37"
-            token="Day"
-            precision={0}
-            title="Freeze Duration"
+            value={Number(values.stts) * 0.0005}
+            precision={2}
+            token="STTS"
+            title="Daily Reward"
           />
-          <TokenValue value="6872" precision={0} title="Freeze Reward" />
         </Row>
       </Col>
     </Row>
@@ -135,7 +133,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   poolFreeze: bindActionCreators(poolFreeze, dispatch),
-  poolUnfreeze: bindActionCreators(poolUnfreeze, dispatch),
+  poolFreezeLP: bindActionCreators(poolFreezeLP, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DepositInfo)

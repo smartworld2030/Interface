@@ -1,6 +1,7 @@
 import { InvestLogo } from './InvestLogo'
 import { SwapLogo } from './SwapLogo'
 import { SttLogo } from './SttLogo'
+import Colors from '../../Theme/Colors'
 
 export const sizeCalculator = (width: number) => {
   const half = width / 2
@@ -32,26 +33,49 @@ export const sizeCalculator = (width: number) => {
       positionX: half - eighth,
       positionY: secondHeight - 29,
       size: 20,
-      link: '/pool',
+      link: '/invest',
       text: '',
       textPos: secondHeight - 55,
       number: 3,
-      icon: <SttLogo width={45} x={half - eighth - 23} y={secondHeight - 74} />,
+      icon: (
+        <InvestLogo width={40} x={half - eighth - 20} y={secondHeight - 70} />
+      ),
     },
     {
       positionX: half - (width < 600 ? 45 : 50),
       positionY: height - 10,
       size: 35,
-      link: '/invest',
+      link: '/pool',
       text: '',
       textPos: height - 66,
-      number: 1,
+      number: 3,
       icon: (
-        <InvestLogo
-          width={70}
-          x={half - (width < 600 ? 80 : 85)}
-          y={height - 81}
-        />
+        <>
+          <svg viewBox={`18 -15 ${half} ${height}`}>
+            <circle
+              r="10"
+              stroke="white"
+              fill={Colors.red}
+              cx={half / 2}
+              cy={height / 2}
+            />
+            <text
+              x="50%"
+              y="50%"
+              fill="white"
+              fontSize="7"
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              New
+            </text>
+          </svg>
+          <SttLogo
+            width={85}
+            x={half - (width < 600 ? 87 : 93)}
+            y={height - 91}
+          />
+        </>
       ),
     },
     {

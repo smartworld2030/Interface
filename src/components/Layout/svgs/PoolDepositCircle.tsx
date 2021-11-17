@@ -5,7 +5,7 @@ import { PoolCircleInput } from './PoolCircleInput'
 
 interface PoolDepositCircleProps {
   width: number
-  value: number
+  value?: string
   token: string
   error?: string
   percent: number
@@ -103,7 +103,7 @@ const PoolDepositCircle: React.FC<PoolDepositCircleProps> = ({
         }}
       >
         <Input
-          value={value === 0 ? '' : value}
+          value={value}
           placeholder={placeholder}
           className="deposit-input"
           onChange={({ target }) => inputHandler(target.value)}
@@ -119,7 +119,6 @@ const PoolDepositCircle: React.FC<PoolDepositCircleProps> = ({
         onTouchEnd={roundSlideTune}
         onTouchMove={roundSlideTune}
         onMouseMove={circleSlider}
-        disableMax
       />
     </Row>
   )

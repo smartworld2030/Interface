@@ -29,6 +29,7 @@ export type TokenBalances = {
   STTS: number
   BTCB: number
   BNB: number
+  LPTOKEN: number
 }
 
 export interface AccountBalanceRequestAction {

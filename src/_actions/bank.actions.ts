@@ -153,7 +153,7 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
       const latestPrice = await priceContract.latestAnswer()
       const BTC = formaterNumber(latestPrice, 8)
       const STTS = formaterNumber(sttsBalance, 8)
-      console.log(STTS)
+
       dispatch({
         type: TOKEN_PRICE_SUCCESS,
         payload: {

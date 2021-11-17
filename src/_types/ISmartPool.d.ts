@@ -14,1040 +14,1574 @@ import {
   Overrides,
   PayableOverrides,
   CallOverrides,
-} from "ethers";
-import { BytesLike } from "@ethersproject/bytes";
-import { Listener, Provider } from "@ethersproject/providers";
-import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
-import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
+} from 'ethers'
+import { BytesLike } from '@ethersproject/bytes'
+import { Listener, Provider } from '@ethersproject/providers'
+import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi'
+import { TypedEventFilter, TypedEvent, TypedListener } from './commons'
 
-interface ISmartPoolInterface extends ethers.utils.Interface {
+interface SmartPool02Interface extends ethers.utils.Interface {
   functions: {
-    "calculateInterest(address)": FunctionFragment;
-    "calulateBnb(uint256)": FunctionFragment;
-    "freeze(address,uint256,uint256,uint256)": FunctionFragment;
-    "freezePrice()": FunctionFragment;
-    "freezePriceInfo(address,uint256)": FunctionFragment;
-    "maxStts()": FunctionFragment;
-    "priceInfo(uint256,uint256)": FunctionFragment;
-    "unfreeze(uint256,uint256,uint256)": FunctionFragment;
-    "updateFreeze(uint256,uint256,uint256)": FunctionFragment;
-    "updatePrice(address)": FunctionFragment;
-    "userCompletedLevel(address)": FunctionFragment;
-    "userDepositNumber(address)": FunctionFragment;
-    "userDepositTime(address)": FunctionFragment;
-    "userDepositTimer(address,uint256)": FunctionFragment;
-    "userExpireTime(address)": FunctionFragment;
-    "userExpired(address)": FunctionFragment;
-    "userReferralList(address)": FunctionFragment;
-    "userReferrals(address)": FunctionFragment;
-    "withdrawInterest()": FunctionFragment;
-  };
+    'END_TIME()': FunctionFragment
+    'MAX_SLIPPAGE()': FunctionFragment
+    'REFERRAL()': FunctionFragment
+    'REWARD()': FunctionFragment
+    'addBlackList(address)': FunctionFragment
+    'blacklist(address)': FunctionFragment
+    'calculateBnb(uint256)': FunctionFragment
+    'calculateDaily(address,uint256)': FunctionFragment
+    'calculateInterest(address)': FunctionFragment
+    'calculateLiquidityValue(uint256)': FunctionFragment
+    'calculatePercent(uint256,uint256)': FunctionFragment
+    'calculateRef(uint256)': FunctionFragment
+    'calculateReward(uint256)': FunctionFragment
+    'changeEndTime(uint256)': FunctionFragment
+    'changeMax(uint256)': FunctionFragment
+    'changeReferral(uint256)': FunctionFragment
+    'changeReward(uint256)': FunctionFragment
+    'freeze(address,uint256,uint256,uint256,uint256,uint256)': FunctionFragment
+    'freezeInfo(uint256,uint256)': FunctionFragment
+    'freezeLP(address,uint256,uint256)': FunctionFragment
+    'lock()': FunctionFragment
+    'owner()': FunctionFragment
+    'preApprove()': FunctionFragment
+    'removeBlackList(address)': FunctionFragment
+    'sttsToBnbPrice()': FunctionFragment
+    'totalLiquidity()': FunctionFragment
+    'unfreeze(uint256,uint256,uint256)': FunctionFragment
+    'unfreezeInfo(address,uint256)': FunctionFragment
+    'unfreezeLP()': FunctionFragment
+    'unlock()': FunctionFragment
+    'updateFreeze(uint256,uint256,uint256,uint256)': FunctionFragment
+    'updateFreezeLP(uint256)': FunctionFragment
+    'userDepositDetails(address,uint256)': FunctionFragment
+    'userDepositNumber(address)': FunctionFragment
+    'users(address)': FunctionFragment
+    'withdrawInterest()': FunctionFragment
+  }
 
+  encodeFunctionData(functionFragment: 'END_TIME', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "calculateInterest",
-    values: [string]
-  ): string;
+    functionFragment: 'MAX_SLIPPAGE',
+    values?: undefined
+  ): string
+  encodeFunctionData(functionFragment: 'REFERRAL', values?: undefined): string
+  encodeFunctionData(functionFragment: 'REWARD', values?: undefined): string
+  encodeFunctionData(functionFragment: 'addBlackList', values: [string]): string
+  encodeFunctionData(functionFragment: 'blacklist', values: [string]): string
   encodeFunctionData(
-    functionFragment: "calulateBnb",
+    functionFragment: 'calculateBnb',
     values: [BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "freeze",
-    values: [string, BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "freezePrice",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "freezePriceInfo",
+    functionFragment: 'calculateDaily',
     values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "maxStts", values?: undefined): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "priceInfo",
+    functionFragment: 'calculateInterest',
+    values: [string]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'calculateLiquidityValue',
+    values: [BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'calculatePercent',
     values: [BigNumberish, BigNumberish]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "unfreeze",
-    values: [BigNumberish, BigNumberish, BigNumberish]
-  ): string;
+    functionFragment: 'calculateRef',
+    values: [BigNumberish]
+  ): string
   encodeFunctionData(
-    functionFragment: "updateFreeze",
-    values: [BigNumberish, BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "updatePrice", values: [string]): string;
+    functionFragment: 'calculateReward',
+    values: [BigNumberish]
+  ): string
   encodeFunctionData(
-    functionFragment: "userCompletedLevel",
+    functionFragment: 'changeEndTime',
+    values: [BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'changeMax',
+    values: [BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'changeReferral',
+    values: [BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'changeReward',
+    values: [BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'freeze',
+    values: [
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'freezeInfo',
+    values: [BigNumberish, BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'freezeLP',
+    values: [string, BigNumberish, BigNumberish]
+  ): string
+  encodeFunctionData(functionFragment: 'lock', values?: undefined): string
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string
+  encodeFunctionData(functionFragment: 'preApprove', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'removeBlackList',
     values: [string]
-  ): string;
+  ): string
   encodeFunctionData(
-    functionFragment: "userDepositNumber",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userDepositTime",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userDepositTimer",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userExpireTime",
-    values: [string]
-  ): string;
-  encodeFunctionData(functionFragment: "userExpired", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "userReferralList",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "userReferrals",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawInterest",
+    functionFragment: 'sttsToBnbPrice',
     values?: undefined
-  ): string;
+  ): string
+  encodeFunctionData(
+    functionFragment: 'totalLiquidity',
+    values?: undefined
+  ): string
+  encodeFunctionData(
+    functionFragment: 'unfreeze',
+    values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'unfreezeInfo',
+    values: [string, BigNumberish]
+  ): string
+  encodeFunctionData(functionFragment: 'unfreezeLP', values?: undefined): string
+  encodeFunctionData(functionFragment: 'unlock', values?: undefined): string
+  encodeFunctionData(
+    functionFragment: 'updateFreeze',
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'updateFreezeLP',
+    values: [BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'userDepositDetails',
+    values: [string, BigNumberish]
+  ): string
+  encodeFunctionData(
+    functionFragment: 'userDepositNumber',
+    values: [string]
+  ): string
+  encodeFunctionData(functionFragment: 'users', values: [string]): string
+  encodeFunctionData(
+    functionFragment: 'withdrawInterest',
+    values?: undefined
+  ): string
 
+  decodeFunctionResult(functionFragment: 'END_TIME', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "calculateInterest",
+    functionFragment: 'MAX_SLIPPAGE',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'REFERRAL', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'REWARD', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "calulateBnb",
+    functionFragment: 'addBlackList',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "freeze", data: BytesLike): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'blacklist', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "freezePrice",
+    functionFragment: 'calculateBnb',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "freezePriceInfo",
+    functionFragment: 'calculateDaily',
     data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "maxStts", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "priceInfo", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "unfreeze", data: BytesLike): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "updateFreeze",
+    functionFragment: 'calculateInterest',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "updatePrice",
+    functionFragment: 'calculateLiquidityValue',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "userCompletedLevel",
+    functionFragment: 'calculatePercent',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "userDepositNumber",
+    functionFragment: 'calculateRef',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "userDepositTime",
+    functionFragment: 'calculateReward',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "userDepositTimer",
+    functionFragment: 'changeEndTime',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'changeMax', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "userExpireTime",
+    functionFragment: 'changeReferral',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "userExpired",
+    functionFragment: 'changeReward',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'freeze', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'freezeInfo', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'freezeLP', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'lock', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'preApprove', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "userReferralList",
+    functionFragment: 'removeBlackList',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "userReferrals",
+    functionFragment: 'sttsToBnbPrice',
     data: BytesLike
-  ): Result;
+  ): Result
   decodeFunctionResult(
-    functionFragment: "withdrawInterest",
+    functionFragment: 'totalLiquidity',
     data: BytesLike
-  ): Result;
+  ): Result
+  decodeFunctionResult(functionFragment: 'unfreeze', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'unfreezeInfo',
+    data: BytesLike
+  ): Result
+  decodeFunctionResult(functionFragment: 'unfreezeLP', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'unlock', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'updateFreeze',
+    data: BytesLike
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'updateFreezeLP',
+    data: BytesLike
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'userDepositDetails',
+    data: BytesLike
+  ): Result
+  decodeFunctionResult(
+    functionFragment: 'userDepositNumber',
+    data: BytesLike
+  ): Result
+  decodeFunctionResult(functionFragment: 'users', data: BytesLike): Result
+  decodeFunctionResult(
+    functionFragment: 'withdrawInterest',
+    data: BytesLike
+  ): Result
 
   events: {
-    "Freeze(address,address,uint256)": EventFragment;
-    "Unfreeze(address,uint256,uint256)": EventFragment;
-    "UpdateFreeze(address,uint256)": EventFragment;
-    "WithdrawInterest(address,uint256,uint256)": EventFragment;
-  };
+    'AddedBlackList(address)': EventFragment
+    'Freeze(address,address,uint256)': EventFragment
+    'FreezeLP(address,address,uint256)': EventFragment
+    'PaymentRecived(address,uint256)': EventFragment
+    'RemovedBlackList(address)': EventFragment
+    'Unfreeze(address,uint256,uint256)': EventFragment
+    'UnfreezeLP(address,uint256)': EventFragment
+    'UpdateFreeze(address,uint256)': EventFragment
+    'UpdateFreezeLP(address,uint256)': EventFragment
+    'WithdrawInterest(address,uint256,uint256)': EventFragment
+  }
 
-  getEvent(nameOrSignatureOrTopic: "Freeze"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unfreeze"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UpdateFreeze"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "WithdrawInterest"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'AddedBlackList'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Freeze'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'FreezeLP'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'PaymentRecived'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'RemovedBlackList'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'Unfreeze'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'UnfreezeLP'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'UpdateFreeze'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'UpdateFreezeLP'): EventFragment
+  getEvent(nameOrSignatureOrTopic: 'WithdrawInterest'): EventFragment
 }
 
-export class ISmartPool extends Contract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+export class ISmartPool02 extends Contract {
+  connect(signerOrProvider: Signer | Provider | string): this
+  attach(addressOrName: string): this
+  deployed(): Promise<this>
 
   listeners<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter?: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): Array<TypedListener<EventArgsArray, EventArgsObject>>;
+  ): Array<TypedListener<EventArgsArray, EventArgsObject>>
   off<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
+  ): this
   on<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
+  ): this
   once<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
+  ): this
   removeListener<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>,
     listener: TypedListener<EventArgsArray, EventArgsObject>
-  ): this;
+  ): this
   removeAllListeners<EventArgsArray extends Array<any>, EventArgsObject>(
     eventFilter: TypedEventFilter<EventArgsArray, EventArgsObject>
-  ): this;
+  ): this
 
-  listeners(eventName?: string): Array<Listener>;
-  off(eventName: string, listener: Listener): this;
-  on(eventName: string, listener: Listener): this;
-  once(eventName: string, listener: Listener): this;
-  removeListener(eventName: string, listener: Listener): this;
-  removeAllListeners(eventName?: string): this;
+  listeners(eventName?: string): Array<Listener>
+  off(eventName: string, listener: Listener): this
+  on(eventName: string, listener: Listener): this
+  once(eventName: string, listener: Listener): this
+  removeListener(eventName: string, listener: Listener): this
+  removeAllListeners(eventName?: string): this
 
   queryFilter<EventArgsArray extends Array<any>, EventArgsObject>(
     event: TypedEventFilter<EventArgsArray, EventArgsObject>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
+  ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>
 
-  interface: ISmartPoolInterface;
+  interface: SmartPool02Interface
 
   functions: {
+    END_TIME(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    'END_TIME()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    MAX_SLIPPAGE(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    'MAX_SLIPPAGE()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    REFERRAL(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    'REFERRAL()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    REWARD(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    'REWARD()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    addBlackList(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'addBlackList(address)'(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    blacklist(arg0: string, overrides?: CallOverrides): Promise<[boolean]>
+
+    'blacklist(address)'(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>
+
+    calculateBnb(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>
+
+    'calculateBnb(uint256)'(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>
+
+    calculateDaily(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { daily: BigNumber }>
+
+    'calculateDaily(address,uint256)'(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { daily: BigNumber }>
+
     calculateInterest(
       user: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        daily: BigNumber;
-        referral: BigNumber;
-        requestTime: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        daily: BigNumber
+        referral: BigNumber
+        referrer: BigNumber
+        requestTime: BigNumber
       }
-    >;
+    >
 
-    "calculateInterest(address)"(
+    'calculateInterest(address)'(
       user: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        daily: BigNumber;
-        referral: BigNumber;
-        requestTime: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        daily: BigNumber
+        referral: BigNumber
+        referrer: BigNumber
+        requestTime: BigNumber
       }
-    >;
+    >
 
-    calulateBnb(
-      stts: BigNumberish,
+    calculateLiquidityValue(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { bnb: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        total: BigNumber
+      }
+    >
 
-    "calulateBnb(uint256)"(
-      stts: BigNumberish,
+    'calculateLiquidityValue(uint256)'(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { bnb: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        total: BigNumber
+      }
+    >
+
+    calculatePercent(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { userValue: BigNumber; refValue: BigNumber }
+    >
+
+    'calculatePercent(uint256,uint256)'(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { userValue: BigNumber; refValue: BigNumber }
+    >
+
+    calculateRef(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>
+
+    'calculateRef(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>
+
+    calculateReward(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>
+
+    'calculateReward(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>
+
+    changeEndTime(
+      end: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'changeEndTime(uint256)'(
+      end: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    changeMax(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'changeMax(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    changeReferral(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'changeReferral(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    changeReward(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'changeReward(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
 
     freeze(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    "freeze(address,uint256,uint256,uint256)"(
+    'freeze(address,uint256,uint256,uint256,uint256,uint256)'(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    freezePrice(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-    "freezePrice()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-    freezePriceInfo(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        stts: BigNumber;
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
-      }
-    >;
-
-    "freezePriceInfo(address,uint256)"(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        stts: BigNumber;
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
-      }
-    >;
-
-    maxStts(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { stts: BigNumber }>;
-
-    "maxStts()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { stts: BigNumber }>;
-
-    priceInfo(
+    freezeInfo(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        reward: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
       }
-    >;
+    >
 
-    "priceInfo(uint256,uint256)"(
+    'freezeInfo(uint256,uint256)'(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        reward: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
       }
-    >;
+    >
+
+    freezeLP(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'freezeLP(address,uint256,uint256)'(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    lock(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'lock()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    owner(overrides?: CallOverrides): Promise<[string]>
+
+    'owner()'(overrides?: CallOverrides): Promise<[string]>
+
+    preApprove(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'preApprove()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    removeBlackList(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'removeBlackList(address)'(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    sttsToBnbPrice(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    'sttsToBnbPrice()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    totalLiquidity(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    'totalLiquidity()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
     unfreeze(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    "unfreeze(uint256,uint256,uint256)"(
+    'unfreeze(uint256,uint256,uint256)'(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
+
+    unfreezeInfo(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
+      }
+    >
+
+    'unfreezeInfo(address,uint256)'(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
+      }
+    >
+
+    unfreezeLP(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'unfreezeLP()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    unlock(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'unlock()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
 
     updateFreeze(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    "updateFreeze(uint256,uint256,uint256)"(
+    'updateFreeze(uint256,uint256,uint256,uint256)'(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    updatePrice(
+    updateFreezeLP(
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    'updateFreezeLP(uint256)'(
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>
+
+    userDepositDetails(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber] & { startTime: BigNumber; reward: BigNumber }
+    >
 
-    "updatePrice(address)"(
+    'userDepositDetails(address,uint256)'(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-    userCompletedLevel(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[number] & { level: number }>;
-
-    "userCompletedLevel(address)"(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<[number] & { level: number }>;
+    ): Promise<
+      [BigNumber, BigNumber] & { startTime: BigNumber; reward: BigNumber }
+    >
 
     userDepositNumber(
       user: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
-    "userDepositNumber(address)"(
+    'userDepositNumber(address)'(
       user: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber]>
 
-    userDepositTime(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    "userDepositTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber[]]>;
-
-    userDepositTimer(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "userDepositTimer(address,uint256)"(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    userExpireTime(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "userExpireTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    userExpired(user: string, overrides?: CallOverrides): Promise<[boolean]>;
-
-    "userExpired(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    userReferralList(
-      user: string,
+    users(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [
-        [
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number
-        ]
-      ]
-    >;
+      [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        referrer: string
+        refPercent: BigNumber
+        refAmounts: BigNumber
+        liquidity: BigNumber
+        latestWithdraw: BigNumber
+      }
+    >
 
-    "userReferralList(address)"(
-      user: string,
+    'users(address)'(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [
-        [
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number,
-          number
-        ]
-      ]
-    >;
-
-    userReferrals(user: string, overrides?: CallOverrides): Promise<[string[]]>;
-
-    "userReferrals(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<[string[]]>;
+      [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        referrer: string
+        refPercent: BigNumber
+        refAmounts: BigNumber
+        liquidity: BigNumber
+        latestWithdraw: BigNumber
+      }
+    >
 
     withdrawInterest(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    ): Promise<ContractTransaction>
 
-    "withdrawInterest()"(
+    'withdrawInterest()'(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-  };
+    ): Promise<ContractTransaction>
+  }
+
+  END_TIME(overrides?: CallOverrides): Promise<BigNumber>
+
+  'END_TIME()'(overrides?: CallOverrides): Promise<BigNumber>
+
+  MAX_SLIPPAGE(overrides?: CallOverrides): Promise<BigNumber>
+
+  'MAX_SLIPPAGE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+  REFERRAL(overrides?: CallOverrides): Promise<BigNumber>
+
+  'REFERRAL()'(overrides?: CallOverrides): Promise<BigNumber>
+
+  REWARD(overrides?: CallOverrides): Promise<BigNumber>
+
+  'REWARD()'(overrides?: CallOverrides): Promise<BigNumber>
+
+  addBlackList(
+    user: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'addBlackList(address)'(
+    user: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  blacklist(arg0: string, overrides?: CallOverrides): Promise<boolean>
+
+  'blacklist(address)'(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>
+
+  calculateBnb(
+    stts: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  'calculateBnb(uint256)'(
+    stts: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  calculateDaily(
+    sender: string,
+    time: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  'calculateDaily(address,uint256)'(
+    sender: string,
+    time: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
 
   calculateInterest(
     user: string,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      daily: BigNumber;
-      referral: BigNumber;
-      requestTime: BigNumber;
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      daily: BigNumber
+      referral: BigNumber
+      referrer: BigNumber
+      requestTime: BigNumber
     }
-  >;
+  >
 
-  "calculateInterest(address)"(
+  'calculateInterest(address)'(
     user: string,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      daily: BigNumber;
-      referral: BigNumber;
-      requestTime: BigNumber;
+    [BigNumber, BigNumber, BigNumber, BigNumber] & {
+      daily: BigNumber
+      referral: BigNumber
+      referrer: BigNumber
+      requestTime: BigNumber
     }
-  >;
+  >
 
-  calulateBnb(
-    stts: BigNumberish,
+  calculateLiquidityValue(
+    liquidity: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      stts: BigNumber
+      bnb: BigNumber
+      total: BigNumber
+    }
+  >
 
-  "calulateBnb(uint256)"(
-    stts: BigNumberish,
+  'calculateLiquidityValue(uint256)'(
+    liquidity: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      stts: BigNumber
+      bnb: BigNumber
+      total: BigNumber
+    }
+  >
+
+  calculatePercent(
+    value: BigNumberish,
+    percent: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & { userValue: BigNumber; refValue: BigNumber }
+  >
+
+  'calculatePercent(uint256,uint256)'(
+    value: BigNumberish,
+    percent: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & { userValue: BigNumber; refValue: BigNumber }
+  >
+
+  calculateRef(
+    value: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  'calculateRef(uint256)'(
+    value: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  calculateReward(
+    value: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  'calculateReward(uint256)'(
+    value: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>
+
+  changeEndTime(
+    end: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'changeEndTime(uint256)'(
+    end: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  changeMax(
+    percent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'changeMax(uint256)'(
+    percent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  changeReferral(
+    percent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'changeReferral(uint256)'(
+    percent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  changeReward(
+    percent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'changeReward(uint256)'(
+    percent: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
 
   freeze(
     referrer: string,
+    refPercent: BigNumberish,
+    sttsAmount: BigNumberish,
     amountSTTSMin: BigNumberish,
     amountBNBMin: BigNumberish,
     deadline: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  "freeze(address,uint256,uint256,uint256)"(
+  'freeze(address,uint256,uint256,uint256,uint256,uint256)'(
     referrer: string,
+    refPercent: BigNumberish,
+    sttsAmount: BigNumberish,
     amountSTTSMin: BigNumberish,
     amountBNBMin: BigNumberish,
     deadline: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  freezePrice(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-  "freezePrice()"(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-  freezePriceInfo(
-    user: string,
-    percent: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-      stts: BigNumber;
-      bnb: BigNumber;
-      minStts: BigNumber;
-      minBnb: BigNumber;
-      slippage: BigNumber;
-    }
-  >;
-
-  "freezePriceInfo(address,uint256)"(
-    user: string,
-    percent: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-      stts: BigNumber;
-      bnb: BigNumber;
-      minStts: BigNumber;
-      minBnb: BigNumber;
-      slippage: BigNumber;
-    }
-  >;
-
-  maxStts(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "maxStts()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  priceInfo(
+  freezeInfo(
     stts: BigNumberish,
     percent: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber] & {
-      bnb: BigNumber;
-      minStts: BigNumber;
-      minBnb: BigNumber;
-      slippage: BigNumber;
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      reward: BigNumber
+      bnb: BigNumber
+      minStts: BigNumber
+      minBnb: BigNumber
+      slippage: BigNumber
     }
-  >;
+  >
 
-  "priceInfo(uint256,uint256)"(
+  'freezeInfo(uint256,uint256)'(
     stts: BigNumberish,
     percent: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [BigNumber, BigNumber, BigNumber, BigNumber] & {
-      bnb: BigNumber;
-      minStts: BigNumber;
-      minBnb: BigNumber;
-      slippage: BigNumber;
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      reward: BigNumber
+      bnb: BigNumber
+      minStts: BigNumber
+      minBnb: BigNumber
+      slippage: BigNumber
     }
-  >;
+  >
+
+  freezeLP(
+    referrer: string,
+    refPercent: BigNumberish,
+    lpAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'freezeLP(address,uint256,uint256)'(
+    referrer: string,
+    refPercent: BigNumberish,
+    lpAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  lock(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'lock()'(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  owner(overrides?: CallOverrides): Promise<string>
+
+  'owner()'(overrides?: CallOverrides): Promise<string>
+
+  preApprove(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'preApprove()'(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  removeBlackList(
+    user: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'removeBlackList(address)'(
+    user: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  sttsToBnbPrice(overrides?: CallOverrides): Promise<BigNumber>
+
+  'sttsToBnbPrice()'(overrides?: CallOverrides): Promise<BigNumber>
+
+  totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+
+  'totalLiquidity()'(overrides?: CallOverrides): Promise<BigNumber>
 
   unfreeze(
     amountSTTSMin: BigNumberish,
     amountBNBMin: BigNumberish,
     deadline: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  "unfreeze(uint256,uint256,uint256)"(
+  'unfreeze(uint256,uint256,uint256)'(
     amountSTTSMin: BigNumberish,
     amountBNBMin: BigNumberish,
     deadline: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
+
+  unfreezeInfo(
+    user: string,
+    percent: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      stts: BigNumber
+      bnb: BigNumber
+      minStts: BigNumber
+      minBnb: BigNumber
+      slippage: BigNumber
+    }
+  >
+
+  'unfreezeInfo(address,uint256)'(
+    user: string,
+    percent: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      stts: BigNumber
+      bnb: BigNumber
+      minStts: BigNumber
+      minBnb: BigNumber
+      slippage: BigNumber
+    }
+  >
+
+  unfreezeLP(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'unfreezeLP()'(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  unlock(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
+
+  'unlock()'(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
 
   updateFreeze(
+    sttsAmount: BigNumberish,
     amountSTTSMin: BigNumberish,
     amountBNBMin: BigNumberish,
     deadline: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  "updateFreeze(uint256,uint256,uint256)"(
+  'updateFreeze(uint256,uint256,uint256,uint256)'(
+    sttsAmount: BigNumberish,
     amountSTTSMin: BigNumberish,
     amountBNBMin: BigNumberish,
     deadline: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  updatePrice(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
+  updateFreezeLP(
+    lpAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
 
-  "updatePrice(address)"(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
+  'updateFreezeLP(uint256)'(
+    lpAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>
 
-  userCompletedLevel(_user: string, overrides?: CallOverrides): Promise<number>;
-
-  "userCompletedLevel(address)"(
-    _user: string,
-    overrides?: CallOverrides
-  ): Promise<number>;
-
-  userDepositNumber(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "userDepositNumber(address)"(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  userDepositTime(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  "userDepositTime(address)"(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber[]>;
-
-  userDepositTimer(
+  userDepositDetails(
     user: string,
     index: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<
+    [BigNumber, BigNumber] & { startTime: BigNumber; reward: BigNumber }
+  >
 
-  "userDepositTimer(address,uint256)"(
+  'userDepositDetails(address,uint256)'(
     user: string,
     index: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<
+    [BigNumber, BigNumber] & { startTime: BigNumber; reward: BigNumber }
+  >
 
-  userExpireTime(user: string, overrides?: CallOverrides): Promise<BigNumber>;
+  userDepositNumber(user: string, overrides?: CallOverrides): Promise<BigNumber>
 
-  "userExpireTime(address)"(
+  'userDepositNumber(address)'(
     user: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  ): Promise<BigNumber>
 
-  userExpired(user: string, overrides?: CallOverrides): Promise<boolean>;
-
-  "userExpired(address)"(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  userReferralList(
-    user: string,
+  users(
+    arg0: string,
     overrides?: CallOverrides
   ): Promise<
-    [
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number
-    ]
-  >;
+    [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      referrer: string
+      refPercent: BigNumber
+      refAmounts: BigNumber
+      liquidity: BigNumber
+      latestWithdraw: BigNumber
+    }
+  >
 
-  "userReferralList(address)"(
-    user: string,
+  'users(address)'(
+    arg0: string,
     overrides?: CallOverrides
   ): Promise<
-    [
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number,
-      number
-    ]
-  >;
-
-  userReferrals(user: string, overrides?: CallOverrides): Promise<string[]>;
-
-  "userReferrals(address)"(
-    user: string,
-    overrides?: CallOverrides
-  ): Promise<string[]>;
+    [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      referrer: string
+      refPercent: BigNumber
+      refAmounts: BigNumber
+      liquidity: BigNumber
+      latestWithdraw: BigNumber
+    }
+  >
 
   withdrawInterest(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
-  "withdrawInterest()"(
+  'withdrawInterest()'(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<ContractTransaction>
 
   callStatic: {
+    END_TIME(overrides?: CallOverrides): Promise<BigNumber>
+
+    'END_TIME()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    MAX_SLIPPAGE(overrides?: CallOverrides): Promise<BigNumber>
+
+    'MAX_SLIPPAGE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    REFERRAL(overrides?: CallOverrides): Promise<BigNumber>
+
+    'REFERRAL()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    REWARD(overrides?: CallOverrides): Promise<BigNumber>
+
+    'REWARD()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    addBlackList(user: string, overrides?: CallOverrides): Promise<void>
+
+    'addBlackList(address)'(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    blacklist(arg0: string, overrides?: CallOverrides): Promise<boolean>
+
+    'blacklist(address)'(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>
+
+    calculateBnb(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateBnb(uint256)'(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    calculateDaily(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateDaily(address,uint256)'(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
     calculateInterest(
       user: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        daily: BigNumber;
-        referral: BigNumber;
-        requestTime: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        daily: BigNumber
+        referral: BigNumber
+        referrer: BigNumber
+        requestTime: BigNumber
       }
-    >;
+    >
 
-    "calculateInterest(address)"(
+    'calculateInterest(address)'(
       user: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        daily: BigNumber;
-        referral: BigNumber;
-        requestTime: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        daily: BigNumber
+        referral: BigNumber
+        referrer: BigNumber
+        requestTime: BigNumber
       }
-    >;
+    >
 
-    calulateBnb(
-      stts: BigNumberish,
+    calculateLiquidityValue(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        total: BigNumber
+      }
+    >
 
-    "calulateBnb(uint256)"(
-      stts: BigNumberish,
+    'calculateLiquidityValue(uint256)'(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        total: BigNumber
+      }
+    >
+
+    calculatePercent(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { userValue: BigNumber; refValue: BigNumber }
+    >
+
+    'calculatePercent(uint256,uint256)'(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & { userValue: BigNumber; refValue: BigNumber }
+    >
+
+    calculateRef(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateRef(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    calculateReward(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateReward(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    changeEndTime(end: BigNumberish, overrides?: CallOverrides): Promise<void>
+
+    'changeEndTime(uint256)'(
+      end: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    changeMax(percent: BigNumberish, overrides?: CallOverrides): Promise<void>
+
+    'changeMax(uint256)'(
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    changeReferral(
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    'changeReferral(uint256)'(
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    changeReward(
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    'changeReward(uint256)'(
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
 
     freeze(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<void>
 
-    "freeze(address,uint256,uint256,uint256)"(
+    'freeze(address,uint256,uint256,uint256,uint256,uint256)'(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<void>
 
-    freezePrice(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-    "freezePrice()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-    freezePriceInfo(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        stts: BigNumber;
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
-      }
-    >;
-
-    "freezePriceInfo(address,uint256)"(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
-        stts: BigNumber;
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
-      }
-    >;
-
-    maxStts(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "maxStts()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceInfo(
+    freezeInfo(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        reward: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
       }
-    >;
+    >
 
-    "priceInfo(uint256,uint256)"(
+    'freezeInfo(uint256,uint256)'(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        bnb: BigNumber;
-        minStts: BigNumber;
-        minBnb: BigNumber;
-        slippage: BigNumber;
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        reward: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
       }
-    >;
+    >
+
+    freezeLP(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    'freezeLP(address,uint256,uint256)'(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    lock(overrides?: CallOverrides): Promise<void>
+
+    'lock()'(overrides?: CallOverrides): Promise<void>
+
+    owner(overrides?: CallOverrides): Promise<string>
+
+    'owner()'(overrides?: CallOverrides): Promise<string>
+
+    preApprove(overrides?: CallOverrides): Promise<void>
+
+    'preApprove()'(overrides?: CallOverrides): Promise<void>
+
+    removeBlackList(user: string, overrides?: CallOverrides): Promise<void>
+
+    'removeBlackList(address)'(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    sttsToBnbPrice(overrides?: CallOverrides): Promise<BigNumber>
+
+    'sttsToBnbPrice()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+
+    'totalLiquidity()'(overrides?: CallOverrides): Promise<BigNumber>
 
     unfreeze(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<void>
 
-    "unfreeze(uint256,uint256,uint256)"(
+    'unfreeze(uint256,uint256,uint256)'(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<void>
+
+    unfreezeInfo(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
+      }
+    >
+
+    'unfreezeInfo(address,uint256)'(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        stts: BigNumber
+        bnb: BigNumber
+        minStts: BigNumber
+        minBnb: BigNumber
+        slippage: BigNumber
+      }
+    >
+
+    unfreezeLP(overrides?: CallOverrides): Promise<void>
+
+    'unfreezeLP()'(overrides?: CallOverrides): Promise<void>
+
+    unlock(overrides?: CallOverrides): Promise<void>
+
+    'unlock()'(overrides?: CallOverrides): Promise<void>
 
     updateFreeze(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<void>
 
-    "updateFreeze(uint256,uint256,uint256)"(
+    'updateFreeze(uint256,uint256,uint256,uint256)'(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<void>
 
-    updatePrice(
+    updateFreezeLP(
+      lpAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    'updateFreezeLP(uint256)'(
+      lpAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>
+
+    userDepositDetails(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber] & { startTime: BigNumber; reward: BigNumber }
+    >
 
-    "updatePrice(address)"(
+    'userDepositDetails(address,uint256)'(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber] & { stts: BigNumber; bnb: BigNumber }>;
-
-    userCompletedLevel(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<number>;
-
-    "userCompletedLevel(address)"(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<number>;
+    ): Promise<
+      [BigNumber, BigNumber] & { startTime: BigNumber; reward: BigNumber }
+    >
 
     userDepositNumber(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "userDepositNumber(address)"(
+    'userDepositNumber(address)'(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    userDepositTime(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    "userDepositTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber[]>;
-
-    userDepositTimer(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "userDepositTimer(address,uint256)"(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userExpireTime(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "userExpireTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userExpired(user: string, overrides?: CallOverrides): Promise<boolean>;
-
-    "userExpired(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    userReferralList(
-      user: string,
+    users(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number
-      ]
-    >;
+      [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        referrer: string
+        refPercent: BigNumber
+        refAmounts: BigNumber
+        liquidity: BigNumber
+        latestWithdraw: BigNumber
+      }
+    >
 
-    "userReferralList(address)"(
-      user: string,
+    'users(address)'(
+      arg0: string,
       overrides?: CallOverrides
     ): Promise<
-      [
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number,
-        number
-      ]
-    >;
+      [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        referrer: string
+        refPercent: BigNumber
+        refAmounts: BigNumber
+        liquidity: BigNumber
+        latestWithdraw: BigNumber
+      }
+    >
 
-    userReferrals(user: string, overrides?: CallOverrides): Promise<string[]>;
+    withdrawInterest(overrides?: CallOverrides): Promise<boolean>
 
-    "userReferrals(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<string[]>;
-
-    withdrawInterest(overrides?: CallOverrides): Promise<boolean>;
-
-    "withdrawInterest()"(overrides?: CallOverrides): Promise<boolean>;
-  };
+    'withdrawInterest()'(overrides?: CallOverrides): Promise<boolean>
+  }
 
   filters: {
+    AddedBlackList(user: null): TypedEventFilter<[string], { user: string }>
+
     Freeze(
       user: string | null,
       referrer: string | null,
@@ -1055,7 +1589,23 @@ export class ISmartPool extends Contract {
     ): TypedEventFilter<
       [string, string, BigNumber],
       { user: string; referrer: string; amount: BigNumber }
-    >;
+    >
+
+    FreezeLP(
+      user: string | null,
+      referrer: string | null,
+      amount: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { user: string; referrer: string; amount: BigNumber }
+    >
+
+    PaymentRecived(
+      user: string | null,
+      value: null
+    ): TypedEventFilter<[string, BigNumber], { user: string; value: BigNumber }>
+
+    RemovedBlackList(user: null): TypedEventFilter<[string], { user: string }>
 
     Unfreeze(
       user: string | null,
@@ -1064,7 +1614,15 @@ export class ISmartPool extends Contract {
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       { user: string; sttsAmount: BigNumber; bnbAmount: BigNumber }
-    >;
+    >
+
+    UnfreezeLP(
+      user: string | null,
+      amount: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { user: string; amount: BigNumber }
+    >
 
     UpdateFreeze(
       user: string | null,
@@ -1072,7 +1630,15 @@ export class ISmartPool extends Contract {
     ): TypedEventFilter<
       [string, BigNumber],
       { user: string; amount: BigNumber }
-    >;
+    >
+
+    UpdateFreezeLP(
+      user: string | null,
+      amount: null
+    ): TypedEventFilter<
+      [string, BigNumber],
+      { user: string; amount: BigNumber }
+    >
 
     WithdrawInterest(
       user: string | null,
@@ -1081,390 +1647,688 @@ export class ISmartPool extends Contract {
     ): TypedEventFilter<
       [string, BigNumber, BigNumber],
       { user: string; daily: BigNumber; referrals: BigNumber }
-    >;
-  };
+    >
+  }
 
   estimateGas: {
+    END_TIME(overrides?: CallOverrides): Promise<BigNumber>
+
+    'END_TIME()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    MAX_SLIPPAGE(overrides?: CallOverrides): Promise<BigNumber>
+
+    'MAX_SLIPPAGE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    REFERRAL(overrides?: CallOverrides): Promise<BigNumber>
+
+    'REFERRAL()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    REWARD(overrides?: CallOverrides): Promise<BigNumber>
+
+    'REWARD()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    addBlackList(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'addBlackList(address)'(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    blacklist(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
+
+    'blacklist(address)'(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    calculateBnb(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateBnb(uint256)'(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    calculateDaily(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateDaily(address,uint256)'(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
     calculateInterest(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "calculateInterest(address)"(
+    'calculateInterest(address)'(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    calulateBnb(
-      stts: BigNumberish,
+    calculateLiquidityValue(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "calulateBnb(uint256)"(
-      stts: BigNumberish,
+    'calculateLiquidityValue(uint256)'(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
+
+    calculatePercent(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculatePercent(uint256,uint256)'(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    calculateRef(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateRef(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    calculateReward(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'calculateReward(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    changeEndTime(
+      end: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'changeEndTime(uint256)'(
+      end: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    changeMax(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'changeMax(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    changeReferral(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'changeReferral(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    changeReward(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'changeReward(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
 
     freeze(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "freeze(address,uint256,uint256,uint256)"(
+    'freeze(address,uint256,uint256,uint256,uint256,uint256)'(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    freezePrice(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "freezePrice()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    freezePriceInfo(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "freezePriceInfo(address,uint256)"(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    maxStts(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "maxStts()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceInfo(
+    freezeInfo(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "priceInfo(uint256,uint256)"(
+    'freezeInfo(uint256,uint256)'(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
+
+    freezeLP(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'freezeLP(address,uint256,uint256)'(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    lock(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'lock()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>
+
+    'owner()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    preApprove(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'preApprove()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    removeBlackList(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'removeBlackList(address)'(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    sttsToBnbPrice(overrides?: CallOverrides): Promise<BigNumber>
+
+    'sttsToBnbPrice()'(overrides?: CallOverrides): Promise<BigNumber>
+
+    totalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+
+    'totalLiquidity()'(overrides?: CallOverrides): Promise<BigNumber>
 
     unfreeze(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "unfreeze(uint256,uint256,uint256)"(
+    'unfreeze(uint256,uint256,uint256)'(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
+
+    unfreezeInfo(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    'unfreezeInfo(address,uint256)'(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>
+
+    unfreezeLP(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'unfreezeLP()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    unlock(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    'unlock()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
 
     updateFreeze(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "updateFreeze(uint256,uint256,uint256)"(
+    'updateFreeze(uint256,uint256,uint256,uint256)'(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    updatePrice(user: string, overrides?: CallOverrides): Promise<BigNumber>;
+    updateFreezeLP(
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
 
-    "updatePrice(address)"(
+    'updateFreezeLP(uint256)'(
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>
+
+    userDepositDetails(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    userCompletedLevel(
-      _user: string,
+    'userDepositDetails(address,uint256)'(
+      user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "userCompletedLevel(address)"(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     userDepositNumber(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "userDepositNumber(address)"(
+    'userDepositNumber(address)'(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    userDepositTime(
-      user: string,
+    users(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
+
+    'users(address)'(
+      arg0: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "userDepositTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userDepositTimer(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "userDepositTimer(address,uint256)"(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userExpireTime(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "userExpireTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userExpired(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "userExpired(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userReferralList(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "userReferralList(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    userReferrals(user: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    "userReferrals(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
     withdrawInterest(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    ): Promise<BigNumber>
 
-    "withdrawInterest()"(
+    'withdrawInterest()'(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-  };
+    ): Promise<BigNumber>
+  }
 
   populateTransaction: {
+    END_TIME(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'END_TIME()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    MAX_SLIPPAGE(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'MAX_SLIPPAGE()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    REFERRAL(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'REFERRAL()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    REWARD(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'REWARD()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    addBlackList(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'addBlackList(address)'(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    blacklist(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'blacklist(address)'(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    calculateBnb(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'calculateBnb(uint256)'(
+      stts: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    calculateDaily(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'calculateDaily(address,uint256)'(
+      sender: string,
+      time: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
     calculateInterest(
       user: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "calculateInterest(address)"(
+    'calculateInterest(address)'(
       user: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    calulateBnb(
-      stts: BigNumberish,
+    calculateLiquidityValue(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "calulateBnb(uint256)"(
-      stts: BigNumberish,
+    'calculateLiquidityValue(uint256)'(
+      liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
+
+    calculatePercent(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'calculatePercent(uint256,uint256)'(
+      value: BigNumberish,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    calculateRef(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'calculateRef(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    calculateReward(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'calculateReward(uint256)'(
+      value: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    changeEndTime(
+      end: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'changeEndTime(uint256)'(
+      end: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    changeMax(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'changeMax(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    changeReferral(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'changeReferral(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    changeReward(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'changeReward(uint256)'(
+      percent: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
 
     freeze(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "freeze(address,uint256,uint256,uint256)"(
+    'freeze(address,uint256,uint256,uint256,uint256,uint256)'(
       referrer: string,
+      refPercent: BigNumberish,
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    freezePrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "freezePrice()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    freezePriceInfo(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "freezePriceInfo(address,uint256)"(
-      user: string,
-      percent: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    maxStts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "maxStts()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceInfo(
+    freezeInfo(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "priceInfo(uint256,uint256)"(
+    'freezeInfo(uint256,uint256)'(
       stts: BigNumberish,
       percent: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
+
+    freezeLP(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'freezeLP(address,uint256,uint256)'(
+      referrer: string,
+      refPercent: BigNumberish,
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    lock(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'lock()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'owner()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    preApprove(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'preApprove()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    removeBlackList(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'removeBlackList(address)'(
+      user: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    sttsToBnbPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'sttsToBnbPrice()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    totalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    'totalLiquidity()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     unfreeze(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "unfreeze(uint256,uint256,uint256)"(
+    'unfreeze(uint256,uint256,uint256)'(
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
+
+    unfreezeInfo(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    'unfreezeInfo(address,uint256)'(
+      user: string,
+      percent: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>
+
+    unfreezeLP(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'unfreezeLP()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    unlock(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'unlock()'(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
 
     updateFreeze(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "updateFreeze(uint256,uint256,uint256)"(
+    'updateFreeze(uint256,uint256,uint256,uint256)'(
+      sttsAmount: BigNumberish,
       amountSTTSMin: BigNumberish,
       amountBNBMin: BigNumberish,
       deadline: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    updatePrice(
+    updateFreezeLP(
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    'updateFreezeLP(uint256)'(
+      lpAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>
+
+    userDepositDetails(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "updatePrice(address)"(
+    'userDepositDetails(address,uint256)'(
       user: string,
+      index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userCompletedLevel(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "userCompletedLevel(address)"(
-      _user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     userDepositNumber(
       user: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "userDepositNumber(address)"(
+    'userDepositNumber(address)'(
       user: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    userDepositTime(
-      user: string,
+    users(
+      arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "userDepositTime(address)"(
-      user: string,
+    'users(address)'(
+      arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userDepositTimer(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "userDepositTimer(address,uint256)"(
-      user: string,
-      index: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userExpireTime(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "userExpireTime(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userExpired(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "userExpired(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userReferralList(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "userReferralList(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    userReferrals(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "userReferrals(address)"(
-      user: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
     withdrawInterest(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    ): Promise<PopulatedTransaction>
 
-    "withdrawInterest()"(
+    'withdrawInterest()'(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+    ): Promise<PopulatedTransaction>
+  }
 }

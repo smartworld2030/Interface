@@ -19,27 +19,29 @@ export interface DefaultPoolState {
   method?: string
   error?: string
   account: PoolAccountInfo
-  currentPrice: CurrentPrice
+  currentPrice: number
+  lpAmounts: LpAmounts
   confirmed: boolean
   poolLoading: boolean
 }
 
 export type PoolAccountInfo = {
-  update: CurrentPrice
   daily: number
-  nextReward: number
-  expires: number
-  expired: boolean
   referral: number
   referrer: number
+  refAmounts: number
   deposits: number
   liquidity: number
-  totalStts: number
   latestWithdraw: number
-  depositDetails: number[]
+  depositDetails: DepositDetail[]
 }
 
-export type CurrentPrice = {
+type DepositDetail = {
+  startTime: number
+  reward: number
+}
+
+export type LpAmounts = {
   stts: number
   bnb: number
 }
@@ -74,7 +76,7 @@ export interface AccountPoolSuccessAction {
   type: typeof POOL_ACCOUNT_SUCCESS
   payload: {
     account: PoolAccountInfo
-    currentPrice: CurrentPrice
+    currentPrice: number
     error?: string
   }
 }
@@ -82,7 +84,7 @@ export interface AccountPoolSuccessAction {
 export interface AccountPoolFailureAction {
   type: typeof POOL_ACCOUNT_FAILURE
   payload: {
-    currentPrice?: CurrentPrice
+    currentPrice: number
     account?: PoolAccountInfo
     error: string
   }

@@ -1,9 +1,11 @@
 import { Button } from 'antd'
-import React, { useState } from 'react'
+import React from 'react'
 import Colors from '../../../Theme/Colors'
 
 interface UnfreezeButtonProps {
   width: number
+  text?: string
+  secondText?: string
   done: boolean
   loading: boolean
   disable?: boolean
@@ -13,23 +15,12 @@ interface UnfreezeButtonProps {
 export const UnfreezeButton: React.FC<UnfreezeButtonProps> = ({
   width,
   done,
+  text,
   loading,
   disable,
+  secondText,
   onClick,
 }) => {
-  const [clicked, setClicked] = useState(false)
-
-  const clickHandler = () => {
-    setClicked(true)
-    setTimeout(() => {
-      setClicked(false)
-    }, 5000)
-  }
-  const unfreezeHandler = () => {
-    onClick()
-    setClicked(false)
-  }
-
   return (
     <Button
       shape="circle"
@@ -39,7 +30,7 @@ export const UnfreezeButton: React.FC<UnfreezeButtonProps> = ({
         width: width,
         borderColor: Colors.red,
       }}
-      onClick={disable ? undefined : clicked ? unfreezeHandler : clickHandler}
+      onClick={onClick}
     >
       <svg
         viewBox="0 0 100 100"
@@ -50,17 +41,37 @@ export const UnfreezeButton: React.FC<UnfreezeButtonProps> = ({
       >
         {done ? (
           <path d="M76.583 29.11h-4.66c-.653 0-1.273.3-1.673.813L42.763 64.743 29.583 48.043a2.133 2.133 0 0 0-1.673-.813H23.25c-.447 0-.693.513-.42.86l18.26 23.133c.853 1.08 2.493 1.08 3.353 0l32.56-41.26c.273-.34.027-.853-.42-.853z" />
-        ) : clicked ? (
+        ) : text && secondText ? (
+          <>
+            <text
+              x="50%"
+              y="40%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize={width > 40 ? width / 3 : width * 0.7}
+            >
+              {text}
+            </text>
+            <text
+              x="50%"
+              y="70%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize={width > 40 ? width / 3 : width * 0.7}
+            >
+              {secondText}
+            </text>
+          </>
+        ) : text ? (
           <text
-            textAnchor="middle"
-            dominantBaseline="middle"
             x="50%"
             y="53%"
-            fill={Colors.red}
-            fontSize="17"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize={width > 40 ? width / 3 : width * 0.9}
             fontWeight="bold"
           >
-            Unfreeze?
+            {text}
           </text>
         ) : (
           <path

@@ -39,7 +39,7 @@ export interface RegisterSuccessAction {
     chainId: number
   }
 }
-export type ContractNames = 'STT' | 'STTS' | 'BTCB'
+export type ContractNames = 'STT' | 'STTS' | 'BTCB' | 'LPTOKEN'
 
 export type ContractObject = {
   [key in ContractNames]: IERC20

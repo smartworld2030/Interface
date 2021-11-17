@@ -31,7 +31,7 @@ import { ISmartWorld } from '../_types/ISmartWorld'
 import { ISmartInvest } from '../_types/ISmartInvest'
 import { ISmartInvest02 } from '../_types/ISmartInvest02'
 import { ISmartSwap } from '../_types/ISmartSwap'
-import { ISmartPool } from '../_types/ISmartPool'
+import { ISmartPool02 } from '../_types/ISmartPool'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -44,7 +44,7 @@ export let investContract: ISmartInvest
 export let invest02Contract: ISmartInvest02
 export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
-export let poolContract: ISmartPool
+export let poolContract: ISmartPool02
 
 export const initialization = () => (
   dispatch: Dispatch<AppActions>,
@@ -73,6 +73,11 @@ export const initialization = () => (
             STT: new Contract(erc20.address[chainId].stt, erc20.abi, signer),
             STTS: new Contract(erc20.address[chainId].stts, erc20.abi, signer),
             BTCB: new Contract(erc20.address[chainId].btcb, erc20.abi, signer),
+            LPTOKEN: new Contract(
+              erc20.address[chainId].lptoken,
+              erc20.abi,
+              signer
+            ),
           } as ContractObject
           investContract = new Contract(
             invest.address[chainId],
@@ -103,7 +108,8 @@ export const initialization = () => (
             pool.address[chainId],
             pool.abi,
             signer
-          ) as ISmartPool
+          ) as ISmartPool02
+
           dispatch({
             type: WALLET_ACTIVATED,
             payload: {
@@ -157,7 +163,10 @@ export const initialization = () => (
             payload: { address },
           })
           dispatch(
-            accountTokenBalances(['STT', 'STTS', 'BTCB'], address) as any
+            accountTokenBalances(
+              ['STT', 'STTS', 'BTCB', 'LPTOKEN'],
+              address
+            ) as any
           )
           successHandler(`Account Changed ${tooShorter(address)}`)
         })

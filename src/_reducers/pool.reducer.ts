@@ -16,16 +16,12 @@ import {
 } from '../_types/pool.types'
 
 const account = {
-  update: { bnb: 0, stts: 0 },
   daily: 0,
-  expires: 0,
-  expired: false,
   referral: 0,
   referrer: 0,
+  refAmounts: 0,
   deposits: 0,
   liquidity: 0,
-  totalStts: 0,
-  nextReward: 0,
   latestWithdraw: 0,
   depositDetails: [],
 }
@@ -33,7 +29,8 @@ const account = {
 const poolReducerDefaultState: DefaultPoolState = {
   poolLoading: false,
   confirmed: false,
-  currentPrice: { stts: 0, bnb: 0 },
+  currentPrice: 0,
+  lpAmounts: { stts: 0, bnb: 0 },
   error: '',
   account,
 }
@@ -87,8 +84,8 @@ export const poolReducer = (
     case POOL_ACCOUNT_FAILURE:
       return {
         ...state,
+        ...action.payload,
         account: { ...account, ...action.payload.account },
-        ...action.payload.currentPrice,
       }
     case POOL_RESET:
       return { ...poolReducerDefaultState }
