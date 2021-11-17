@@ -123,7 +123,9 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
       >
         The Liquidity Provider Pool
       </Typography.Title>
-      <ul style={{ textAlign: 'left', padding: '10px 20px' }}>
+      <ul
+        style={{ textAlign: 'left', padding: '10px 20px', listStyle: 'none' }}
+      >
         <li>* The minimum investment is one STTS.</li>
         <li>* You need BNB as much as you want to invest on STTS.</li>
         <li>

@@ -41,12 +41,20 @@ const ReactGlobe: React.FC<GlobeProps> = ({
       globeEl.current.controls().autoRotate = true
       globeEl.current.controls().autoRotateSpeed = 0.3
       globeEl.current.pointOfView({
-        altitude: width < 768 ? 10 : 5,
+        altitude: width > 768 ? 5 : 10,
       })
-      globeEl.current.camera().setViewOffset(100, 100, 0, height / 55, 100, 100)
+      globeEl.current
+        .camera()
+        .setViewOffset(
+          window.innerWidth,
+          height,
+          0,
+          width < 768 && height > 800 ? height / 3.1 : window.innerHeight / 8,
+          window.innerWidth,
+          width < 768 ? height : window.innerHeight
+        )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height])
+  }, [height, width])
 
   const weightColor = d3
     .scaleSequentialSqrt(d3.interpolateYlOrRd)
@@ -57,7 +65,6 @@ const ReactGlobe: React.FC<GlobeProps> = ({
       <Globe
         ref={globeEl}
         height={height}
-        width={width}
         globeImageUrl={earth}
         bumpImageUrl={clouds}
         backgroundImageUrl={background}

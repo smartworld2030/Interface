@@ -166,7 +166,11 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         <Col>
           <Row justify="between" style={{ width: '100%', margin: 0 }}>
             <Row style={{ width: width / 3 }} justify="start">
-              {Titles[pathname] === 'POOL' && <Countdown date={deadline} />}
+              {Titles[pathname] === 'POOL' && (
+                <div>
+                  Ends in: <Countdown date={deadline} />
+                </div>
+              )}
             </Row>
             <Row justify="center" style={{ width: width / 3 }}>
               <Typography.Title

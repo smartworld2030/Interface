@@ -1,7 +1,7 @@
 const pool = {
   address: {
     56: '0x4056E842Db38cc348aD152DF03e7f01dde8e125a',
-    97: '0x993298552BC217D536708cD42eE1ed8727aFed08',
+    97: '0x04887Fe05b40Cd2C62AD2783eD901f3bD0a9ea49',
   },
   abi: [
     'event WithdrawInterest(address indexed user, uint256 daily, uint256 referrals)',

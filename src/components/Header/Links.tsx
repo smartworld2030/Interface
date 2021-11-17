@@ -36,7 +36,7 @@ export const sizeCalculator = (width: number) => {
       link: '/invest',
       text: '',
       textPos: secondHeight - 55,
-      number: 3,
+      number: 4,
       icon: (
         <InvestLogo width={40} x={half - eighth - 20} y={secondHeight - 70} />
       ),
@@ -48,12 +48,12 @@ export const sizeCalculator = (width: number) => {
       link: '/pool',
       text: '',
       textPos: height - 66,
-      number: 3,
+      number: 1,
       icon: (
         <>
           <svg viewBox={`18 -15 ${half} ${height}`}>
             <circle
-              r="10"
+              r="7"
               stroke="white"
               fill={Colors.red}
               cx={half / 2}
@@ -63,7 +63,7 @@ export const sizeCalculator = (width: number) => {
               x="50%"
               y="50%"
               fill="white"
-              fontSize="7"
+              fontSize="4"
               textAnchor="middle"
               dominantBaseline="middle"
             >

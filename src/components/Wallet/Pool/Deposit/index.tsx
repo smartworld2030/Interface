@@ -172,9 +172,10 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
                 token={symbol}
                 placeholder={placeholder[token]}
                 value={values[token]}
-                percent={percent < 100 ? percent : 100}
+                percent={percent}
                 inputHandler={inputHandler[token]}
                 percentHandler={percentHandler[token]}
+                disable={tokens[token] < values[token]}
               />
             )
           })}
