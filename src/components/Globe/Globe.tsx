@@ -72,7 +72,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({
           overflowX: 'hidden',
           width: 'calc(100% - 10px)',
           zIndex: 100,
-          bottom: height - 470,
+          bottom: 2,
           left: 5,
         }}
       >
