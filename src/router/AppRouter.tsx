@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
@@ -31,14 +31,16 @@ import Countdown from 'react-countdown'
 
 interface IProps {
   isMobile: boolean
+  height: number
   width: number
   detailHandler: () => void
-  globeHeight: (arg: number) => void
 }
 
 type AppRouterProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
+
+  const deadline = new Date('May 16, 2022 12:46:54 PM')
 
 const Titles = {
   '/invest': 'INVESTMENT',
@@ -46,7 +48,7 @@ const Titles = {
   '/info': 'INFORMATION',
   '/pool': 'POOL',
   '/swap': 'SWAP',
-  '/stb': 'STB',
+  '/nft': 'NFT',
 }
 
 const priceDelay = 10
@@ -54,24 +56,20 @@ const detailsDelay = 30
 let timer
 let routeTimer
 
-const deadline = new Date('May 16, 2022 12:46:54 PM')
-
 export const AppRouter: React.FC<AppRouterProps> = ({
   detailHandler,
   isMobile,
   address,
+  height,
   width,
   active,
   init,
-  globeHeight,
   tokenPrices,
   poolInformation,
   bankTotalSatoshi,
   investInformation,
   invest02Information,
 }) => {
-  const [height, setHeight] = useState(0)
-  const hTimer = useRef<NodeJS.Timeout>(null)
   const location = useLocation()
   const { pathname } = location
 
@@ -140,31 +138,18 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
   })
 
-  const getHeight = (ref: HTMLDivElement) => {
-    if (ref) {
-      const { height } = ref.getBoundingClientRect()
-      clearTimeout(hTimer.current)
-      hTimer.current = setTimeout(() => {
-        setHeight(height)
-        globeHeight(height + 500)
-      }, 500)
-    }
-  }
-
   return (
     <Container
       fluid
       style={{
-        position: 'absolute',
-        top: 470,
-        left: 0,
         width,
         height,
+        background: `url(${require("../assets/c.jpg").default})`,
       }}
     >
       <Row justify="center" align="center">
         <Col>
-          <Row justify="between" style={{ width: '100%', margin: 0 }}>
+        <Row justify="between" style={{ width: '100%', margin: 0 }}>
             <Row style={{ width: width / 3 }} justify="start">
               {Titles[pathname] === 'POOL' && (
                 <div>
@@ -218,7 +203,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
               height={isMobile ? undefined : 300}
               width={width - 32}
             >
-              <animated.div key={key} style={style} ref={getHeight}>
+              <animated.div key={key} style={style}>
                 <Switch location={item}>
                   <Route exact path="/invest">
                     <ProtectedRoute
@@ -245,7 +230,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                   </Route>
                   <Route exact path="/stb">
                     <ProtectedRoute isMobile={isMobile} height={height}>
-                      <STB isMobile={isMobile} />
+                      <NFT isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
                   <Route exact path="/info">
@@ -273,7 +258,7 @@ interface tester {
   isMobile: boolean
 }
 
-export const STB: React.FC<tester> = ({ isMobile }) => {
+export const NFT: React.FC<tester> = ({ isMobile }) => {
   return (
     <Row
       justify="around"
@@ -299,11 +284,6 @@ export const STB: React.FC<tester> = ({ isMobile }) => {
       <Col xs={12} md={2}></Col>
       <Col xs={12} md={4}>
         Coming Soon!
-        <hr /> STB is the future stable coin. STB is issued only by the STT
-        payment. The STB token is generated from 99 percent of the STT payment
-        which is always worth as 100 SATOSHI or one BITS. <br />
-        1 dollar = 100 cents
-        <br />1 STB = 100 SATOSHI
       </Col>
       <Col xs={12} md={2}></Col>
     </Row>
