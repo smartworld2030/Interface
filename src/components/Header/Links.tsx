@@ -111,7 +111,7 @@ export const sizeCalculator = (width: number) => {
       positionY: fristHeight - 54,
       size: 15,
       link: '/stb',
-      text: 'STB',
+      text: 'NFT',
       number: 0,
       textPos: fristHeight - 69,
       icon: <div></div>,

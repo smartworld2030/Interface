@@ -85,7 +85,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
         <Row align="center" justify="around">
           <TokenValue
             title="Price(Smart Bits)"
-            token="STB"
+            token="NFT"
             precision={1}
             value={calcSatoshi() / 100}
           />
