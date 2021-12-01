@@ -31,8 +31,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({
         <div>
           STTS:
           <p className="price-value">
-            {/* {calcDollar('STTS')} */}
-            0.0798
+            {calcDollar('STTS')}
             <span>$</span>
           </p>
           BTC:
