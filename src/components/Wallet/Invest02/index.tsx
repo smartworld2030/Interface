@@ -17,28 +17,30 @@ const Investment02: React.FC<IProps> = ({
   isMobile,
   error,
   invest02Loading,
-}) => (
-  <Spin
-    style={{
-      textAlign: 'center',
-      height: 150,
-    }}
-    spinning={invest02Loading}
-    tip={error ? error : 'Waiting...'}
-  >
-    <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
-      <Col md={12} lg={6}>
-        <DepositSection isMobile={isMobile} />
-      </Col>
-      <Col md={6} lg={3}>
-        <WithdrawSection width={230} />
-      </Col>
-      <Col md={6} lg={3}>
-        <DetailSection />
-      </Col>
-    </Row>
-  </Spin>
-)
+}) => {
+  return (
+    <Spin
+      style={{
+        textAlign: 'center',
+        height: 150,
+      }}
+      spinning={invest02Loading}
+      tip={error ? error : 'Waiting...'}
+    >
+      <Row justify="between" style={{ height: isMobile ? 1200 : 300 }}>
+        <Col md={12} lg={6}>
+          <DepositSection isMobile={isMobile} />
+        </Col>
+        <Col md={6} lg={3}>
+          <WithdrawSection width={230} isMobile={isMobile} />
+        </Col>
+        <Col md={6} lg={3}>
+          <DetailSection />
+        </Col>
+      </Row>
+    </Spin>
+  )
+}
 
 const mapStateToProps = (state: AppState) => {
   const { error, invest02Loading } = state.invest02
