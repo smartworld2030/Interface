@@ -12,11 +12,12 @@ import {
   INVEST02_MESSAGES,
   INVEST02_TRANSACTION_READY,
 } from '../_types/invest02.types'
-import { formaterNumber, bytesFormater } from '../_helpers/api'
+import { formaterNumber, bytesFormater, deadline } from '../_helpers/api'
 import { AppActions, AppState } from '../_types'
 import { constants, Transaction, utils } from 'ethers'
 import info from '../_contracts/info'
 import { accountTokenBalances } from './account.actions'
+import { requestSwap } from './swap.actions'
 
 export const removeError = () => (dispatch: Dispatch<AppActions>) =>
   dispatch({ type: INVEST02_MESSAGES, payload: { error: '' } })
@@ -34,18 +35,23 @@ export const requestInvest02 = (method: any, args: any) => (
           payload: { transaction },
         })
         warningHandler('Transaction Pending', null, transaction.hash)
-        provider.once(transaction.hash, () => {
+        provider.once(transaction.hash, (e) => {
           dispatch({
             type: INVEST02_TRANSACTION_MINED,
           })
-          setTimeout(() => {
-            dispatch({
-              type: INVEST02_TRANSACTION_READY,
-            })
-          }, 5000)
-          successHandler('Transaction Confirmed', null, transaction.hash)
-          dispatch(invest02Information() as any)
-          dispatch(accountTokenBalances(['BTCB', 'STT', 'STTS']) as any)
+          if (method === 'withdrawInterest') {
+            const stts = Number(e.logs[0].data)
+            dispatch(requestSwap('safeBnbSwap', [stts, deadline(3)]) as any)
+          } else {
+            setTimeout(() => {
+              dispatch({
+                type: INVEST02_TRANSACTION_READY,
+              })
+            }, 5000)
+            successHandler('Transaction Confirmed', null, transaction.hash)
+            dispatch(invest02Information() as any)
+            dispatch(accountTokenBalances(['BTCB', 'STT', 'STTS']) as any)
+          }
         })
       }
     })
