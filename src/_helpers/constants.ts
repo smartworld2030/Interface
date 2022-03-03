@@ -1,9 +1,29 @@
+import notification from 'antd/lib/notification'
+
 export const messages = {
   available:
     '🦊 Please click Connect button for connection to Binance Smart Chain using your wallet!',
   notAvailable: '🦊 Please install Metamask into your browser: ',
   itsMobile: '🦊 Please use Metamask/TrustWallet App!',
   loading: 'Loading...',
+}
+
+export const copyAddress = (text: string, message: string) => {
+  if (navigator.clipboard) navigator.clipboard.writeText(text)
+  else {
+    var textField = document.createElement('textarea')
+    textField.innerText = text
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+  }
+  notification.success({
+    message,
+    placement: 'bottomRight',
+    duration: 2,
+    closeIcon: null,
+  })
 }
 
 export const supportedChain = (chainId?: number) =>

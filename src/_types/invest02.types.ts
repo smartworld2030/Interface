@@ -28,6 +28,7 @@ export type Invest02Info = {
   bnb: number
   stts: number
   btcb: number
+  isBlocked: boolean
   totalAmount: number
   hourly: number
   refPercent: number

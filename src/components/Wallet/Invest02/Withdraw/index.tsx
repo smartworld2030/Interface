@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Row, Col } from 'react-grid-system'
 import { connect } from 'react-redux'
 import Colors from '../../../../Theme/Colors'
@@ -11,7 +11,11 @@ import Popover from 'antd/lib/popover'
 import { ExclamationTriangle } from 'components/Layout/svgs/ExclamationTriangle'
 import Text from 'antd/lib/typography/Text'
 import { FlexDiv } from 'components/Layout/divs/Divs'
-
+import list from '_helpers/unblock.json'
+import Button from 'antd/lib/button/button'
+import { transferSTTS } from '_actions/smartworld.action'
+import { copyAddress, shorter } from '_helpers/constants'
+import { CopyOutlined } from '@ant-design/icons'
 interface IProps {
   width: number
   isMobile: boolean
@@ -22,12 +26,21 @@ type WithdrawCircleProps = IProps &
 
 const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   width,
+  address,
+  chainId,
   latestWithdraw,
   referral,
   hourly,
   isMobile,
+  isBlocked,
   withdrawInterest,
 }) => {
+  const unblockPrice = useMemo(
+    () => (isBlocked ? list[chainId][address] : 0),
+    [isBlocked, address, chainId]
+  )
+  const unblockAddress = process.env.REACT_APP_UNBLOCK_ADDRESS
+
   const half = width / 2
   const r = half - 10
   const c = 2 * Math.PI * r
@@ -49,25 +62,70 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           align="center"
           style={{ height: '100%' }}
         >
-          <Popover
-            content={
-              <FlexDiv style={{ maxWidth: 250 }}>
-                <Text>
-                  If smart world distinguishes a address which tries to hack the
-                  system by the STTS liquidity pool swing, it blocks for ever
-                </Text>
-              </FlexDiv>
-            }
-            title="Warning"
-            trigger="click"
-            visible={visible}
-            onVisibleChange={setVisible}
-          >
-            <ExclamationTriangle
-              size={isMobile ? '25px' : '20px'}
-              onClick={() => setVisible((prev) => !prev)}
-            />
-          </Popover>
+          {isBlocked && unblockPrice ? (
+            <Popover
+              content={
+                <FlexDiv
+                  style={{ maxWidth: isMobile ? '100%' : 250, minHeight: 150 }}
+                >
+                  <Text
+                    onClick={() =>
+                      copyAddress(unblockAddress, 'Address Copied!')
+                    }
+                  >
+                    Your account blocked and eligible to be unblock with
+                    penalty!
+                    <br />
+                    send {unblockPrice} STTS to {shorter(unblockAddress)}
+                    <CopyOutlined color={Colors.green} />, then wait for
+                    unblock!
+                  </Text>
+                  <Text style={{ color: Colors.green }}>
+                    Make sure you have ({unblockPrice} STTS) then click on
+                    button blow to pay penalty, then wait for unblock(it may
+                    take up to 24 hours).
+                  </Text>
+                  <Button
+                    type="primary"
+                    onClick={() => transferSTTS(unblockAddress, unblockPrice)}
+                  >
+                    UnBlock
+                  </Button>
+                </FlexDiv>
+              }
+              title="You are blocked!"
+              trigger="click"
+              visible={visible}
+              onVisibleChange={setVisible}
+            >
+              <ExclamationTriangle
+                color="red"
+                size={isMobile ? '30px' : '25px'}
+                onClick={() => setVisible((prev) => !prev)}
+              />
+            </Popover>
+          ) : (
+            <Popover
+              content={
+                <FlexDiv style={{ maxWidth: 250 }}>
+                  <Text>
+                    If smart world distinguishes a address which tries to hack
+                    the system by the STTS liquidity pool swing, it blocks for
+                    ever
+                  </Text>
+                </FlexDiv>
+              }
+              title="Warning"
+              trigger="click"
+              visible={visible}
+              onVisibleChange={setVisible}
+            >
+              <ExclamationTriangle
+                size={isMobile ? '30px' : '25px'}
+                onClick={() => setVisible((prev) => !prev)}
+              />
+            </Popover>
+          )}
         </Row>
       </Col>
       <Col md={10}>
@@ -211,13 +269,17 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { error, tokens } = state.account
-  const { hourly, referral, latestWithdraw } = state.invest02.account
+  const { chainId } = state.wallet
+  const { error, tokens, address } = state.account
+  const { hourly, referral, isBlocked, latestWithdraw } = state.invest02.account
   return {
     error,
+    chainId,
     tokens,
     hourly,
+    address,
     referral,
+    isBlocked,
     latestWithdraw,
   }
 }

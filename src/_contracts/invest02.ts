@@ -14,6 +14,7 @@ const invest = {
     'function monthlyReward(uint256 value) public view returns (uint256)',
     'function hourlyReward(uint256 value) public view returns (uint256)',
     'function rewardPeriod(uint256 value) public view returns (uint256)',
+    'function blacklist(address user) public view returns (bool)',
     'function rewardInfo(uint256 value) public view returns (uint256 period,uint256 reward,uint256 endTime)',
     'function btcPrice() public view returns (uint256)',
     'function sttsToUSD(uint256 value) public view returns (uint256)',

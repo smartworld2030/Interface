@@ -7,8 +7,7 @@ import { ethereum, truncate } from '../../../_helpers/api'
 import info from '../../../_contracts/info'
 import { Col, Row } from 'react-grid-system'
 import bank from '../../../_contracts/bank'
-import { tooShorter } from '../../../_helpers/constants'
-import notification from 'antd/lib/notification'
+import { copyAddress, tooShorter } from '../../../_helpers/constants'
 import { CopyOutlined } from '@ant-design/icons'
 
 const { Paragraph, Link } = Typography
@@ -74,24 +73,9 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
             </Paragraph>
           </Link>
           <Link
-            onClick={() => {
-              if (navigator.clipboard)
-                navigator.clipboard.writeText(info[chainId].STTS)
-              else {
-                var textField = document.createElement('textarea')
-                textField.innerText = info[chainId].STTS
-                document.body.appendChild(textField)
-                textField.select()
-                document.execCommand('copy')
-                textField.remove()
-              }
-              notification.success({
-                message: 'STTS address Copied!',
-                placement: 'bottomRight',
-                duration: 2,
-                closeIcon: <div></div>,
-              })
-            }}
+            onClick={() =>
+              copyAddress(info[chainId].STTS, 'STTS address Copied!')
+            }
           >
             <Paragraph>
               {tooShorter(info[chainId]?.STTS)}{' '}

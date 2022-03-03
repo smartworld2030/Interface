@@ -25,6 +25,7 @@ const account = {
   stts: 0,
   bnb: 0,
   deposits: 0,
+  isBlocked: false,
   latestWithdraw: 0,
   depositDetails: [],
 }
