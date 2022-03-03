@@ -16,6 +16,7 @@ import Button from 'antd/lib/button/button'
 import { transferSTTS } from '_actions/smartworld.action'
 import { copyAddress, shorter } from '_helpers/constants'
 import { CopyOutlined } from '@ant-design/icons'
+
 interface IProps {
   width: number
   isMobile: boolean
@@ -39,7 +40,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
     () => (isBlocked ? list[chainId][address] : 0),
     [isBlocked, address, chainId]
   )
-  const unblockAddress = process.env.REACT_APP_UNBLOCK_ADDRESS
+  const unblockAddress = list.address
 
   const half = width / 2
   const r = half - 10
