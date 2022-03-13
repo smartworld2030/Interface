@@ -8,7 +8,7 @@ import { AppActions, AppState } from '../../../../_types'
 import {
   convertNumbers2English,
   percentToValue,
-  // truncate,
+  truncate,
   valueToPercent,
 } from '../../../../_helpers/api'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
@@ -41,15 +41,15 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
     }
   }, [token])
 
-  // const hundredDollar = (p) => 100 / ((p / 10 ** 8) * dollar.BTC)
+  const hundredDollar = (p) => 100 / ((p / 10 ** 8) * dollar.BTC)
 
-  // const minimumAmount = (t: string) => {
-  //   return truncate(
-  //     hundredDollar(prices[t]).toString(),
-  //     t === 'STTS' ? 1 : 4,
-  //     t !== 'BTCB'
-  //   )
-  // }
+  const minimumAmount = (t: string) => {
+    return truncate(
+      hundredDollar(prices[t]).toString(),
+      t === 'STTS' ? 1 : 4,
+      t !== 'BTCB'
+    )
+  }
 
   const percentHandler = (per: number) => {
     if (error) removeError()
@@ -79,7 +79,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
               onClick={setToken}
               token={t}
               active={token === t}
-              // info={minimumAmount(t)}
+              info={minimumAmount(t)}
             />
           ))}
         </Row>
