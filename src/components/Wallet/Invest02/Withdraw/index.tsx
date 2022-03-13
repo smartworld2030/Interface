@@ -37,9 +37,17 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   withdrawInterest,
 }) => {
   const unblockPrice = useMemo(
-    () => (isBlocked ? list[chainId][address] : 0),
+    () =>
+      isBlocked
+        ? Object.entries(list[chainId]).reduce(
+            (all, [add, price]) =>
+              add.toLowerCase() === address.toLowerCase() ? Number(price) : all,
+            0
+          )
+        : 0,
     [isBlocked, address, chainId]
   )
+
   const unblockAddress = list.address
 
   const half = width / 2

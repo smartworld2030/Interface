@@ -31,7 +31,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({
         <div>
           STTS:
           <p className="price-value">
-            {0.046}
+            {0.0462}
             <span>$</span>
           </p>
           BTC:
@@ -49,11 +49,11 @@ export const ChainPriceFeed: React.FC<IProps> = ({
             {100}
             <span>$</span>
           </p>
-          Smart World TVL:
+          {/* Smart World TVL:
           <p className="price-value">
             {calcBtcPrice(total)}
             <span>$</span>
-          </p>
+          </p> */}
           {/* Smart World Staked STTS:
           <p className="price-value">
             {STTS?.toLocaleString(undefined, { maximumSignificantDigits: 7 })}
