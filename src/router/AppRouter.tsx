@@ -40,7 +40,7 @@ type AppRouterProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
 
-  const deadline = new Date('May 16, 2022 12:46:54 PM')
+const deadline = new Date('May 16, 2022 12:46:54 PM')
 
 const Titles = {
   '/invest': 'INVESTMENT',
@@ -144,12 +144,12 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       style={{
         width,
         height,
-        background: `url(${require("../assets/c.jpg").default})`,
+        background: `url(${require('../assets/c.jpg').default})`,
       }}
     >
       <Row justify="center" align="center">
         <Col>
-        <Row justify="between" style={{ width: '100%', margin: 0 }}>
+          <Row justify="between" style={{ width: '100%', margin: 0 }}>
             <Row style={{ width: width / 3 }} justify="start">
               {Titles[pathname] === 'POOL' && (
                 <div>

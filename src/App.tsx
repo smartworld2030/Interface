@@ -1,9 +1,12 @@
-import { Component } from 'react'
+import { FlexDiv } from 'components/Layout/divs/Divs'
+import { Component, lazy, Suspense } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
-import Globe from './components/Globe/Globe'
+// import Globe from './components/Globe/Globe'
 import { Header } from './components/Header'
 import AppRouter from './router/AppRouter'
 import DepositTable from './router/DepositTable'
+
+const Globe = lazy(() => import('./components/Globe/Globe'))
 
 let setTime: NodeJS.Timeout
 
@@ -56,9 +59,25 @@ class App extends Component<AppProps, AppStates> {
     return (
       <Router>
         <Header width={appWidth} />
-        <Globe height={globeHeight} width={appWidth} showDetail={showDetail}>
-          <DepositTable clickHandler={this.setShowDetail} />
-        </Globe>
+        <Suspense
+          fallback={
+            <FlexDiv
+              style={{
+                height: globeHeight,
+                width: appWidth,
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: 'green',
+              }}
+            >
+              loading...
+            </FlexDiv>
+          }
+        >
+          <Globe height={globeHeight} width={appWidth} showDetail={showDetail}>
+            <DepositTable clickHandler={this.setShowDetail} />
+          </Globe>
+        </Suspense>
         <AppRouter
           isMobile={isMobile}
           width={appWidth}
