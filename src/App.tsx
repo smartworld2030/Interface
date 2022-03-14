@@ -1,7 +1,6 @@
 import { FlexDiv } from 'components/Layout/divs/Divs'
 import { Component, lazy, Suspense } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
-// import Globe from './components/Globe/Globe'
 import { Header } from './components/Header'
 import AppRouter from './router/AppRouter'
 import DepositTable from './router/DepositTable'

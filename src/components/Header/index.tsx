@@ -4,7 +4,6 @@ import { sizeCalculator } from './Links'
 import { HeadCircle } from './HeadCircle'
 import { useLocation } from 'react-router-dom'
 import Colors from '../../Theme/Colors'
-import ChainPriceFeed from './ChainPriceFeed'
 
 const StyledSvg = styled.svg`
   position: absolute;
@@ -59,9 +58,9 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
           onClick={() => setActive(item.link)}
         />
       ))}
-      <foreignObject width="100%" height="10%" y={height * 0.05}>
+      {/* <foreignObject width="100%" height="10%" y={height * 0.05}>
         <ChainPriceFeed />
-      </foreignObject>
+      </foreignObject> */}
     </StyledSvg>
   )
 }
