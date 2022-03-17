@@ -46,151 +46,157 @@ export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
 export let poolContract: ISmartPool02
 
-export const initialization = () => (
-  dispatch: Dispatch<AppActions>,
-  getState: () => AppState
-) => {
-  dispatch({ type: WALLET_REQUEST })
-  if (!getState().wallet.active) {
-    if (ethereum) {
-      provider = new providers.Web3Provider(ethereum, 'any')
-      provider.send('eth_requestAccounts', [])
-      signer = provider.getSigner()
+export const initialization =
+  () => (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
+    dispatch({ type: WALLET_REQUEST })
+    if (!getState().wallet.active) {
+      if (ethereum) {
+        provider = new providers.Web3Provider(ethereum, 'any')
+        provider.send('eth_requestAccounts', [])
+        signer = provider.getSigner()
 
-      ethereum.on('chainChanged', () => {
-        window.location.reload()
-      })
-
-      ethereum.on('accountsChanged', () => {
-        window.location.reload()
-      })
-
-      provider.on('network', ({ chainId }) => {
-        dispatch({ type: CHAIN_CHANGE_REQUEST, payload: { chainId } })
-        console.log(chainId)
-        if (supportedChain(chainId)) {
-          tokenContract = {
-            STT: new Contract(erc20.address[chainId].stt, erc20.abi, signer),
-            STTS: new Contract(erc20.address[chainId].stts, erc20.abi, signer),
-            BTCB: new Contract(erc20.address[chainId].btcb, erc20.abi, signer),
-            LPTOKEN: new Contract(
-              erc20.address[chainId].lptoken,
-              erc20.abi,
-              signer
-            ),
-          } as ContractObject
-          investContract = new Contract(
-            invest.address[chainId],
-            invest.abi,
-            signer
-          ) as ISmartInvest
-          invest02Contract = new Contract(
-            invest02.address[chainId],
-            invest02.abi,
-            signer
-          ) as ISmartInvest02
-          bankContract = new Contract(
-            erc20.address[chainId].stt,
-            bank.abi,
-            signer
-          ) as ISmartWorld
-          priceContract = new Contract(
-            tokenPrice.address[chainId].btc,
-            tokenPrice.abi,
-            signer
-          )
-          swapContract = new Contract(
-            swap.address[chainId],
-            swap.abi,
-            signer
-          ) as ISmartSwap
-          poolContract = new Contract(
-            pool.address[chainId],
-            pool.abi,
-            signer
-          ) as ISmartPool02
-
-          dispatch({
-            type: WALLET_ACTIVATED,
-            payload: {
-              chainId,
-            },
-          })
-          dispatch({ type: CHAIN_CHANGE_REQUEST, payload: { chainId } })
-          successHandler('Connected To ' + chainList[chainId]?.name)
-        } else {
-          const msg = 'Please Change to Binance Smart Chain Mainnet!'
-          warningHandler(msg)
-          dispatch({
-            type: CHAIN_CHANGE_FAILURE,
-            payload: {
-              error: {
-                code: 301,
-                msg,
-              },
-            },
-          })
-        }
-        accountHandler()
-      })
-    } else {
-      dispatch({
-        type: WALLET_FAILURE,
-        error: {
-          msg: 'notAvailable',
-          code: 401,
-        },
-      })
-      const msg = 'Wallet Is not Available!'
-      errorHandler(msg, WALLET_WAITING_MESSAGE)
-      dispatch({
-        type: WALLET_WAITING_MESSAGE,
-        payload: { error: { msg, code: 401 } },
-      })
-    }
-  }
-
-  const accountHandler = (account?: string) => {
-    dispatch({
-      type: ACCOUNT_LOGOUT,
-    })
-    clearTimeout(timer)
-    if (account) {
-      timer = setTimeout(() => {
-        signer.getAddress().then((address) => {
-          dispatch({
-            type: ACCOUNT_LOGGEDIN,
-            payload: { address },
-          })
-          dispatch(
-            accountTokenBalances(
-              ['STT', 'STTS', 'BTCB', 'LPTOKEN'],
-              address
-            ) as any
-          )
-          successHandler(`Account Changed ${tooShorter(address)}`)
+        ethereum.on('chainChanged', () => {
+          window.location.reload()
         })
-      }, 1000)
-    } else {
-      dispatch({
-        type: WALLET_WAITING_MESSAGE,
-        payload: {
+
+        ethereum.on('accountsChanged', () => {
+          window.location.reload()
+        })
+
+        provider.on('network', ({ chainId }) => {
+          dispatch({ type: CHAIN_CHANGE_REQUEST, payload: { chainId } })
+          console.log(chainId)
+          if (supportedChain(chainId)) {
+            tokenContract = {
+              STT: new Contract(erc20.address[chainId].stt, erc20.abi, signer),
+              STTS: new Contract(
+                erc20.address[chainId].stts,
+                erc20.abi,
+                signer
+              ),
+              BTCB: new Contract(
+                erc20.address[chainId].btcb,
+                erc20.abi,
+                signer
+              ),
+              LPTOKEN: new Contract(
+                erc20.address[chainId].lptoken,
+                erc20.abi,
+                signer
+              ),
+            } as ContractObject
+            investContract = new Contract(
+              invest.address[chainId],
+              invest.abi,
+              signer
+            ) as ISmartInvest
+            invest02Contract = new Contract(
+              invest02.address[chainId],
+              invest02.abi,
+              signer
+            ) as ISmartInvest02
+            bankContract = new Contract(
+              erc20.address[chainId].stt,
+              bank.abi,
+              signer
+            ) as ISmartWorld
+            priceContract = new Contract(
+              tokenPrice.address[chainId].btc,
+              tokenPrice.abi,
+              signer
+            )
+            swapContract = new Contract(
+              swap.address[chainId],
+              swap.abi,
+              signer
+            ) as ISmartSwap
+            poolContract = new Contract(
+              pool.address[chainId],
+              pool.abi,
+              signer
+            ) as ISmartPool02
+
+            dispatch({
+              type: WALLET_ACTIVATED,
+              payload: {
+                chainId,
+              },
+            })
+            dispatch({ type: CHAIN_CHANGE_REQUEST, payload: { chainId } })
+            successHandler('Connected To ' + chainList[chainId]?.name)
+          } else {
+            const msg = 'Please Change to Binance Smart Chain Mainnet!'
+            warningHandler(msg)
+            dispatch({
+              type: CHAIN_CHANGE_FAILURE,
+              payload: {
+                error: {
+                  code: 301,
+                  msg,
+                },
+              },
+            })
+          }
+          accountHandler()
+        })
+      } else {
+        dispatch({
+          type: WALLET_FAILURE,
           error: {
-            code: 301,
-            msg: 'Waiting...',
+            msg: 'notAvailable',
+            code: 401,
           },
-        },
-      })
+        })
+        const msg = 'Wallet Is not Available!'
+        errorHandler(msg, WALLET_WAITING_MESSAGE)
+        dispatch({
+          type: WALLET_WAITING_MESSAGE,
+          payload: { error: { msg, code: 401 } },
+        })
+      }
     }
 
-    clearInterval(interval)
-    interval = setInterval(async () => {
-      const accounts = await ethereum?.request({ method: 'eth_accounts' })
-      if (!account && accounts.length > 0) accountHandler(accounts[0])
-      else if (account && accounts.length === 0) accountHandler()
-    }, 1000)
+    const accountHandler = (account?: string) => {
+      dispatch({
+        type: ACCOUNT_LOGOUT,
+      })
+      clearTimeout(timer)
+      if (account) {
+        timer = setTimeout(() => {
+          signer.getAddress().then((address) => {
+            dispatch({
+              type: ACCOUNT_LOGGEDIN,
+              payload: { address },
+            })
+            dispatch(
+              accountTokenBalances(
+                ['STT', 'STTS', 'BTCB', 'LPTOKEN'],
+                address
+              ) as any
+            )
+            successHandler(`Account Changed ${tooShorter(address)}`)
+          })
+        }, 1000)
+      } else {
+        dispatch({
+          type: WALLET_WAITING_MESSAGE,
+          payload: {
+            error: {
+              code: 301,
+              msg: 'Waiting...',
+            },
+          },
+        })
+      }
+
+      clearInterval(interval)
+      interval = setInterval(async () => {
+        const accounts = await ethereum?.request({ method: 'eth_accounts' })
+        if (!account && accounts.length > 0) accountHandler(accounts[0])
+        else if (account && accounts.length === 0) accountHandler()
+      }, 1000)
+    }
   }
-}
 
 export const changeToMain = () => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: CHAIN_CHANGE_REQUEST })

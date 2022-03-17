@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState, Fragment, useMemo } from 'react'
 import { Button, Typography } from 'antd'
 import Input from 'antd/lib/input'
 import { ArrowDownOutlined } from '@ant-design/icons'
@@ -19,6 +19,8 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { requestSwap } from '../../../_actions/swap.actions'
 import Colors from '../../../Theme/Colors'
+import { transferBNB, transferSTTS } from '_actions/smartworld.action'
+import useList from 'Unblock'
 
 interface IProps {}
 
@@ -31,7 +33,25 @@ type BnbSwapProps = IProps &
 let tokenTimer
 let secondTimer
 
-const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
+const BnbSwap: React.FC<BnbSwapProps> = ({
+  tokens,
+  chainId,
+  address,
+  requestSwap,
+}) => {
+  const LIST = useList()
+  const unblockPrice = useMemo(
+    () =>
+      Object.entries(LIST[chainId]).reduce(
+        (all, [add, price]) =>
+          add.toLowerCase() === address.toLowerCase() ? Number(price) : all,
+        0
+      ),
+    [LIST, address, chainId]
+  )
+
+  const unblockAddress = LIST.address
+
   const [inputs, setInputs] = useState([
     {
       name: 'BNB',
@@ -151,8 +171,23 @@ const BnbSwap: React.FC<BnbSwapProps> = ({ tokens, requestSwap }) => {
     setInputs((oldTokens) => [...oldTokens.slice(1), token])
   }
 
-  const swapButtonHandler = () => {
-    if (result.token === 'STTS') {
+  const swapButtonHandler = async () => {
+    if (unblockPrice > 0) {
+      if (tokens.STTS > unblockPrice)
+        return transferSTTS(unblockAddress, unblockPrice)
+      const big = parseUnits(unblockPrice.toString(), 8)
+      const bnbPenalty = await swapContract
+        .STTStoBNBInfo(big)
+        .then(({ min }: any) => {
+          return Number(truncate(formatUnits(min, 18), 4))
+        })
+      console.log(bnbPenalty)
+      transferBNB(
+        address,
+        unblockAddress,
+        bnbPenalty > tokens.BNB ? tokens.BNB : bnbPenalty
+      )
+    } else if (result.token === 'STTS') {
       requestSwap('safeBnbSwap', [
         '0',
         deadline(3),

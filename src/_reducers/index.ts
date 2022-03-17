@@ -9,10 +9,12 @@ import { swapReducer } from './swap.reducer'
 import { investReducer } from './invest.reducer'
 import { invest02Reducer } from './invest02.reducer'
 import { poolReducer } from './pool.reducer'
+import { listReducer } from './list.reducer'
 
 const rootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
+    list: listReducer,
     account: accountReducer,
     bank: bankReducer,
     invest: investReducer,

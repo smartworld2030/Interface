@@ -11,11 +11,11 @@ import Popover from 'antd/lib/popover'
 import { ExclamationTriangle } from 'components/Layout/svgs/ExclamationTriangle'
 import Text from 'antd/lib/typography/Text'
 import { FlexDiv } from 'components/Layout/divs/Divs'
-import list from '_helpers/unblock.json'
 import Button from 'antd/lib/button/button'
 import { transferSTTS } from '_actions/smartworld.action'
 import { copyAddress, shorter } from '_helpers/constants'
 import { CopyOutlined } from '@ant-design/icons'
+import useList from 'Unblock'
 
 interface IProps {
   width: number
@@ -36,19 +36,21 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   isBlocked,
   withdrawInterest,
 }) => {
+  const LIST = useList()
+
   const unblockPrice = useMemo(
     () =>
       isBlocked
-        ? Object.entries(list[chainId]).reduce(
+        ? Object.entries(LIST[chainId]).reduce(
             (all, [add, price]) =>
               add.toLowerCase() === address.toLowerCase() ? Number(price) : all,
             0
           )
         : 0,
-    [isBlocked, address, chainId]
+    [isBlocked, LIST, chainId, address]
   )
 
-  const unblockAddress = list.address
+  const unblockAddress = LIST.address
 
   const half = width / 2
   const r = half - 10

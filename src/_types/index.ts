@@ -8,9 +8,8 @@ import { Invest02ActionTypes, DefaultInvest02State } from './invest02.types'
 import { SwapActionTypes, DefaultSwapState } from './swap.types'
 import { DefaultPoolState, PoolActionTypes } from './pool.types'
 
-export type ArrayElement<
-  ArrayType extends readonly unknown[]
-> = ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never
 
 export const REQUEST = {
   INVEST: 'REQUEST_INVEST',
@@ -40,7 +39,14 @@ export type AppActions =
   | SwapActionTypes
   | CallHistoryMethodAction
 
+export interface DefaultListState {
+  address: string
+  '97': { [key: string]: number }
+  '56': { [key: string]: number }
+}
+
 export type AppState = {
+  list: DefaultListState
   bank: DefaultBankState
   router: RouterState
   account: DefaultUserState
