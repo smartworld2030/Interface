@@ -30,6 +30,8 @@ import { investInformation } from '../_actions/invest.actions'
 import Countdown from 'react-countdown'
 import { Modal } from 'antd'
 
+let SHOWED = false
+
 interface IProps {
   isMobile: boolean
   height: number
@@ -124,6 +126,13 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   }, [active, bankTotalSatoshi, tokenPrices])
 
   useEffect(() => {
+    if (!SHOWED && !isAccepted && pathname === '/invest02') {
+      SHOWED = true
+      info()
+    }
+  }, [isAccepted, pathname])
+
+  useEffect(() => {
     const switcher = () => {
       switch (pathname) {
         case '/pool':
@@ -133,7 +142,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
           if (investContract) investInformation()
           break
         case '/invest02':
-          if (!isAccepted) info()
           if (invest02Contract) invest02Information()
           break
         case '/swap':
@@ -158,7 +166,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     poolInformation,
     investInformation,
     invest02Information,
-    isAccepted,
   ])
 
   const transitions = useTransition(location, {
