@@ -71,7 +71,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
               />
               <TokenValue
                 value={
-                  account.depositDetails.reduce(
+                  account.depositDetails?.reduce(
                     (items, item) => items + Number(item.reward),
                     0
                   ) /
@@ -110,11 +110,11 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              {account.depositDetails.length ? (
+              {account.depositDetails?.length ? (
                 <Row direction="column">
                   <p className="ant-statistic-title">Deposit details</p>
                   <Row align="center" justify="around">
-                    {account.depositDetails.map((item, i) => {
+                    {account.depositDetails?.map((item, i) => {
                       const endTime = new Date(item.endTime * 1000)
                       const startTime = new Date(item.startTime * 1000)
                       return selected === i ? (

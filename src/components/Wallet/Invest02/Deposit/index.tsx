@@ -32,7 +32,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
   error,
   removeError,
 }) => {
-  const [token, setToken] = useState('STTS')
+  const [token, setToken] = useState('BNB')
   const [value, setValue] = useState<string>()
 
   useEffect(() => {
@@ -72,16 +72,13 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
           align="center"
           style={{ height: '100%' }}
         >
-          {tokenNames.map((t) => (
-            <TokenCircle
-              key={t}
-              width={70}
-              onClick={setToken}
-              token={t}
-              active={token === t}
-              info={minimumAmount(t)}
-            />
-          ))}
+          <TokenCircle
+            width={70}
+            onClick={setToken}
+            token="BNB"
+            active={true}
+            info={minimumAmount('BNB')}
+          />
         </Row>
       </Col>
       <Col md={4}>
