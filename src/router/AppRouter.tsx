@@ -7,7 +7,7 @@ import Investment02 from '../components/Wallet/Invest02'
 import Swap from '../components/Wallet/Swap'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
-import { AbsoluteBody, FlexDiv } from '../components/Layout/divs/Divs'
+import { AbsoluteBody } from '../components/Layout/divs/Divs'
 import { AppActions, AppState } from '../_types'
 import { accountTokenBalances } from '../_actions/account.actions'
 import Info from '../components/Wallet/Info'
@@ -43,29 +43,22 @@ type AppRouterProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
 
-function info() {
+const info = () =>
   Modal.info({
     title: `New Investment update.`,
     content: (
-      <FlexDiv style={{ justifyContent: 'space-between' }}>
-        <p>
-          In <Countdown date={investDeadline} /> We make new update on the
-          investment!
-        </p>
-        <ul>
-          <li>You can only invest by BNB from now on.</li>
-          <li>5% fee of investment will be saved in the pool .</li>
-        </ul>
-      </FlexDiv>
+      <ul>
+        <li>You can only invest by BNB from now on.</li>
+        <li>5% fee of investment will be saved in the pool.</li>
+        <li>Minimum investment reduced from 100$ to 50$.</li>
+      </ul>
     ),
     onOk() {
       localStorage.setItem('investupdate', 'accepted')
     },
   })
-}
 
 const poolDeadline = new Date('May 16, 2022 12:46:54 PM')
-const investDeadline = new Date('March 29, 2022 12:00:00 AM')
 
 const Titles = {
   '/invest': 'INVESTMENT',
@@ -194,9 +187,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                 </div>
               )}
               {Titles[pathname] === 'INVESTMENT02' && (
-                <Typography.Link onClick={info}>
-                  New update in: <Countdown date={investDeadline} />
-                </Typography.Link>
+                <Typography.Link onClick={info}>New update!</Typography.Link>
               )}
             </Row>
             <Row justify="center" style={{ width: width / 3 }}>
