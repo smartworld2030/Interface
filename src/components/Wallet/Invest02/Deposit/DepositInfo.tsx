@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { bindActionCreators } from 'redux'
 import { Row, Col } from 'react-grid-system'
 import { ThunkDispatch } from 'redux-thunk'
@@ -20,6 +20,7 @@ type DepositInfoProps = IProps &
   ReturnType<typeof mapDispatchToProps>
 
 const DepositInfo: React.FC<DepositInfoProps> = ({
+  fee,
   prices,
   token,
   dollar,
@@ -27,37 +28,38 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   error,
   loading,
   account,
+  minimum,
   confirmed,
   investment02Deposit,
 }) => {
   const depositHandler = () => {
     if (!loading && !confirmed) {
       console.log(token, value)
-      investment02Deposit(token, value)
+      investment02Deposit(value.toString())
     }
   }
 
   const currentPercent = account.refPercent / 1000
 
-  const calcSatoshi = () => {
-    return prices[token] * value
-  }
+  const calcValue = useMemo(
+    () => ((prices[token] * value) / 10 ** 8) * dollar.BTC,
+    [prices, token, value, dollar.BTC]
+  )
 
-  const calcDollar = () => (calcSatoshi() / 10 ** 8) * dollar.BTC
+  const calcFee = useMemo(() => (calcValue * fee) / 100, [calcValue, fee])
 
-  const calcReward = () => {
-    const multiple = token === 'STTS' ? 1 : 0.75
+  const calcDollar = useMemo(() => calcValue - calcFee, [calcFee, calcValue])
 
-    return calcDollar() * multiple
-  }
-
-  const calcPercent = () => {
-    const cal = referralPercent(account.totalAmount + calcReward())
+  const calcPercent = useMemo(() => {
+    const cal = referralPercent(account.totalAmount + calcDollar)
 
     return cal - currentPercent
-  }
+  }, [account.totalAmount, calcDollar, currentPercent])
 
-  const disableHandler = () => value <= 0 || calcDollar() < 100 || !!error
+  const disableHandler = useMemo(
+    () => value <= 0 || calcDollar < minimum || !!error,
+    [calcDollar, error, minimum, value]
+  )
 
   return (
     <Row
@@ -80,10 +82,13 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             value={value}
           />
           <TokenValue
-            title="Price(Dollar)"
+            title={`Investment - ${fee}% Fee`}
             precision={2}
             token="$"
-            value={calcDollar()}
+            value={calcDollar}
+            doublePrefix="-"
+            double={calcFee}
+            doubled
           />
         </Row>
       </Col>
@@ -93,14 +98,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             title="Reward percent"
             token="% Monthly"
             precision={1}
-            value={rewardPercent(calcReward())}
+            value={rewardPercent(calcDollar)}
           />
           <TokenValue
             value={currentPercent}
             precision={3}
             token="%"
             title="Referral percent"
-            double={calcPercent() < 0.001 ? 0 : calcPercent()}
+            double={calcPercent < 0.001 ? 0 : calcPercent}
             doubled
           />
         </Row>
@@ -120,14 +125,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             onClick={depositHandler}
             done={confirmed}
             loading={loading}
-            disable={disableHandler()}
+            disable={disableHandler}
           />
         </Row>
       </Col>
       <Col xs={12} width="100%">
         <Row align="center" justify="around">
           <TokenValue
-            value={calcReward() * 2}
+            value={calcDollar * 2}
             precision={0}
             token="$"
             title="Invetment reward"
@@ -136,7 +141,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             title="Invetment period"
             token="Month"
             precision={0}
-            value={rewardPeriod(calcReward()) ? rewardPeriod(calcReward()) : 0}
+            value={rewardPeriod(calcDollar) ? rewardPeriod(calcDollar) : 0}
           />
         </Row>
       </Col>
@@ -147,12 +152,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { loggedIn, error } = state.account
   const { prices, dollar } = state.bank
-  const { invest02Loading, confirmed, account } = state.invest02
+  const { invest02Loading, confirmed, account, fee, minimum } = state.invest02
   return {
+    fee,
     error,
     prices,
     dollar,
     account,
+    minimum,
     loggedIn,
     confirmed,
     loading: invest02Loading,

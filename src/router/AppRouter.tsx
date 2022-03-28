@@ -221,14 +221,14 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                   Liquidity Pool
                 </Typography.Link>
               )}
-              {/* {Titles[pathname] === 'SWAP' && (
+              {Titles[pathname] === 'SWAP' && (
                 <Typography.Link
                   href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
                   target="_blank"
                 >
                   PanckakeSwap
                 </Typography.Link>
-              )} */}
+              )}
             </Row>
           </Row>
         </Col>

@@ -19,8 +19,10 @@ export interface DefaultInvest02State {
   method?: string
   error?: string
   account: Invest02Info
-  maxPercent: number
+  fee: number
+  minimum: number
   confirmed: boolean
+  needMigrate: boolean
   invest02Loading: boolean
 }
 
@@ -75,12 +77,23 @@ export interface AccountInvest02RequestAction {
 }
 export interface AccountInvest02SuccessAction {
   type: typeof INVEST02_ACCOUNT_SUCCESS
-  payload: { account: Invest02Info; maxPercent: number; error?: string }
+  payload: {
+    account: Invest02Info
+    needMigrate: boolean
+    fee: number
+    minimum: number
+    error?: string
+  }
 }
 
 export interface AccountInvest02FailureAction {
   type: typeof INVEST02_ACCOUNT_FAILURE
-  payload: { maxPercent?: number; error: string }
+  payload: {
+    fee?: number
+    minimum: number
+    needMigrate: boolean
+    error: string
+  }
 }
 
 export interface MessageInvest02Action {

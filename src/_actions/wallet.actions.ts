@@ -22,6 +22,7 @@ import erc20 from '../_contracts/erc20'
 import bank from '../_contracts/bank'
 import invest from '../_contracts/invest'
 import invest02 from '../_contracts/invest02'
+import invest03 from '../_contracts/invest03'
 import pool from '../_contracts/pool'
 import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
 import { accountTokenBalances } from './account.actions'
@@ -42,6 +43,7 @@ export let tokenContract: ContractObject
 export let priceContract: PriceContract
 export let investContract: ISmartInvest
 export let invest02Contract: ISmartInvest02
+export let invest03Contract: ISmartInvest02
 export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
 export let poolContract: ISmartPool02
@@ -93,6 +95,11 @@ export const initialization =
             invest02Contract = new Contract(
               invest02.address[chainId],
               invest02.abi,
+              signer
+            ) as ISmartInvest02
+            invest03Contract = new Contract(
+              invest03.address[chainId],
+              invest03.abi,
               signer
             ) as ISmartInvest02
             bankContract = new Contract(

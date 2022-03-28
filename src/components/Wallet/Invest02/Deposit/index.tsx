@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Row, Col } from 'react-grid-system'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -26,13 +26,15 @@ export const tokenNames = ['STTS', 'BNB', 'BTCB']
 
 export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
+  minimum,
   tokens,
   prices,
   dollar,
   error,
+  fee,
   removeError,
 }) => {
-  const [token, setToken] = useState('STTS')
+  const [token, setToken] = useState('BNB')
   const [value, setValue] = useState<string>()
 
   useEffect(() => {
@@ -41,27 +43,44 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
     }
   }, [token])
 
-  const hundredDollar = (p) => 100 / ((p / 10 ** 8) * dollar.BTC)
+  const feeDollar = useMemo(() => (minimum * (fee + 1)) / 100, [fee, minimum])
 
-  const minimumAmount = (t: string) => {
-    return truncate(
-      hundredDollar(prices[t]).toString(),
-      t === 'STTS' ? 1 : 4,
-      t !== 'BTCB'
-    )
-  }
+  const minimumDollar = useCallback(
+    (p: number) =>
+      Math.ceil(minimum + feeDollar) / ((p / 10 ** 8) * dollar.BTC),
+    [feeDollar, minimum, dollar.BTC]
+  )
 
-  const percentHandler = (per: number) => {
-    if (error) removeError()
-    setValue(percentToValue(tokens[token], per))
-  }
+  const minimumAmount = useCallback(
+    (t: string) => {
+      return truncate(
+        minimumDollar(prices[t]).toString(),
+        t === 'STTS' ? 1 : 4,
+        t !== 'BTCB'
+      )
+    },
+    [minimumDollar, prices]
+  )
 
-  const inputHandler = (val: string) => {
-    if (error) removeError()
-    val = convertNumbers2English(val)
-    if (val.length <= 20 && /^\d*\.?\d*$/.test(val))
-      setValue(val === '00' ? Number(val).toString() : val === '.' ? '0.' : val)
-  }
+  const percentHandler = useCallback(
+    (per: number) => {
+      if (error) removeError()
+      setValue(percentToValue(tokens[token], per))
+    },
+    [error, removeError, token, tokens]
+  )
+
+  const inputHandler = useCallback(
+    (val: string) => {
+      if (error) removeError()
+      val = convertNumbers2English(val)
+      if (val.length <= 20 && /^\d*\.?\d*$/.test(val))
+        setValue(
+          val === '00' ? Number(val).toString() : val === '.' ? '0.' : val
+        )
+    },
+    [error, removeError]
+  )
 
   return (
     <Row direction="row" style={{ height: '100%' }}>
@@ -72,16 +91,14 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
           align="center"
           style={{ height: '100%' }}
         >
-          {tokenNames.map((t) => (
-            <TokenCircle
-              key={t}
-              width={70}
-              onClick={setToken}
-              token={t}
-              active={token === t}
-              info={minimumAmount(t)}
-            />
-          ))}
+          <TokenCircle
+            width={70}
+            onClick={setToken}
+            token={'BNB'}
+            active={token === 'BNB'}
+            disabled={token !== 'BNB'}
+            info={minimumAmount('BNB')}
+          />
         </Row>
       </Col>
       <Col md={4}>
@@ -105,15 +122,17 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
 }
 const mapStateToProps = (state: AppState) => {
   const { tokens, address, loggedIn } = state.account
-  const { error } = state.invest02
+  const { error, minimum, fee } = state.invest02
   const { prices, dollar } = state.bank
   return {
     address,
     loggedIn,
+    minimum,
     prices,
     dollar,
     tokens,
     error,
+    fee,
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({

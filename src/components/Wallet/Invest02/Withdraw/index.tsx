@@ -6,7 +6,10 @@ import { formaterNumber } from '../../../../_helpers/api'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
-import { withdrawInterest } from '../../../../_actions/invest02.actions'
+import {
+  migrateAndWithdraw,
+  withdrawInterest,
+} from '../../../../_actions/invest02.actions'
 import Popover from 'antd/lib/popover'
 import { ExclamationTriangle } from 'components/Layout/svgs/ExclamationTriangle'
 import Text from 'antd/lib/typography/Text'
@@ -34,10 +37,15 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   hourly,
   isMobile,
   isBlocked,
+  needMigrate,
   withdrawInterest,
+  migrateAndWithdraw,
 }) => {
   const LIST = useList()
 
+  const withdraw = () => {
+    needMigrate ? migrateAndWithdraw() : withdrawInterest()
+  }
   const unblockPrice = useMemo(
     () =>
       isBlocked
@@ -56,8 +64,11 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   const r = half - 10
   const c = 2 * Math.PI * r
   const period = 3600
-  const secPast =
-    latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0
+  const secPast = useMemo(
+    () =>
+      latestWithdraw !== 0 ? (Date.now() / 1000 - latestWithdraw) % period : 0,
+    [latestWithdraw]
+  )
 
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
@@ -73,7 +84,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           align="center"
           style={{ height: '100%' }}
         >
-          {isBlocked && unblockPrice ? (
+          {isBlocked && unblockPrice && (
             <Popover
               content={
                 <FlexDiv
@@ -111,27 +122,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
             >
               <ExclamationTriangle
                 color="red"
-                size={isMobile ? '30px' : '25px'}
-                onClick={() => setVisible((prev) => !prev)}
-              />
-            </Popover>
-          ) : (
-            <Popover
-              content={
-                <FlexDiv style={{ maxWidth: 250 }}>
-                  <Text>
-                    If smart world distinguishes a address which tries to hack
-                    the system by the STTS liquidity pool swing, it blocks for
-                    ever
-                  </Text>
-                </FlexDiv>
-              }
-              title="Warning"
-              trigger="click"
-              visible={visible}
-              onVisibleChange={setVisible}
-            >
-              <ExclamationTriangle
                 size={isMobile ? '30px' : '25px'}
                 onClick={() => setVisible((prev) => !prev)}
               />
@@ -232,11 +222,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
             >
               REFERRAL
             </text>
-            <g
-              onClick={
-                referral + hourly > 0 ? () => withdrawInterest() : undefined
-              }
-            >
+            <g onClick={referral + hourly > 0 ? () => withdraw() : undefined}>
               <rect
                 x={30}
                 y={r * 0.87}
@@ -282,7 +268,10 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { chainId } = state.wallet
   const { error, tokens, address } = state.account
-  const { hourly, referral, isBlocked, latestWithdraw } = state.invest02.account
+  const {
+    needMigrate,
+    account: { hourly, referral, isBlocked, latestWithdraw },
+  } = state.invest02
   return {
     error,
     chainId,
@@ -291,12 +280,14 @@ const mapStateToProps = (state: AppState) => {
     address,
     referral,
     isBlocked,
+    needMigrate,
     latestWithdraw,
   }
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   withdrawInterest: bindActionCreators(withdrawInterest, dispatch),
+  migrateAndWithdraw: bindActionCreators(migrateAndWithdraw, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithdrawSection)

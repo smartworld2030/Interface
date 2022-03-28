@@ -1,10 +1,9 @@
 import Table from 'antd/lib/table'
 import Typography from 'antd/lib/typography'
-import React, { useState } from 'react'
+import React from 'react'
 import { CloseSquareOutlined } from '@ant-design/icons'
 import { Row, Col } from 'react-grid-system'
 import Colors from '../Theme/Colors'
-import Switch from 'antd/lib/switch'
 import { useLocation } from 'react-router-dom'
 
 export function referralPercent(value) {
@@ -37,7 +36,7 @@ export function rewardPeriod(value) {
 
 export function rewardPercent(value) {
   if (value < 100) {
-    return (value * 5) / 100
+    return 5
   }
   const percent = 5 + calcPercent(value - 100)
   return percent > 14 ? 14 : percent
@@ -67,16 +66,7 @@ const columns = [
 ]
 
 const amounts = [
-  100,
-  500,
-  1000,
-  10000,
-  21000,
-  30000,
-  61000,
-  101000,
-  141000,
-  188000,
+  50, 100, 500, 1000, 10000, 21000, 30000, 61000, 101000, 141000, 188000,
 ]
 
 const data = (withStts: boolean) =>
@@ -108,7 +98,7 @@ interface DepositTableProps {
 }
 
 const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
-  const [withStts, setWithStts] = useState(true)
+  // const [withStts, setWithStts] = useState(true)
   const { pathname } = useLocation()
 
   return pathname === '/pool' ? (
@@ -181,7 +171,7 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
         <Col xs={4} style={{ textAlign: 'center' }}>
           INFORMATION
         </Col>
-        <Col xs={4} style={{ textAlign: 'right' }}>
+        {/* <Col xs={4} style={{ textAlign: 'right' }}>
           {pathname !== '/invest' && (
             <Switch
               checkedChildren="STTS"
@@ -190,11 +180,11 @@ const DepositTable: React.FC<DepositTableProps> = ({ clickHandler }) => {
               defaultChecked={withStts}
             />
           )}
-        </Col>
+        </Col> */}
       </Row>
       <Table
         columns={columns}
-        dataSource={data(withStts)}
+        dataSource={data(true)}
         pagination={false}
         scroll={{ y: 240 }}
       />

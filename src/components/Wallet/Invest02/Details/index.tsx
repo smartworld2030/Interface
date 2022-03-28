@@ -5,7 +5,7 @@ import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
 import { Row, Col } from 'react-grid-system'
 import { useLocation } from 'react-router-dom'
-import { invest02Information } from '../../../../_actions/invest02.actions'
+import { migrateByUser } from '../../../../_actions/invest02.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
 import { TokenValue } from '../../../Layout/typography/Tokens'
 import copy from 'copy-to-clipboard'
@@ -13,6 +13,8 @@ import QRCode from 'react-qr-code'
 import Colors from '../../../../Theme/Colors'
 import { successHandler } from '../../../../_helpers/alert'
 import { truncate } from '../../../../_helpers/api'
+import Typography from 'antd/lib/typography'
+import Button from 'antd/lib/button'
 
 interface IProps {}
 
@@ -23,6 +25,8 @@ type ReferralSectionProps = IProps &
 export const DetailSection: React.FC<ReferralSectionProps> = ({
   address,
   account,
+  needMigrate,
+  migrateByUser,
 }) => {
   const [selected, setSeleted] = useState(-1)
   const [done, setDone] = useState(false)
@@ -36,6 +40,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       setDone(true)
     }
   }
+
   const calcDollar = () => (account.referral + account.hourly) / 10 ** 8
 
   return (
@@ -71,7 +76,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
               />
               <TokenValue
                 value={
-                  account.depositDetails.reduce(
+                  account.depositDetails?.reduce(
                     (items, item) => items + Number(item.reward),
                     0
                   ) /
@@ -101,20 +106,41 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              <ReferralButton
-                width={90}
-                onClick={copyHandler}
-                disable={account.totalAmount === 0}
-              />
+              {needMigrate ? (
+                <Button
+                  shape="circle"
+                  type="default"
+                  className="migrate-button"
+                  style={{
+                    height: 100,
+                    width: 100,
+                    borderColor: Colors.green,
+                  }}
+                  onClick={() => migrateByUser()}
+                >
+                  <Typography.Text
+                    strong
+                    style={{ fontSize: '1rem', color: Colors.green }}
+                  >
+                    Migrate
+                  </Typography.Text>
+                </Button>
+              ) : (
+                <ReferralButton
+                  width={90}
+                  onClick={copyHandler}
+                  disable={account.totalAmount === 0}
+                />
+              )}
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              {account.depositDetails.length ? (
+              {account.depositDetails?.length ? (
                 <Row direction="column">
                   <p className="ant-statistic-title">Deposit details</p>
                   <Row align="center" justify="around">
-                    {account.depositDetails.map((item, i) => {
+                    {account.depositDetails?.map((item, i) => {
                       const endTime = new Date(item.endTime * 1000)
                       const startTime = new Date(item.startTime * 1000)
                       return selected === i ? (
@@ -163,8 +189,9 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 
 const mapStateToProps = (state: AppState) => {
   const { address, tokens } = state.account
-  const { account } = state.invest02
+  const { needMigrate, account } = state.invest02
   return {
+    needMigrate,
     account,
     address,
     tokens,
@@ -172,7 +199,7 @@ const mapStateToProps = (state: AppState) => {
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
-  invest02Information: bindActionCreators(invest02Information, dispatch),
+  migrateByUser: bindActionCreators(migrateByUser, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailSection)

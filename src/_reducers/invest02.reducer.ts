@@ -33,8 +33,10 @@ const account = {
 const invest02ReducerDefaultState: DefaultInvest02State = {
   invest02Loading: false,
   confirmed: false,
-  maxPercent: 0,
+  fee: 5,
+  minimum: 50,
   error: '',
+  needMigrate: false,
   account,
 }
 
@@ -80,9 +82,7 @@ export const invest02Reducer = (
     case INVEST02_ACCOUNT_SUCCESS:
       return {
         ...state,
-        account: { ...account, ...action.payload.account },
-        maxPercent: action.payload.maxPercent,
-        error: action.payload.error,
+        ...action.payload,
       }
     case INVEST02_ACCOUNT_FAILURE:
       return { ...state, ...action.payload }
