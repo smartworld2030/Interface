@@ -1,6 +1,6 @@
 const invest = {
   address: {
-    56: '0x59FD37b88780a7F5be75f0A5B9afeA7cf94eF0ff',
+    56: '0xeB2F87B4fF2C35bf1a56B97bAd9bd8Bbf06768bA',
     97: '0xD5Cdb81a23f1fFFaBb2519E733F07EF4af214d5C',
   },
   abi: [
@@ -9,7 +9,7 @@ const invest = {
     'event RegisterUser(address indexed user, address indexed referrer, uint256 value)',
     'function users(address) public view returns (address referrer,uint256 refEndTime,uint256 refAmounts,uint256 refPercent,uint256 totalAmount,uint256 latestWithdraw)',
     'function FEE() public view returns (uint256)',
-    'function MINIMUM_AMOUNTS() public view returns (uint256)',
+    'function MINIMUM_INVEST() public view returns (uint256)',
     'function totalReward(uint256 value) public view returns (uint256)',
     'function rewardPercent(uint256 value) public view returns (uint256)',
     'function monthlyReward(uint256 value) public view returns (uint256)',

@@ -67,6 +67,10 @@ export const investment02Deposit =
     dispatch(requestInvest03('invest', [ref, { value }]) as any)
   }
 
+export const migrateByUser = () => async (dispatch: Dispatch<AppActions>) => {
+  dispatch(requestInvest03('migrateByUser', []) as any)
+}
+
 export const migrateAndWithdraw =
   () => async (dispatch: Dispatch<AppActions>) => {
     dispatch(requestInvest03('migrateAndWithdrawInterest', []) as any)
@@ -83,7 +87,7 @@ export const invest02Information =
     if (!address) address = getState().account.address
     dispatch({ type: INVEST02_ACCOUNT_REQUEST })
     const fee = await invest03Contract.FEE()
-    const minimum = await invest03Contract.MINIMUM_AMOUNTS()
+    const minimum = await invest03Contract.MINIMUM_INVEST()
 
     const oldAccountInfo: any = await readInvest02(
       'users',

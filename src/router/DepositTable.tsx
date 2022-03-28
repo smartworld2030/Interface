@@ -36,7 +36,7 @@ export function rewardPeriod(value) {
 
 export function rewardPercent(value) {
   if (value < 100) {
-    return (value * 5) / 100
+    return 5
   }
   const percent = 5 + calcPercent(value - 100)
   return percent > 14 ? 14 : percent

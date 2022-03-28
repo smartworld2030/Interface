@@ -41,18 +41,14 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
 
   const currentPercent = account.refPercent / 1000
 
-  const calcSatoshi = useMemo(() => {
-    return prices[token] * value
-  }, [prices, token, value])
+  const calcValue = useMemo(
+    () => ((prices[token] * value) / 10 ** 8) * dollar.BTC,
+    [prices, token, value, dollar.BTC]
+  )
 
-  const calcFee = useMemo(
-    () => ((calcSatoshi / 10 ** 8) * dollar.BTC * fee) / 100,
-    [calcSatoshi, dollar.BTC, fee]
-  )
-  const calcDollar = useMemo(
-    () => (calcSatoshi / 10 ** 8) * dollar.BTC - calcFee,
-    [calcFee, calcSatoshi, dollar.BTC]
-  )
+  const calcFee = useMemo(() => (calcValue * fee) / 100, [calcValue, fee])
+
+  const calcDollar = useMemo(() => calcValue - calcFee, [calcFee, calcValue])
 
   const calcPercent = useMemo(() => {
     const cal = referralPercent(account.totalAmount + calcDollar)

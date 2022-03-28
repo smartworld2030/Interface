@@ -147,6 +147,24 @@ button.ant-btn-circle {
   margin: 0 10px;
 }
 
+.migrate-button {
+  animation: blink 2s ease 0s infinite normal forwards;
+}
+
+@keyframes blink {
+  0%,
+  50%,
+  100% {
+    border-style: solid;
+  }
+
+  25%,
+  75% {
+    border-style: double;
+    border-width: 10px;
+  }
+}
+
 @keyframes scaling-1 {
   0% {
     transform: scale(0.5);
