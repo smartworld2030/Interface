@@ -6,7 +6,7 @@ import { AppState } from '../../../_types'
 import { ethereum, truncate } from '../../../_helpers/api'
 import info from '../../../_contracts/info'
 import { Col, Row } from 'react-grid-system'
-import bank from '../../../_contracts/bank'
+import invest03 from '../../../_contracts/invest03'
 import { copyAddress, tooShorter } from '../../../_helpers/constants'
 import { CopyOutlined } from '@ant-design/icons'
 
@@ -88,7 +88,7 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
       <Col xs={11} style={{ margin: 'auto' }}>
         <Row justify="between">
           <Link
-            href={'https://bscscan.com/address/' + bank.address[56]}
+            href={'https://bscscan.com/address/' + invest03.address[56]}
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -53,7 +53,7 @@ const Info: React.FC<InfoProps> = () => {
                 size="large"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://bscscan.com/address/0xbBe476b50D857BF41bBd1EB02F777cb9084C1564"
+                href="https://bscscan.com/address/0xeB2F87B4fF2C35bf1a56B97bAd9bd8Bbf06768bA"
               />
               <Button
                 type="primary"
