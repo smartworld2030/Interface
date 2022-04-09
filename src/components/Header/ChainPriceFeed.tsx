@@ -46,10 +46,10 @@ export const ChainPriceFeed: React.FC<IProps> = ({
           </p>
           Minimum Investment:
           <p className="price-value">
-            {100}
+            {50}
             <span>$</span>
           </p>
-          Smart World TVL:
+          {/* Smart World TVL:
           <p className="price-value">
             {calcBtcPrice(total)}
             <span>$</span>
@@ -58,7 +58,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({
           <p className="price-value">
             {STTS?.toLocaleString(undefined, { maximumSignificantDigits: 7 })}
             <span>STTS</span>
-          </p>
+          </p> */}
         </div>
       </div>
     </Marquee>
