@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import Investment from '../components/Wallet/Invest'
 import Investment02 from '../components/Wallet/Invest02'
 import Swap from '../components/Wallet/Swap'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
@@ -20,7 +19,6 @@ import { poolInformation } from '../_actions/pool.actions'
 import {
   initialization,
   invest02Contract,
-  investContract,
   poolContract,
 } from '../_actions/wallet.actions'
 import Pool from '../components/Wallet/Pool'
@@ -61,7 +59,6 @@ const info = () =>
 const poolDeadline = new Date('May 16, 2022 12:46:54 PM')
 
 const Titles = {
-  '/invest': 'INVESTMENT',
   '/invest02': 'INVESTMENT02',
   '/info': 'INFORMATION',
   '/pool': 'POOL',
@@ -130,9 +127,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       switch (pathname) {
         case '/pool':
           if (poolContract) poolInformation()
-          break
-        case '/invest':
-          if (investContract) investInformation()
           break
         case '/invest02':
           if (invest02Contract) invest02Information()
@@ -238,15 +232,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
             >
               <animated.div key={key} style={style}>
                 <Switch location={item}>
-                  <Route exact path="/invest">
-                    <ProtectedRoute
-                      isMobile={isMobile}
-                      height={height}
-                      needLogin
-                    >
-                      <Investment isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
                   <Route exact path="/invest02">
                     <ProtectedRoute
                       isMobile={isMobile}
