@@ -7,6 +7,7 @@ import { InvestActionTypes, DefaultInvestState } from './invest.types'
 import { Invest02ActionTypes, DefaultInvest02State } from './invest02.types'
 import { SwapActionTypes, DefaultSwapState } from './swap.types'
 import { DefaultPoolState, PoolActionTypes } from './pool.types'
+import { Invest05ActionTypes, DefaultInvest05State } from './invest05.types'
 
 export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never
@@ -30,6 +31,7 @@ export const FAILURE = {
 export type AppActions =
   | InvestActionTypes
   | Invest02ActionTypes
+  | Invest05ActionTypes
   | PoolActionTypes
   | UserActionTypes
   | BankActionTypes
@@ -53,6 +55,7 @@ export type AppState = {
   wallet: DefaultWalletState
   invest: DefaultInvestState
   invest02: DefaultInvest02State
+  invest05: DefaultInvest05State
   swap: DefaultSwapState
   pool: DefaultPoolState
 }

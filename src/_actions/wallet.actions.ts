@@ -33,6 +33,8 @@ import { ISmartInvest } from '../_types/ISmartInvest'
 import { ISmartInvest02 } from '../_types/ISmartInvest02'
 import { ISmartSwap } from '../_types/ISmartSwap'
 import { ISmartPool02 } from '../_types/ISmartPool'
+import invest05 from '_contracts/invest05'
+import { ISmartInvest05 } from '_types/ISmartInvest05'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -44,6 +46,7 @@ export let priceContract: PriceContract
 export let investContract: ISmartInvest
 export let invest02Contract: ISmartInvest02
 export let invest03Contract: ISmartInvest02
+export let invest05Contract: ISmartInvest05
 export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
 export let poolContract: ISmartPool02
@@ -102,6 +105,11 @@ export const initialization =
               invest03.abi,
               signer
             ) as ISmartInvest02
+            invest05Contract = new Contract(
+              invest05.address[chainId],
+              invest05.abi,
+              signer
+            ) as ISmartInvest05
             bankContract = new Contract(
               erc20.address[chainId].stt,
               bank.abi,

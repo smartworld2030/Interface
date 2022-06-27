@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import Investment from '../components/Wallet/Invest'
 import Investment02 from '../components/Wallet/Invest02'
+import Investment05 from '../components/Wallet/Invest05'
 import Swap from '../components/Wallet/Swap'
 import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
 import { useTransition, animated } from 'react-spring'
@@ -20,6 +21,7 @@ import { poolInformation } from '../_actions/pool.actions'
 import {
   initialization,
   invest02Contract,
+  invest05Contract,
   investContract,
   poolContract,
 } from '../_actions/wallet.actions'
@@ -29,6 +31,7 @@ import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriang
 import { investInformation } from '../_actions/invest.actions'
 import Countdown from 'react-countdown'
 import { Modal } from 'antd'
+import { invest05Information } from '_actions/invest05.actions'
 
 let SHOWED = false
 
@@ -63,6 +66,7 @@ const poolDeadline = new Date('May 16, 2022 12:46:54 PM')
 const Titles = {
   '/invest': 'INVESTMENT',
   '/invest02': 'INVESTMENT02',
+  '/invest05': 'INVESTMENT05',
   '/info': 'INFORMATION',
   '/pool': 'POOL',
   '/swap': 'SWAP',
@@ -87,6 +91,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   bankTotalSatoshi,
   investInformation,
   invest02Information,
+  invest05Information,
 }) => {
   const location = useLocation()
   const { pathname } = location
@@ -137,6 +142,9 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         case '/invest02':
           if (invest02Contract) invest02Information()
           break
+        case '/invest05':
+          if (invest05Contract) invest05Information()
+          break
         case '/swap':
           break
         default:
@@ -159,6 +167,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     poolInformation,
     investInformation,
     invest02Information,
+    invest05Information,
   ])
 
   const transitions = useTransition(location, {
@@ -256,6 +265,15 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                       <Investment02 isMobile={isMobile} />
                     </ProtectedRoute>
                   </Route>
+                  <Route exact path="/invest05">
+                    <ProtectedRoute
+                      isMobile={isMobile}
+                      height={height}
+                      needLogin
+                    >
+                      <Investment05 isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
                   <Route exact path={['/pool', '/freeze']}>
                     <ProtectedRoute isMobile={isMobile} height={height}>
                       <Pool isMobile={isMobile} />
@@ -338,6 +356,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   poolInformation: bindActionCreators(poolInformation, dispatch),
   investInformation: bindActionCreators(investInformation, dispatch),
   invest02Information: bindActionCreators(invest02Information, dispatch),
+  invest05Information: bindActionCreators(invest05Information, dispatch),
   accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
 })
 

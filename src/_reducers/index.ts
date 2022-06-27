@@ -10,6 +10,7 @@ import { investReducer } from './invest.reducer'
 import { invest02Reducer } from './invest02.reducer'
 import { poolReducer } from './pool.reducer'
 import { listReducer } from './list.reducer'
+import { invest05Reducer } from './invest05.reducer'
 
 const rootReducer = (history: History) =>
   combineReducers({
@@ -19,6 +20,7 @@ const rootReducer = (history: History) =>
     bank: bankReducer,
     invest: investReducer,
     invest02: invest02Reducer,
+    invest05: invest05Reducer,
     pool: poolReducer,
     swap: swapReducer,
     wallet: walletReducer,

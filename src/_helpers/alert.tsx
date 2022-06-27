@@ -5,6 +5,7 @@ import { SHOW_SNACKBAR } from '../_types/snackbar.types'
 import chainList from './chainList'
 import { shorter } from './constants'
 import Button from 'antd/lib/button'
+import invest05Error from './invest05Error.json'
 
 export const errorHandler = (err: any, type?: any, link?: string): void => {
   let error = errorCompiler(err)
@@ -33,14 +34,25 @@ export const warningHandler = (err: any, type?: any, link?: string): void => {
   })
 }
 
-const errorCompiler = (err: string | any) =>
-  err
-    ? typeof err === 'string'
-      ? err.replace(/<[^>]+>/g, '')
-      : typeof err === 'object'
-      ? err?.data?.message.split('::')[1]
-      : 'Message Not Found!'
-    : 'Message Not Found!'
+const errorCompiler = (err: string | any) => {
+  switch (typeof err) {
+    case 'string':
+      return err.replace(/<[^>]+>/g, '')
+    case 'object':
+      let message: string | undefined = err?.data?.message || err?.message
+      if (message) {
+        const msg = message.replace('execution reverted: ', '')
+        if (msg.length === 3) return invest05Error[msg]
+        else if (msg.includes('MetaMask Tx Signature:'))
+          return msg.replace('MetaMask Tx Signature: ', '')
+        else return msg.split('::')[1]
+      } else {
+        return 'Message Not Found!'
+      }
+    default:
+      return 'Message Not Found!'
+  }
+}
 
 export const snackBarMaker = (
   message: string,
