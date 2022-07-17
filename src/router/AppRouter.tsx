@@ -21,13 +21,15 @@ import {
   initialization,
   invest02Contract,
   poolContract,
+  stockContract,
 } from '../_actions/wallet.actions'
 import Pool from '../components/Wallet/Pool'
-import Logo from '../assets/Logo.png'
 import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
 import { investInformation } from '../_actions/invest.actions'
-import Countdown from 'react-countdown'
+import { stockInformation } from '../_actions/stock.actions'
 import { Modal } from 'antd'
+import Game from 'components/Wallet/Game'
+import StartTimer from 'components/Wallet/Game/StartTimer'
 
 let SHOWED = false
 
@@ -57,8 +59,6 @@ const info = () =>
     },
   })
 
-const poolDeadline = new Date('May 16, 2022 12:46:54 PM')
-
 const Titles = {
   '/invest': 'INVESTMENT',
   '/invest02': 'INVESTMENT02',
@@ -66,6 +66,7 @@ const Titles = {
   '/pool': 'POOL',
   '/swap': 'SWAP',
   '/nft': 'NFT',
+  '/game': 'GAME',
 }
 
 const priceDelay = 10
@@ -84,6 +85,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   tokenPrices,
   poolInformation,
   bankTotalSatoshi,
+  stockInformation,
   investInformation,
   invest02Information,
 }) => {
@@ -126,7 +128,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
 
   useEffect(() => {
     const switcher = () => {
-      switch (pathname) {
+      switch (pathname.toLocaleLowerCase()) {
         case '/pool':
           if (poolContract) poolInformation()
           break
@@ -135,6 +137,9 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         //   break
         case '/invest02':
           if (invest02Contract) invest02Information()
+          break
+        case '/game':
+          if (stockContract) stockInformation()
           break
         case '/swap':
           break
@@ -158,6 +163,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     poolInformation,
     investInformation,
     invest02Information,
+    stockInformation,
   ])
 
   const transitions = useTransition(location, {
@@ -168,121 +174,125 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   })
 
   return (
-    <Container
-      fluid
-      style={{
-        width,
-        height,
-        background: `url(${require('../assets/c.jpg').default})`,
-      }}
-    >
-      <Row justify="center" align="center">
-        <Col>
-          <Row justify="between" style={{ width: '100%', margin: 0 }}>
-            <Row style={{ width: width / 3 }} justify="start">
-              {Titles[pathname] === 'POOL' && (
-                <div>
-                  Ends in: <Countdown date={poolDeadline} />
-                </div>
-              )}
-              {Titles[pathname] === 'INVESTMENT02' && (
-                <Typography.Link onClick={info}>New update!</Typography.Link>
-              )}
+    pathname !== '/nft' && (
+      <Container
+        fluid
+        style={{
+          width,
+          height,
+          transition: 'all 1s',
+          background: `url(${require('../assets/c.jpg').default})`,
+        }}
+      >
+        <Row justify="center" align="center">
+          <Col>
+            <Row justify="between" style={{ width: '100%', margin: 0 }}>
+              <Row style={{ width: width / 3 }} justify="start">
+                {Titles[pathname] === 'INVESTMENT02' && (
+                  <Typography.Link onClick={info}>New update!</Typography.Link>
+                )}
+              </Row>
+              <Row justify="center" style={{ width: width / 3 }}>
+                <Typography.Title
+                  style={{ margin: 0, position: 'relative' }}
+                  level={5}
+                >
+                  {Titles[pathname]}
+                  {Titles[pathname] === 'INVESTMENT02' ||
+                  Titles[pathname] === 'INVESTMENT' ||
+                  Titles[pathname] === 'POOL' ? (
+                    <ExclamationTriangle onClick={detailHandler} />
+                  ) : null}
+                </Typography.Title>
+              </Row>
+              <Row style={{ width: width / 3 }} justify="end">
+                {Titles[pathname] === 'POOL' && (
+                  <Typography.Link
+                    href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+                    target="_blank"
+                  >
+                    Liquidity Pool
+                  </Typography.Link>
+                )}
+                {Titles[pathname] === 'SWAP' && (
+                  <Typography.Link
+                    href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+                    target="_blank"
+                  >
+                    PanckakeSwap
+                  </Typography.Link>
+                )}
+              </Row>
             </Row>
-            <Row justify="center" style={{ width: width / 3 }}>
-              <Typography.Title
-                style={{ margin: 0, position: 'relative' }}
-                level={5}
+          </Col>
+          <Col
+            xs={12}
+            style={{
+              position: 'relative',
+              height: height - 20,
+              padding: 0,
+            }}
+          >
+            {transitions((style, item, _, key) => (
+              <AbsoluteBody
+                height={isMobile ? undefined : 300}
+                width={width - 32}
               >
-                {Titles[pathname]}
-                {Titles[pathname] === 'INVESTMENT02' ||
-                Titles[pathname] === 'INVESTMENT' ||
-                Titles[pathname] === 'POOL' ? (
-                  <ExclamationTriangle onClick={detailHandler} />
-                ) : null}
-              </Typography.Title>
-            </Row>
-            <Row style={{ width: width / 3 }} justify="end">
-              {Titles[pathname] === 'POOL' && (
-                <Typography.Link
-                  href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-                  target="_blank"
-                >
-                  Liquidity Pool
-                </Typography.Link>
-              )}
-              {Titles[pathname] === 'SWAP' && (
-                <Typography.Link
-                  href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-                  target="_blank"
-                >
-                  PanckakeSwap
-                </Typography.Link>
-              )}
-            </Row>
-          </Row>
-        </Col>
-        <Col
-          xs={12}
-          style={{
-            position: 'relative',
-            height: height - 20,
-            padding: 0,
-          }}
-        >
-          {transitions((style, item, _, key) => (
-            <AbsoluteBody
-              height={isMobile ? undefined : 300}
-              width={width - 32}
-            >
-              <animated.div key={key} style={style}>
-                <Switch location={item}>
-                  <Route exact path="/invest">
-                    <ProtectedRoute
-                      isMobile={isMobile}
-                      height={height}
-                      needLogin
-                    >
-                      <Investment isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path="/invest02">
-                    <ProtectedRoute
-                      isMobile={isMobile}
-                      height={height}
-                      needLogin
-                    >
-                      <Investment02 isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path={['/pool', '/freeze']}>
-                    <ProtectedRoute isMobile={isMobile} height={height}>
-                      <Pool isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path="/stb">
-                    <ProtectedRoute isMobile={isMobile} height={height}>
-                      <NFT isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route exact path="/info">
-                    <Info isMobile={isMobile} />
-                  </Route>
-                  <Route exact path="/swap">
-                    <ProtectedRoute isMobile={isMobile} height={height}>
-                      <Swap isMobile={isMobile} />
-                    </ProtectedRoute>
-                  </Route>
-                  <Route path="/">
-                    <Redirect to="/invest02" />
-                  </Route>
-                </Switch>
-              </animated.div>
-            </AbsoluteBody>
-          ))}
-        </Col>
-      </Row>
-    </Container>
+                <animated.div key={key} style={style}>
+                  <Switch location={item}>
+                    <Route exact path="/invest">
+                      <ProtectedRoute
+                        isMobile={isMobile}
+                        height={height}
+                        needLogin
+                      >
+                        <Investment isMobile={isMobile} />
+                      </ProtectedRoute>
+                    </Route>
+                    <Route exact path="/invest02">
+                      <ProtectedRoute
+                        isMobile={isMobile}
+                        height={height}
+                        needLogin
+                      >
+                        <Investment02 isMobile={isMobile} />
+                      </ProtectedRoute>
+                    </Route>
+                    <Route exact path={['/pool', '/freeze']}>
+                      <ProtectedRoute isMobile={isMobile} height={height}>
+                        <Pool isMobile={isMobile} />
+                      </ProtectedRoute>
+                    </Route>
+                    <Route exact path="/nft" />
+                    <Route exact path="/game">
+                      <StartTimer isMobile={isMobile} width={width} />
+                      <ProtectedRoute
+                        isMobile={isMobile}
+                        height={height}
+                        style={{ filter: 'blur(5px)' }}
+                      >
+                        <Game isMobile={isMobile} width={width} />
+                      </ProtectedRoute>
+                    </Route>
+                    <Route exact path="/info">
+                      <Info isMobile={isMobile} />
+                    </Route>
+                    <Route exact path="/swap">
+                      <ProtectedRoute isMobile={isMobile} height={height}>
+                        <Swap isMobile={isMobile} />
+                      </ProtectedRoute>
+                    </Route>
+                    <Route path="/">
+                      <Redirect to="/invest02" />
+                    </Route>
+                  </Switch>
+                </animated.div>
+              </AbsoluteBody>
+            ))}
+          </Col>
+        </Row>
+      </Container>
+    )
   )
 }
 
@@ -290,36 +300,8 @@ interface tester {
   isMobile: boolean
 }
 
-export const NFT: React.FC<tester> = ({ isMobile }) => {
-  return (
-    <Row
-      justify="around"
-      align="center"
-      style={{
-        fontSize: '15px',
-        minHeight: isMobile ? 300 : 300,
-        textShadow: '1px 1px 2px black',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          filter: 'blur(4px) grayscale(0.2)',
-          height: '40vh',
-          width: '100vw',
-          backgroundSize: '200px 200px',
-          backgroundImage: `url(${Logo})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-        }}
-      />
-      <Col xs={12} md={2}></Col>
-      <Col xs={12} md={4}>
-        Coming Soon!
-      </Col>
-      <Col xs={12} md={2}></Col>
-    </Row>
-  )
+export const NFT: React.FC<tester> = () => {
+  return null
 }
 
 const mapStateToProps = (state: AppState) => {
@@ -335,6 +317,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   tokenPrices: bindActionCreators(tokenPrices, dispatch),
   bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),
+  stockInformation: bindActionCreators(stockInformation, dispatch),
   investInformation: bindActionCreators(investInformation, dispatch),
   invest02Information: bindActionCreators(invest02Information, dispatch),
   accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),

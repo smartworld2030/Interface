@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Row, Col } from 'react-grid-system'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -7,14 +7,14 @@ import { removeError } from '../../../../_actions/invest.actions'
 import { AppActions, AppState } from '../../../../_types'
 import {
   convertNumbers2English,
-  formatToString,
   percentToValue,
-  truncate,
   valueToPercent,
 } from '../../../../_helpers/api'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
 import TokenCircle from '../../../Layout/svgs/TokenCircle'
 import DepositInfo from './DepositInfo'
+import carImage from 'assets/car.png'
+import robotImage from 'assets/robot.png'
 
 interface IProps {
   isMobile: boolean
@@ -23,16 +23,17 @@ type DepositSectionProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
 
-export const tokenNames = ['STTS', 'BNB', 'BTCB']
+export const tokenNames = ['STC', 'STR']
 
 export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
-  tokens,
-  prices,
+  BUSD,
   error,
+  remainingCarStock,
+  remainingRobotStock,
   removeError,
 }) => {
-  const [token, setToken] = useState('STTS')
+  const [token, setToken] = useState('STC')
   const [value, setValue] = useState<string>()
 
   useEffect(() => {
@@ -41,17 +42,42 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
     }
   }, [token])
 
-  const minimumAmount = (t: string) =>
-    truncate(
-      formatToString(500000 / prices[t]),
-      t === 'STTS' ? 1 : 3,
-      t !== 'BTCB'
-    )
+  const actualValue = useMemo(
+    () => (value ? Number(value).toFixed() : undefined),
+    [value]
+  )
 
-  const percentHandler = (per: number) => {
-    if (error) removeError()
-    setValue(percentToValue(tokens[token], per))
-  }
+  const minimumAmount = (t: string) => (t === 'STC' ? '$20' : '$10')
+
+  const remainigToken = useMemo(
+    () => (token === 'STC' ? remainingCarStock : remainingRobotStock),
+    [remainingCarStock, remainingRobotStock, token]
+  )
+
+  const tokenPrice = useMemo(() => (token === 'STC' ? 20 : 10), [token])
+
+  const maxTokenCanBuy = useMemo(() => BUSD / tokenPrice, [BUSD, tokenPrice])
+
+  const maxTokenCanGet = useMemo(
+    () =>
+      Math.floor(
+        maxTokenCanBuy > remainigToken ? remainigToken : maxTokenCanBuy
+      ),
+    [maxTokenCanBuy, remainigToken]
+  )
+
+  const moreThanRemain = useMemo(
+    () => Number(actualValue) > remainigToken,
+    [remainigToken, actualValue]
+  )
+
+  const percentHandler = useCallback(
+    (per: number) => {
+      if (error) removeError()
+      setValue(percentToValue(maxTokenCanGet, per))
+    },
+    [error, maxTokenCanGet, removeError]
+  )
 
   const inputHandler = (val: string) => {
     if (error) removeError()
@@ -66,7 +92,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
 
   return (
     <Row direction="row" style={{ height: '100%' }}>
-      <Col md={2}>
+      <Col md={3}>
         <Row
           direction={isMobile ? 'row' : 'column'}
           justify="around"
@@ -76,10 +102,18 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
           {tokenNames.map((t) => (
             <TokenCircle
               key={t}
-              width={70}
-              onClick={setToken}
-              token={t}
+              width={100}
+              onClick={() => setToken(t)}
+              token={t === 'STR' ? 'ROBOT' : 'CAR'}
               active={token === t}
+              infoSize="10"
+              fontProps={{
+                fontSize: '20',
+                style: {
+                  textShadow: '0px 0px 3px black',
+                },
+              }}
+              image={t === 'STC' ? carImage : robotImage}
               info={minimumAmount(t)}
             />
           ))}
@@ -88,32 +122,42 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
       <Col md={4}>
         <Row justify="around" align="center" style={{ height: '100%' }}>
           <DepositCircle
-            maxButtonHandler={maxButtonHandler}
             width={isMobile ? 210 : 190}
-            token={token}
-            value={value}
-            placeholder={tokens[token].toString()}
-            percent={valueToPercent(Number(value), tokens[token])}
+            token={token === 'STC' ? 'CAR' : 'ROBOT'}
+            value={actualValue}
+            maxButtonHandler={maxButtonHandler}
+            placeholder={maxTokenCanGet.toString()}
+            percent={valueToPercent(Number(actualValue), maxTokenCanGet)}
             inputHandler={inputHandler}
             percentHandler={percentHandler}
           />
         </Row>
       </Col>
-      <Col md={6}>
-        <DepositInfo token={token} value={Number(value ?? 0)} />
+      <Col md={5}>
+        <DepositInfo
+          tokenPrice={tokenPrice}
+          moreThanRemain={moreThanRemain}
+          token={token}
+          value={Number(actualValue ?? 0)}
+        />
       </Col>
     </Row>
   )
 }
 const mapStateToProps = (state: AppState) => {
-  const { tokens, address, loggedIn } = state.account
-  const { error } = state.invest
+  const { address, loggedIn } = state.account
+  const {
+    error,
+    data: { BUSD, remainingCarStock, remainingRobotStock },
+  } = state.stock
   const { prices } = state.bank
   return {
     address,
     loggedIn,
+    remainingCarStock,
+    remainingRobotStock,
     prices,
-    tokens,
+    BUSD,
     error,
   }
 }

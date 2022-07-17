@@ -116,7 +116,7 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
           <TokenValue
             value={calcSTT()}
             precision={0}
-            title="Invetment reward"
+            title="Investment reward"
           />
           <TokenValue
             value={account.percent / 250}

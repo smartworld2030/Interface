@@ -16,6 +16,28 @@ interface SmartWorldAddressProps {}
 
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
+export const requestAddToken = ({ address, symbol, decimals, image }) =>
+  new Promise((resolve, reject) => {
+    ethereum
+      ?.request({
+        method: 'wallet_watchAsset',
+        params: {
+          // @ts-ignore
+          type: 'ERC20',
+          options: {
+            address,
+            symbol,
+            decimals,
+            image,
+          },
+        },
+      })
+      .then((result) => resolve(result))
+      .catch((err) => {
+        reject(err)
+      })
+  })
+
 const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
   const [account, setAccount] = useState('0x...')
 
@@ -23,27 +45,6 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
     setAccount(tooShorter(address))
   }, [address])
 
-  const requestAddToken = ({ address, symbol, decimals, image }) =>
-    new Promise((resolve, reject) => {
-      ethereum
-        ?.request({
-          method: 'wallet_watchAsset',
-          params: {
-            // @ts-ignore
-            type: 'ERC20',
-            options: {
-              address,
-              symbol,
-              decimals,
-              image,
-            },
-          },
-        })
-        .then((result) => resolve(result))
-        .catch((err) => {
-          reject(err)
-        })
-    })
   const addSttsToWallet = () => {
     let address = info[chainId].STTS
     let symbol = 'STTS'

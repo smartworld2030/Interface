@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import Input from 'antd/lib/input'
 import { Row } from 'react-grid-system'
 import { CircleInput } from './CircleInput'
@@ -12,6 +12,7 @@ interface DepositCircleProps {
   placeholder: string
   percentHandler: (arg: number) => void
   inputHandler: (arg: any) => void
+  maxButtonHandler: () => void
 }
 
 const DepositCircle: React.FC<DepositCircleProps> = ({
@@ -22,57 +23,57 @@ const DepositCircle: React.FC<DepositCircleProps> = ({
   placeholder,
   inputHandler,
   percentHandler,
+  maxButtonHandler,
 }) => {
-  const roundSlideTune = (event) => {
-    const x = event.pageX || event.touches[0]?.clientX
-    const y = event.pageY || event.touches[0]?.clientY
-    let elPos = event.target.getBoundingClientRect()
-    let dX = 0,
-      dY = 0,
-      cX = elPos.width / 2,
-      cY = elPos.height / 2,
-      eX = x - elPos.left,
-      eY = y - elPos.top
+  const roundSlideTune = useCallback(
+    (event) => {
+      const x = event.pageX || event.touches[0]?.clientX
+      const y = event.pageY || event.touches[0]?.clientY
+      let elPos = event.target.getBoundingClientRect()
+      let dX = 0,
+        dY = 0,
+        cX = elPos.width / 2,
+        cY = elPos.height / 2,
+        eX = x - elPos.left,
+        eY = y - elPos.top
 
-    if (Math.abs(eX - cX) >= Math.abs(eY - cY)) {
-      dX = 150 / 2 + (Math.sign(eX - cX) * 150) / 2
-      dY = 150 / 2 + (((eY - cY) / Math.abs(eX - cX)) * 150) / 2
-    } else {
-      dX = 150 / 2 + (((eX - cX) / Math.abs(eY - cY)) * 150) / 2
-      dY = 150 / 2 + (Math.sign(eY - cY) * 150) / 2
-    }
-    if (Math.abs(eX - cX) >= Math.abs(eY - cY)) {
-      dX = 150 / 2 + (Math.sign(eX - cX) * 150) / 2
-      dY = 150 / 2 + (((eY - cY) / Math.abs(eX - cX)) * 150) / 2
-    } else {
-      dX = 150 / 2 + (((eX - cX) / Math.abs(eY - cY)) * 150) / 2
-      dY = 150 / 2 + (Math.sign(eY - cY) * 150) / 2
-    }
+      if (Math.abs(eX - cX) >= Math.abs(eY - cY)) {
+        dX = 150 / 2 + (Math.sign(eX - cX) * 150) / 2
+        dY = 150 / 2 + (((eY - cY) / Math.abs(eX - cX)) * 150) / 2
+      } else {
+        dX = 150 / 2 + (((eX - cX) / Math.abs(eY - cY)) * 150) / 2
+        dY = 150 / 2 + (Math.sign(eY - cY) * 150) / 2
+      }
+      if (Math.abs(eX - cX) >= Math.abs(eY - cY)) {
+        dX = 150 / 2 + (Math.sign(eX - cX) * 150) / 2
+        dY = 150 / 2 + (((eY - cY) / Math.abs(eX - cX)) * 150) / 2
+      } else {
+        dX = 150 / 2 + (((eX - cX) / Math.abs(eY - cY)) * 150) / 2
+        dY = 150 / 2 + (Math.sign(eY - cY) * 150) / 2
+      }
 
-    dX = Math.round((dX / 150) * 100)
-    dY = Math.round((dY / 150) * 100)
+      dX = Math.round((dX / 150) * 100)
+      dY = Math.round((dY / 150) * 100)
 
-    if (0 <= dX && dX < 50 && dY === 0) {
-      percentHandler(100 - Math.round(((50 - dX) / 50) * 12.5))
-    } else if (dX === 0 && 0 <= dY && dY <= 100) {
-      percentHandler(100 - Math.round(12.5 + (dY / 100) * 25))
-    } else if (0 <= dX && dX <= 100 && dY === 100) {
-      percentHandler(100 - Math.round(37.5 + (dX / 100) * 25))
-    } else if (dX === 100 && 0 <= dY && dY <= 100) {
-      percentHandler(100 - Math.round(62.5 + ((100 - dY) / 100) * 25))
-    } else if (50 <= dX && dX <= 100 && dY === 0) {
-      percentHandler(100 - Math.round(87.5 + ((100 - dX) / 50) * 12.5))
-    }
-  }
+      if (0 <= dX && dX < 50 && dY === 0) {
+        percentHandler(100 - Math.round(((50 - dX) / 50) * 12.5))
+      } else if (dX === 0 && 0 <= dY && dY <= 100) {
+        percentHandler(100 - Math.round(12.5 + (dY / 100) * 25))
+      } else if (0 <= dX && dX <= 100 && dY === 100) {
+        percentHandler(100 - Math.round(37.5 + (dX / 100) * 25))
+      } else if (dX === 100 && 0 <= dY && dY <= 100) {
+        percentHandler(100 - Math.round(62.5 + ((100 - dY) / 100) * 25))
+      } else if (50 <= dX && dX <= 100 && dY === 0) {
+        percentHandler(100 - Math.round(87.5 + ((100 - dX) / 50) * 12.5))
+      }
+    },
+    [percentHandler]
+  )
 
   const circleSlider = (event) => {
     if (event.buttons === 1 || event.buttons === 3) {
       roundSlideTune(event)
     }
-  }
-
-  const maxButtonHandler = () => {
-    percentHandler(100)
   }
 
   return (

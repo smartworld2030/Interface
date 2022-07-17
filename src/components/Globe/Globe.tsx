@@ -1,4 +1,3 @@
-//@ts-nocheck
 import React, { useState, useEffect, useRef } from 'react'
 import Globe from 'react-globe.gl'
 import * as d3 from 'd3'
@@ -33,14 +32,17 @@ const ReactGlobe: React.FC<GlobeProps> = ({
         }))
       )
       .then(setPopData)
-  }, []) // [] mean
+  }, [])
 
   useEffect(() => {
     // Auto-rotate
     if (globeEl?.current) {
+      //@ts-ignore
       globeEl.current.controls().autoRotate = true
+      //@ts-ignore
       globeEl.current.controls().autoRotateSpeed = 0.3
-      globeEl.current.camera().setViewOffset(100, 100, 0, -18, 100, 100)
+      //@ts-ignore
+      globeEl.current.camera().setViewOffset(100, 100, 0, -13, 100, 100)
     }
   }, [])
 
@@ -49,7 +51,7 @@ const ReactGlobe: React.FC<GlobeProps> = ({
     .domain([0, 1e7])
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', transition: 'height 1s', height }}>
       <Globe
         ref={globeEl}
         height={height}

@@ -82,6 +82,9 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
     [error, removeError]
   )
 
+  const maxButtonHandler = () => {
+    percentHandler(100)
+  }
   return (
     <Row direction="row" style={{ height: '100%' }}>
       <Col md={2}>
@@ -104,6 +107,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
       <Col md={4}>
         <Row justify="around" align="center" style={{ height: '100%' }}>
           <DepositCircle
+            maxButtonHandler={maxButtonHandler}
             width={isMobile ? 210 : 190}
             token={token}
             value={value}

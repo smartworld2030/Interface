@@ -1,4 +1,5 @@
 import { InvestLogo } from './InvestLogo'
+import { GameLogo } from './GameLogo'
 import { SwapLogo } from './SwapLogo'
 import { SttLogo } from './SttLogo'
 import Colors from '../../Theme/Colors'
@@ -33,63 +34,40 @@ export const sizeCalculator = (width: number) => {
       positionX: half - eighth,
       positionY: secondHeight - 29,
       size: 20,
-      link: '/invest',
+      link: '/pool',
       text: '',
       textPos: secondHeight - 55,
       number: 4,
-      icon: (
-        <InvestLogo width={40} x={half - eighth - 20} y={secondHeight - 70} />
-      ),
+      icon: <SttLogo width={40} x={half - eighth - 20} y={secondHeight - 70} />,
     },
     {
       positionX: half - (width < 600 ? 45 : 50),
       positionY: height - 10,
       size: 35,
-      link: '/pool',
+      link: '/invest02',
       text: '',
       textPos: height - 66,
       number: 1,
       icon: (
-        <>
-          <svg viewBox={`18 -15 ${half} ${height}`}>
-            <circle
-              r="7"
-              stroke="white"
-              fill={Colors.red}
-              cx={half / 2}
-              cy={height / 2}
-            />
-            <text
-              x="50%"
-              y="50%"
-              fill="white"
-              fontSize="4"
-              textAnchor="middle"
-              dominantBaseline="middle"
-            >
-              New
-            </text>
-          </svg>
-          <SttLogo
-            width={85}
-            x={half - (width < 600 ? 87 : 93)}
-            y={height - 91}
-          />
-        </>
+        <InvestLogo
+          width={70}
+          x={half - (width < 600 ? 80 : 85)}
+          y={height - 80}
+        />
       ),
     },
     {
       positionX: half + (width < 600 ? 45 : 50),
       positionY: height - 10,
       size: 35,
-      link: '/invest02',
+      link: '/swap',
       text: '',
       textPos: height - 66,
       number: 2,
       icon: (
-        <InvestLogo
-          width={70}
-          x={half + (width < 600 ? 10 : 15)}
+        <SwapLogo
+          width={75}
+          x={half + (width < 600 ? 8 : 13)}
           y={height - 81}
         />
       ),
@@ -98,19 +76,40 @@ export const sizeCalculator = (width: number) => {
       positionX: half + eighth,
       positionY: secondHeight - 29,
       size: 20,
-      link: '/swap',
+      link: '/game',
       text: '',
       textPos: secondHeight - 55,
       number: 3,
       icon: (
-        <SwapLogo width={42} x={half + eighth - 21} y={secondHeight - 70} />
+        <>
+          <>
+            <circle
+              r="7"
+              stroke="white"
+              fill={Colors.red}
+              cx={half + eighth - 15}
+              cy={secondHeight - 65}
+            />
+            <text
+              x={half + eighth - 15}
+              y={secondHeight - 65}
+              fill="white"
+              fontSize="4"
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              New
+            </text>
+          </>
+          <GameLogo width={42} x={half + eighth - 21} y={secondHeight - 70} />
+        </>
       ),
     },
     {
       positionX: half + quarter,
       positionY: fristHeight - 54,
       size: 15,
-      link: '/stb',
+      link: '/nft',
       text: 'NFT',
       number: 0,
       textPos: fristHeight - 69,

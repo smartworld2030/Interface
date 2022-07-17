@@ -7,6 +7,7 @@ import { InvestActionTypes, DefaultInvestState } from './invest.types'
 import { Invest02ActionTypes, DefaultInvest02State } from './invest02.types'
 import { SwapActionTypes, DefaultSwapState } from './swap.types'
 import { DefaultPoolState, PoolActionTypes } from './pool.types'
+import { DefaultStockState, StockActionTypes } from './stock.types'
 
 export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never
@@ -33,6 +34,7 @@ export type AppActions =
   | PoolActionTypes
   | UserActionTypes
   | BankActionTypes
+  | StockActionTypes
   | WalletActionTypes
   | PoolActionTypes
   | SnackActionTypes
@@ -53,6 +55,7 @@ export type AppState = {
   wallet: DefaultWalletState
   invest: DefaultInvestState
   invest02: DefaultInvest02State
+  stock: DefaultStockState
   swap: DefaultSwapState
   pool: DefaultPoolState
 }

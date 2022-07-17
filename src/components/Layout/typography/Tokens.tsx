@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactText } from 'react'
 import styled from '@emotion/styled'
 import Colors from '../../../Theme/Colors'
 import Statistic, { StatisticProps } from 'antd/lib/statistic'
@@ -35,7 +35,7 @@ interface STTProps {
 
 interface TokenValueProps extends StatisticProps {
   color?: string
-  value: number | string
+  value?: ReactText
   token?: string
   tokenColor?: string
   double?: number
@@ -95,8 +95,20 @@ export const ColoredWord: React.FC<STTProps> = (props) => {
   )
 }
 
+export const BUSD = () => (
+  <ColoredWord word={{ color: Colors.green, word: 'BUSD' }} />
+)
+
 export const STT = () => (
   <ColoredWord word={{ color: Colors.green, word: 'STT' }} />
+)
+
+export const STR = () => (
+  <ColoredWord word={{ color: Colors.green, word: 'STR' }} />
+)
+
+export const STC = () => (
+  <ColoredWord word={{ color: Colors.green, word: 'STC' }} />
 )
 
 export const STTS = () => (

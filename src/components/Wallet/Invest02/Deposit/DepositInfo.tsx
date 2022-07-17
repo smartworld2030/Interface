@@ -135,10 +135,10 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             value={calcDollar * 2}
             precision={0}
             token="$"
-            title="Invetment reward"
+            title="Investment reward"
           />
           <TokenValue
-            title="Invetment period"
+            title="Investment period"
             token="Month"
             precision={0}
             value={rewardPeriod(calcDollar) ? rewardPeriod(calcDollar) : 0}

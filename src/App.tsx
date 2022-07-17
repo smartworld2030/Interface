@@ -1,9 +1,9 @@
 import { FlexDiv } from 'components/Layout/divs/Divs'
-import { Component, lazy, Suspense } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Header } from './components/Header'
 import AppRouter from './router/AppRouter'
 import DepositTable from './router/DepositTable'
+import { useLocation } from 'react-router-dom'
 
 const Globe = lazy(() => import('./components/Globe/Globe'))
 
@@ -11,81 +11,84 @@ let setTime: NodeJS.Timeout
 
 type AppProps = {}
 
-interface AppStates {
-  spacerHeight: number
-  appWidth: number
-  showDetail: boolean
-}
+const App: React.FC<AppProps> = () => {
+  const [{ globeHeight, multi }, setGlobeHeight] = useState({
+    globeHeight: 200,
+    multi: 0.6,
+  })
+  const [{ appWidth, appHeight, showDetail }, setState] = useState({
+    appHeight: 45,
+    appWidth: window.innerWidth,
+    showDetail: false,
+  })
 
-class App extends Component<AppProps, AppStates> {
-  constructor(props: AppProps) {
-    super(props)
-    this.state = {
-      spacerHeight: 45,
-      appWidth: window.innerWidth,
-      showDetail: false,
+  useEffect(() => {
+    const updateDimensions = () => {
+      clearTimeout(setTime)
+      setTime = setTimeout(() => {
+        setState((prev) => ({
+          ...prev,
+          appWidth: window.innerWidth,
+          appHeight: window.innerHeight - 10,
+        }))
+        setGlobeHeight({
+          globeHeight: (window.innerHeight - 10) * 0.6,
+          multi: 0.6,
+        })
+      }, 200)
     }
-  }
 
-  updateDimensions = () => {
-    clearTimeout(setTime)
-    setTime = setTimeout(() => {
-      this.setState({
-        appWidth: window.innerWidth,
-        spacerHeight: window.innerHeight - 10,
-      })
-    }, 200)
-  }
+    window.addEventListener('resize', updateDimensions)
+    updateDimensions()
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [appHeight])
 
-  componentDidMount() {
-    window.addEventListener('resize', this.updateDimensions)
-    this.setState({
-      spacerHeight: window.innerHeight - 10,
-    })
-  }
+  const setShowDetail = () =>
+    setState((prev) => ({ ...prev, showDetail: !prev.showDetail }))
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.updateDimensions)
-  }
+  const isMobile = useMemo(() => (appWidth > 768 ? false : true), [appWidth])
 
-  setShowDetail = () =>
-    this.setState((prev) => ({ showDetail: !prev.showDetail }))
+  const { pathname } = useLocation()
 
-  render() {
-    const { appWidth, spacerHeight, showDetail } = this.state
-    const isMobile = appWidth > 768 ? false : true
-    const globeHeight = spacerHeight * 0.6
-    return (
-      <Router>
-        <Header width={appWidth} />
-        <Suspense
-          fallback={
-            <FlexDiv
-              style={{
-                height: globeHeight,
-                width: appWidth,
-                justifyContent: 'center',
-                alignItems: 'center',
-                color: 'green',
-              }}
-            >
-              loading...
-            </FlexDiv>
-          }
-        >
-          <Globe height={globeHeight} width={appWidth} showDetail={showDetail}>
-            <DepositTable clickHandler={this.setShowDetail} />
-          </Globe>
-        </Suspense>
-        <AppRouter
-          isMobile={isMobile}
-          width={appWidth}
-          height={spacerHeight - globeHeight}
-          detailHandler={this.setShowDetail}
-        />
-      </Router>
-    )
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      if (multi === 0.6 && pathname === '/nft')
+        setGlobeHeight({ globeHeight: appHeight, multi: 1 })
+      if (multi === 1 && pathname !== '/nft')
+        setGlobeHeight({ globeHeight: appHeight * 0.6, multi: 0.6 })
+    }, 1000)
+  }, [pathname, multi, appHeight])
+
+  return (
+    <>
+      <Header width={appWidth} />
+      <Suspense
+        fallback={
+          <FlexDiv
+            style={{
+              height: globeHeight,
+              width: appWidth,
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'green',
+            }}
+          >
+            loading...
+          </FlexDiv>
+        }
+      >
+        <Globe height={globeHeight} width={appWidth} showDetail={showDetail}>
+          <DepositTable clickHandler={setShowDetail} />
+        </Globe>
+      </Suspense>
+      <AppRouter
+        isMobile={isMobile}
+        width={appWidth}
+        height={appHeight - globeHeight}
+        detailHandler={setShowDetail}
+      />
+    </>
+  )
 }
 
 export default App

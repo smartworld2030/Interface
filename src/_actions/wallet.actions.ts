@@ -33,6 +33,8 @@ import { ISmartInvest } from '../_types/ISmartInvest'
 import { ISmartInvest02 } from '../_types/ISmartInvest02'
 import { ISmartSwap } from '../_types/ISmartSwap'
 import { ISmartPool02 } from '../_types/ISmartPool'
+import stock from '_contracts/stock'
+import { SmartGameStock } from '_types/SmartGameStock'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -47,6 +49,7 @@ export let invest03Contract: ISmartInvest02
 export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
 export let poolContract: ISmartPool02
+export let stockContract: SmartGameStock
 
 export const initialization =
   () => (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
@@ -81,6 +84,13 @@ export const initialization =
                 erc20.abi,
                 signer
               ),
+              BUSD: new Contract(
+                erc20.address[chainId].busd,
+                erc20.abi,
+                signer
+              ),
+              STC: new Contract(erc20.address[chainId].stc, erc20.abi, signer),
+              STR: new Contract(erc20.address[chainId].str, erc20.abi, signer),
               LPTOKEN: new Contract(
                 erc20.address[chainId].lptoken,
                 erc20.abi,
@@ -122,6 +132,11 @@ export const initialization =
               pool.abi,
               signer
             ) as ISmartPool02
+            stockContract = new Contract(
+              stock.address[chainId],
+              stock.abi,
+              signer
+            ) as SmartGameStock
 
             dispatch({
               type: WALLET_ACTIVATED,

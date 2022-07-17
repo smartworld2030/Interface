@@ -9,7 +9,7 @@ import {
   ACCOUNT_BALANCE_FAILURE,
 } from '../_types/account.types'
 
-const balances = { BTCB: 0, STT: 0, STTS: 0, BNB: 0, LPTOKEN: 0 }
+const balances = { BTCB: 0, BUSD: 0, STT: 0, STTS: 0, BNB: 0, LPTOKEN: 0 }
 
 const initialState: DefaultUserState = {
   loggedIn: false,

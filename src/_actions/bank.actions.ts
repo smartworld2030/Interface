@@ -42,42 +42,41 @@ export const requestSatoshi = async (
       .catch((err) => reject(err))
   })
 
-export const bankTokenBalances = (tokens: ContractNames[]) => (
-  dispatch: Dispatch<AppActions>,
-  getState: () => AppState
-) => {
-  const address = getState().bank.address
-  const chainId = getState().wallet.chainId
+export const bankTokenBalances =
+  (tokens: ContractNames[]) =>
+  (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
+    const address = getState().bank.address
+    const chainId = getState().wallet.chainId
 
-  dispatch({ type: BANK_TOKEN_BALANCE_REQUEST })
-  Promise.all(
-    tokens.map(
-      (token) =>
-        new Promise((resolve) =>
-          tokenContract[token]
-            .balanceOf(address[chainId])
-            .then((res) =>
-              resolve({ token, balance: formaterNumber(res, token) })
-            )
-        )
+    dispatch({ type: BANK_TOKEN_BALANCE_REQUEST })
+    Promise.all(
+      tokens.map(
+        (token) =>
+          new Promise((resolve) =>
+            tokenContract[token]
+              .balanceOf(address[chainId])
+              .then((res) =>
+                resolve({ token, balance: formaterNumber(res, token) })
+              )
+          )
+      )
     )
-  )
-    .then((data: any) =>
-      dispatch({
-        type: BANK_TOKEN_BALANCE_SUCCESS,
-        payload: {
-          tokens: data.reduce(
-            (items, item) => ({
-              ...items,
-              [item.token]: item.balance,
-            }),
-            {}
-          ),
-        },
-      })
-    )
-    .catch((err) => errorHandler(err, BANK_TOKEN_BALANCE_FAILURE))
-}
+      .then((data: any) =>
+        dispatch({
+          type: BANK_TOKEN_BALANCE_SUCCESS,
+          payload: {
+            tokens: data.reduce(
+              (items, item) => ({
+                ...items,
+                [item.token]: item.balance,
+              }),
+              {}
+            ),
+          },
+        })
+      )
+      .catch((err) => errorHandler(err, BANK_TOKEN_BALANCE_FAILURE))
+  }
 
 export const bankTotalSatoshi = () => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: BANK_SATOSHI_BALANCE_REQUEST })

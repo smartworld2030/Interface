@@ -28,6 +28,7 @@ export type TokenBalances = {
   STT: number
   STTS: number
   BTCB: number
+  BUSD: number
   BNB: number
   LPTOKEN: number
 }
