@@ -29,7 +29,6 @@ import { investInformation } from '../_actions/invest.actions'
 import { stockInformation } from '../_actions/stock.actions'
 import { Modal } from 'antd'
 import Game from 'components/Wallet/Game'
-import StartTimer from 'components/Wallet/Game/StartTimer'
 
 let SHOWED = false
 
@@ -265,12 +264,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                     </Route>
                     <Route exact path="/nft" />
                     <Route exact path="/game">
-                      <StartTimer isMobile={isMobile} width={width} />
-                      <ProtectedRoute
-                        isMobile={isMobile}
-                        height={height}
-                        style={{ filter: 'blur(5px)' }}
-                      >
+                      <ProtectedRoute isMobile={isMobile} height={height}>
                         <Game isMobile={isMobile} width={width} />
                       </ProtectedRoute>
                     </Route>
