@@ -7,7 +7,7 @@ import { Row, Col } from 'react-grid-system'
 import { useLocation } from 'react-router-dom'
 import { investInformation } from '../../../../_actions/invest.actions'
 import ReferralButton from '../../../Layout/svgs/ReferralButton'
-import { STC, STR, TokenValue } from '../../../Layout/typography/Tokens'
+import { TokenValue } from '../../../Layout/typography/Tokens'
 import copy from 'copy-to-clipboard'
 import QRCode from 'react-qr-code'
 import Colors from '../../../../Theme/Colors'
@@ -43,7 +43,6 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       let address = info[chainId][token]
       let symbol = token
       let decimals = 0
-      console.log(address)
       let image =
         token === 'STR'
           ? 'https://i.postimg.cc/SjWY1CTv/robot.png'
@@ -102,15 +101,10 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   type="text"
                   title="add token"
                   onClick={() => addTokenToWallet('STC')}
+                  style={{ display: 'inline-flex' }}
                 >
-                  <Row
-                    align="center"
-                    justify="between"
-                    style={{ flexFlow: 'row', width: '100%' }}
-                  >
-                    Add&nbsp;
-                    <STC />
-                  </Row>
+                  Add&nbsp;
+                  <p style={{ color: Colors.green }}>STC</p>
                 </Button>
               </Col>
               <Col xs={6} width="100%">
@@ -118,15 +112,10 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   type="text"
                   title="add token"
                   onClick={() => addTokenToWallet('STR')}
+                  style={{ display: 'inline-flex' }}
                 >
-                  <Row
-                    align="center"
-                    justify="between"
-                    style={{ flexFlow: 'row', width: '100%' }}
-                  >
-                    Add&nbsp;
-                    <STR />
-                  </Row>
+                  Add&nbsp;
+                  <p style={{ color: Colors.green }}>STR</p>
                 </Button>
               </Col>
             </Row>

@@ -15,6 +15,7 @@ import TokenCircle from '../../../Layout/svgs/TokenCircle'
 import DepositInfo from './DepositInfo'
 import carImage from 'assets/car.png'
 import robotImage from 'assets/robot.png'
+import { TokenValue } from 'components/Layout/typography/Tokens'
 
 interface IProps {
   isMobile: boolean
@@ -122,6 +123,16 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
       </Col>
       <Col md={4}>
         <Row justify="around" align="center" style={{ height: '100%' }}>
+          <Col xs={12} width="100%">
+            <Row align="center" justify="around">
+              <TokenValue
+                title="Your BUSD"
+                precision={2}
+                token="BUSD"
+                value={BUSD}
+              />
+            </Row>
+          </Col>
           <DepositCircle
             width={isMobile ? 210 : 190}
             token={token === 'STC' ? 'CAR' : 'ROBOT'}

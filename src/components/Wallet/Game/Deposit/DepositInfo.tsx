@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { bindActionCreators } from 'redux'
 import { Row, Col } from 'react-grid-system'
 import { ThunkDispatch } from 'redux-thunk'
@@ -28,18 +28,17 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
   loading,
   confirmed,
   tokenPrice,
-  // requestBuyStock,
+  requestBuyStock,
 }) => {
-  const buyStockHandler = () => {}
-  // useCallback(() => {
-  //   if (!loading && !confirmed) {
-  //     console.log(token, value)
-  //     // requestBuyStock(
-  //     //   token === 'STC' ? 'buySmartCarStock' : 'buySmartRobotStock',
-  //     //   value
-  //     // )
-  //   }
-  // }, [confirmed, loading, requestBuyStock, token, value])
+  const buyStockHandler = useCallback(() => {
+    if (!loading && !confirmed) {
+      console.log(token, value)
+      requestBuyStock(
+        token === 'STC' ? 'buySmartCarStock' : 'buySmartRobotStock',
+        value
+      )
+    }
+  }, [confirmed, loading, requestBuyStock, token, value])
 
   const calcToken = useMemo(() => value * tokenPrice, [tokenPrice, value])
 
@@ -72,16 +71,6 @@ const DepositInfo: React.FC<DepositInfoProps> = ({
             value={value}
             token={token}
             title={`number of token(${token})`}
-          />
-        </Row>
-      </Col>
-      <Col xs={12} width="100%">
-        <Row align="center" justify="around">
-          <TokenValue
-            title="BUSD Balance"
-            precision={2}
-            token="BUSD"
-            value={data.BUSD}
           />
         </Row>
       </Col>

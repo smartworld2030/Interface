@@ -1,6 +1,6 @@
 const stock = {
   address: {
-    56: '0x19F3C5BB1773f4A0a0A11F0960875C365399eDD8',
+    56: '0xa42ae0d06e96bfcdf026fb3877c2df1df9b9059e',
     97: '0x54790643E12b9bF9d33b504d3275871f9911270e',
   },
   abi: [
