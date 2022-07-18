@@ -25,6 +25,7 @@ type ReferralSectionProps = IProps &
 export const DetailSection: React.FC<ReferralSectionProps> = ({
   address,
   chainId,
+  tokens,
 }) => {
   const [done, setDone] = useState(false)
   const { pathname } = useLocation()
@@ -77,8 +78,16 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
         <>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              <TokenValue value="100" token="STC" title="Your Car Stock" />
-              <TokenValue value="100" token="STR" title="Your Robot Stock" />
+              <TokenValue
+                value={tokens.STC}
+                token="STC"
+                title="Your Car Stock"
+              />
+              <TokenValue
+                value={tokens.STR}
+                token="STR"
+                title="Your Robot Stock"
+              />
             </Row>
           </Col>
           <Col xs={12} width="100%">
@@ -97,9 +106,10 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   <Row
                     align="center"
                     justify="between"
-                    style={{ flexFlow: 'row', width: '50px' }}
+                    style={{ flexFlow: 'row', width: '100%' }}
                   >
-                    Add <STC />
+                    Add&nbsp;
+                    <STC />
                   </Row>
                 </Button>
               </Col>
@@ -112,9 +122,10 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                   <Row
                     align="center"
                     justify="between"
-                    style={{ flexFlow: 'row', width: '50px' }}
+                    style={{ flexFlow: 'row', width: '100%' }}
                   >
-                    Add <STR />
+                    Add&nbsp;
+                    <STR />
                   </Row>
                 </Button>
               </Col>
@@ -127,11 +138,14 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { address, tokens, error } = state.account
+  const { address, error } = state.account
+  const {
+    data: { STC, STR },
+  } = state.stock
   const chainId = state.wallet.chainId
   return {
     address,
-    tokens,
+    tokens: { STC, STR },
     chainId,
     error,
   }
