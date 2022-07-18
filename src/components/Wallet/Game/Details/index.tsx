@@ -38,12 +38,12 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
       setDone(true)
     }
   }
-
   const addTokenToWallet = useCallback(
     (token) => {
       let address = info[chainId][token]
       let symbol = token
       let decimals = 0
+      console.log(address)
       let image =
         token === 'STR'
           ? 'https://i.postimg.cc/SjWY1CTv/robot.png'

@@ -107,6 +107,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
               token={t === 'STR' ? 'ROBOT' : 'CAR'}
               active={token === t}
               infoSize="10"
+              topInfo={t === 'STC' ? remainingCarStock : remainingRobotStock}
               fontProps={{
                 fontSize: '20',
                 style: {
@@ -126,7 +127,11 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
             token={token === 'STC' ? 'CAR' : 'ROBOT'}
             value={actualValue}
             maxButtonHandler={maxButtonHandler}
-            placeholder={maxTokenCanGet.toString()}
+            placeholder={
+              token === 'STC'
+                ? remainingCarStock.toString()
+                : remainingRobotStock.toString()
+            }
             percent={valueToPercent(Number(actualValue), maxTokenCanGet)}
             inputHandler={inputHandler}
             percentHandler={percentHandler}

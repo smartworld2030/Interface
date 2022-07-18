@@ -11,6 +11,7 @@ interface CircleProps {
   active: boolean
   image?: string
   infoSize?: ReactText
+  topInfo?: ReactText
   fontProps?: {
     stroke?: string
     fontSize?: ReactText
@@ -31,6 +32,7 @@ const TokenCircle: React.FC<CircleProps> = ({
   disabled,
   infoSize = 7,
   fontProps,
+  topInfo,
   onClick,
 }) => {
   const half = width / 2
@@ -86,6 +88,16 @@ const TokenCircle: React.FC<CircleProps> = ({
           />
           <text
             textAnchor="middle"
+            x="50%"
+            y="30%"
+            fill="white"
+            {...fontProps}
+            fontSize={infoSize}
+          >
+            {disabled ? '' : topInfo}
+          </text>
+          <text
+            textAnchor="middle"
             dominantBaseline="middle"
             x="50%"
             y="53%"
@@ -122,6 +134,16 @@ const TokenCircle: React.FC<CircleProps> = ({
             strokeWidth="2.5"
             fill={image ? `url(#${substring(image)})` : Colors.background}
           />
+          <text
+            textAnchor="middle"
+            x="50%"
+            y="30%"
+            fill="white"
+            {...fontProps}
+            fontSize={infoSize}
+          >
+            {disabled ? '' : topInfo}
+          </text>
           <text
             textAnchor="middle"
             x="50%"
