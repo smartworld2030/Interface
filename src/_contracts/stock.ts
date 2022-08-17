@@ -1,7 +1,7 @@
 const stock = {
   address: {
     56: '0xa42ae0d06e96bfcdf026fb3877c2df1df9b9059e',
-    97: '0x54790643E12b9bF9d33b504d3275871f9911270e',
+    97: '0xEF621FE75d24ce09642f73969eEFcA3f7FF61A72',
   },
   abi: [
     'event BuySmartCarStock(address indexed user, uint256 tokenAmount)',

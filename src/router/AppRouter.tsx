@@ -1,34 +1,34 @@
+import { Modal } from 'antd'
+import Typography from 'antd/lib/typography'
+import Game from 'components/Wallet/Game'
 import React, { useEffect, useMemo } from 'react'
+import { Col, Container, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
+import { animated, useTransition } from 'react-spring'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
+import { AbsoluteBody } from '../components/Layout/divs/Divs'
+import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
+import Info from '../components/Wallet/Info'
 import Investment from '../components/Wallet/Invest'
 import Investment02 from '../components/Wallet/Invest02'
+import Pool from '../components/Wallet/Pool'
 import Swap from '../components/Wallet/Swap'
-import { Switch, Route, Redirect, useLocation } from 'react-router-dom'
-import { useTransition, animated } from 'react-spring'
-import { AbsoluteBody } from '../components/Layout/divs/Divs'
-import { AppActions, AppState } from '../_types'
 import { accountTokenBalances } from '../_actions/account.actions'
-import Info from '../components/Wallet/Info'
-import ProtectedRoute from './ProtectedRoute'
-import { Container, Row, Col } from 'react-grid-system'
-import Typography from 'antd/lib/typography'
-import { tokenPrices, bankTotalSatoshi } from '../_actions/bank.actions'
+import { bankTotalSatoshi, tokenPrices } from '../_actions/bank.actions'
+import { investInformation } from '../_actions/invest.actions'
 import { invest02Information } from '../_actions/invest02.actions'
 import { poolInformation } from '../_actions/pool.actions'
+import { stockInformation } from '../_actions/stock.actions'
 import {
   initialization,
   invest02Contract,
   poolContract,
   stockContract,
 } from '../_actions/wallet.actions'
-import Pool from '../components/Wallet/Pool'
-import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
-import { investInformation } from '../_actions/invest.actions'
-import { stockInformation } from '../_actions/stock.actions'
-import { Modal } from 'antd'
-import Game from 'components/Wallet/Game'
+import { AppActions, AppState } from '../_types'
+import ProtectedRoute from './ProtectedRoute'
 
 let SHOWED = false
 
@@ -49,7 +49,7 @@ const info = () =>
     content: (
       <ul>
         <li>You can only invest by BNB from now on.</li>
-        <li>5% fee of investment will be saved in the pool.</li>
+        <li>35% fee of investment will be saved in the pool.</li>
         <li>Minimum investment reduced from 100$ to 50$.</li>
       </ul>
     ),
@@ -197,8 +197,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                   level={5}
                 >
                   {Titles[pathname]}
-                  {Titles[pathname] === 'INVESTMENT02' ||
-                  Titles[pathname] === 'INVESTMENT' ||
+                  {Titles[pathname] === 'INVESTMENT' ||
                   Titles[pathname] === 'POOL' ? (
                     <ExclamationTriangle onClick={detailHandler} />
                   ) : null}
