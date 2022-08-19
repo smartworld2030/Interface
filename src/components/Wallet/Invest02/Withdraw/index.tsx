@@ -1,24 +1,24 @@
+import { CopyOutlined } from '@ant-design/icons'
+import Button from 'antd/lib/button/button'
+import Popover from 'antd/lib/popover'
+import Text from 'antd/lib/typography/Text'
+import { FlexDiv } from 'components/Layout/divs/Divs'
+import { ExclamationTriangle } from 'components/Layout/svgs/ExclamationTriangle'
 import React, { useMemo, useState } from 'react'
-import { Row, Col } from 'react-grid-system'
+import { Col, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
-import Colors from '../../../../Theme/Colors'
-import { formaterNumber } from '../../../../_helpers/api'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { AppActions, AppState } from '../../../../_types'
+import useList from 'Unblock'
+import { transferSTTS } from '_actions/smartworld.action'
+import { copyAddress, shorter } from '_helpers/constants'
+import Colors from '../../../../Theme/Colors'
 import {
   migrateAndWithdraw,
   withdrawInterest,
 } from '../../../../_actions/invest02.actions'
-import Popover from 'antd/lib/popover'
-import { ExclamationTriangle } from 'components/Layout/svgs/ExclamationTriangle'
-import Text from 'antd/lib/typography/Text'
-import { FlexDiv } from 'components/Layout/divs/Divs'
-import Button from 'antd/lib/button/button'
-import { transferSTTS } from '_actions/smartworld.action'
-import { copyAddress, shorter } from '_helpers/constants'
-import { CopyOutlined } from '@ant-design/icons'
-import useList from 'Unblock'
+import { formaterNumber } from '../../../../_helpers/api'
+import { AppActions, AppState } from '../../../../_types'
 
 interface IProps {
   width: number
@@ -90,11 +90,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
                 <FlexDiv
                   style={{ maxWidth: isMobile ? '100%' : 250, minHeight: 150 }}
                 >
-                  <Text
-                    onClick={() =>
-                      copyAddress(unblockAddress, 'Address Copied!')
-                    }
-                  >
+                  <Text onClick={() => copyAddress(unblockAddress)}>
                     Your account blocked and eligible to be unblock with
                     penalty!
                     <br />

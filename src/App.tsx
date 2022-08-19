@@ -1,9 +1,9 @@
 import { FlexDiv } from 'components/Layout/divs/Divs'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Header } from './components/Header'
 import AppRouter from './router/AppRouter'
 import DepositTable from './router/DepositTable'
-import { useLocation } from 'react-router-dom'
 
 const Globe = lazy(() => import('./components/Globe/Globe'))
 

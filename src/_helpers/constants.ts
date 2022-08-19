@@ -8,7 +8,7 @@ export const messages = {
   loading: 'Loading...',
 }
 
-export const copyAddress = (text: string, message: string) => {
+export const copyAddress = (text: string, message = 'Address Copied!') => {
   if (navigator.clipboard) navigator.clipboard.writeText(text)
   else {
     var textField = document.createElement('textarea')
