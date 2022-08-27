@@ -1,17 +1,8 @@
-import { CopyOutlined } from '@ant-design/icons'
-import Button from 'antd/lib/button/button'
-import Popover from 'antd/lib/popover'
-import Text from 'antd/lib/typography/Text'
-import { FlexDiv } from 'components/Layout/divs/Divs'
-import { ExclamationTriangle } from 'components/Layout/svgs/ExclamationTriangle'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Col, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import useList from 'Unblock'
-import { transferSTTS } from '_actions/smartworld.action'
-import { copyAddress, shorter } from '_helpers/constants'
 import Colors from '../../../../Theme/Colors'
 import {
   migrateAndWithdraw,
@@ -30,35 +21,17 @@ type WithdrawCircleProps = IProps &
 
 const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   width,
-  address,
-  chainId,
   latestWithdraw,
   referral,
   hourly,
   isMobile,
-  isBlocked,
   needMigrate,
   withdrawInterest,
   migrateAndWithdraw,
 }) => {
-  const LIST = useList()
-
   const withdraw = () => {
     needMigrate ? migrateAndWithdraw() : withdrawInterest()
   }
-  const unblockPrice = useMemo(
-    () =>
-      isBlocked
-        ? Object.entries(LIST[chainId]).reduce(
-            (all, [add, price]) =>
-              add.toLowerCase() === address.toLowerCase() ? Number(price) : all,
-            0
-          )
-        : 0,
-    [isBlocked, LIST, chainId, address]
-  )
-
-  const unblockAddress = LIST.address
 
   const half = width / 2
   const r = half - 10
@@ -73,8 +46,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   const secRemain = period - secPast
   const pastRadius = c * (secPast / period)
 
-  const [visible, setVisible] = useState(false)
-
   return (
     <Row direction="row" style={{ height: '100%' }}>
       <Col md={1}>
@@ -83,47 +54,7 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
           justify="around"
           align="center"
           style={{ height: '100%' }}
-        >
-          {isBlocked && unblockPrice && (
-            <Popover
-              content={
-                <FlexDiv
-                  style={{ maxWidth: isMobile ? '100%' : 250, minHeight: 150 }}
-                >
-                  <Text onClick={() => copyAddress(unblockAddress)}>
-                    Your account blocked and eligible to be unblock with
-                    penalty!
-                    <br />
-                    send {unblockPrice} STTS to {shorter(unblockAddress)}
-                    <CopyOutlined color={Colors.green} />, then wait for
-                    unblock!
-                  </Text>
-                  <Text style={{ color: Colors.green }}>
-                    Make sure you have ({unblockPrice} STTS) then click on
-                    button blow to pay penalty, then wait for unblock(it may
-                    take up to 24 hours).
-                  </Text>
-                  <Button
-                    type="primary"
-                    onClick={() => transferSTTS(unblockAddress, unblockPrice)}
-                  >
-                    UnBlock
-                  </Button>
-                </FlexDiv>
-              }
-              title="You are blocked!"
-              trigger="click"
-              visible={visible}
-              onVisibleChange={setVisible}
-            >
-              <ExclamationTriangle
-                color="red"
-                size={isMobile ? '30px' : '25px'}
-                onClick={() => setVisible((prev) => !prev)}
-              />
-            </Popover>
-          )}
-        </Row>
+        ></Row>
       </Col>
       <Col md={10}>
         <Row
@@ -268,16 +199,19 @@ const mapStateToProps = (state: AppState) => {
     needMigrate,
     account: { hourly, referral, isBlocked, latestWithdraw },
   } = state.invest02
+  const zero = isBlocked ? { hourly: 0, referral: 0, latestWithdraw: 0 } : {}
+
   return {
     error,
     chainId,
     tokens,
-    hourly,
     address,
+    hourly,
     referral,
     isBlocked,
     needMigrate,
     latestWithdraw,
+    ...zero,
   }
 }
 

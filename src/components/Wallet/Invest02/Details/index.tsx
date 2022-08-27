@@ -1,20 +1,20 @@
+import Button from 'antd/lib/button'
+import Typography from 'antd/lib/typography'
+import copy from 'copy-to-clipboard'
 import React, { useState } from 'react'
+import { Col, Row } from 'react-grid-system'
+import QRCode from 'react-qr-code'
 import { connect } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { AppActions, AppState } from '../../../../_types'
-import { Row, Col } from 'react-grid-system'
-import { useLocation } from 'react-router-dom'
-import { migrateByUser } from '../../../../_actions/invest02.actions'
-import ReferralButton from '../../../Layout/svgs/ReferralButton'
-import { TokenValue } from '../../../Layout/typography/Tokens'
-import copy from 'copy-to-clipboard'
-import QRCode from 'react-qr-code'
 import Colors from '../../../../Theme/Colors'
+import { migrateByUser } from '../../../../_actions/invest02.actions'
 import { successHandler } from '../../../../_helpers/alert'
 import { truncate } from '../../../../_helpers/api'
-import Typography from 'antd/lib/typography'
-import Button from 'antd/lib/button'
+import { AppActions, AppState } from '../../../../_types'
+import ReferralButton from '../../../Layout/svgs/ReferralButton'
+import { TokenValue } from '../../../Layout/typography/Tokens'
 
 interface IProps {}
 
@@ -24,7 +24,11 @@ type ReferralSectionProps = IProps &
 
 export const DetailSection: React.FC<ReferralSectionProps> = ({
   address,
-  account,
+  referral,
+  hourly,
+  refPercent,
+  depositDetails,
+  totalAmount,
   needMigrate,
   migrateByUser,
 }) => {
@@ -41,7 +45,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
     }
   }
 
-  const calcDollar = () => (account.referral + account.hourly) / 10 ** 8
+  const calcDollar = () => (referral + hourly) / 10 ** 8
 
   return (
     <Row
@@ -72,15 +76,17 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                 title="Referral percent"
                 precision={3}
                 token="%"
-                value={account.refPercent / 1000}
+                value={refPercent / 1000}
               />
               <TokenValue
                 value={
-                  account.depositDetails?.reduce(
-                    (items, item) => items + Number(item.reward),
-                    0
-                  ) /
-                  10 ** 8
+                  depositDetails
+                    ? depositDetails.reduce(
+                        (all, item) => all + Number(item.reward),
+                        0
+                      ) /
+                      10 ** 8
+                    : 0
                 }
                 token="$"
                 precision={3}
@@ -99,7 +105,7 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
               <TokenValue
                 token="$"
                 precision={0}
-                value={account.totalAmount}
+                value={totalAmount}
                 title="Total investment"
               />
             </Row>
@@ -129,18 +135,18 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
                 <ReferralButton
                   width={90}
                   onClick={copyHandler}
-                  disable={account.totalAmount === 0}
+                  disable={totalAmount === 0}
                 />
               )}
             </Row>
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              {account.depositDetails?.length ? (
+              {depositDetails?.length ? (
                 <Row direction="column">
                   <p className="ant-statistic-title">Deposit details</p>
                   <Row align="center" justify="around">
-                    {account.depositDetails?.map((item, i) => {
+                    {depositDetails?.map((item, i) => {
                       const endTime = new Date(item.endTime * 1000)
                       const startTime = new Date(item.startTime * 1000)
                       return selected === i ? (
@@ -189,12 +195,38 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 
 const mapStateToProps = (state: AppState) => {
   const { address, tokens } = state.account
-  const { needMigrate, account } = state.invest02
+  const {
+    needMigrate,
+    account: {
+      referral,
+      hourly,
+      refPercent,
+      depositDetails,
+      totalAmount,
+      isBlocked,
+    },
+  } = state.invest02
+  const zero = isBlocked
+    ? {
+        hourly: 0,
+        totalAmount: 0,
+        referral: 0,
+        latestWithdraw: 0,
+        refPercent: 0,
+        depositDetails: undefined,
+      }
+    : {}
+
   return {
     needMigrate,
-    account,
+    referral,
+    hourly,
+    refPercent,
+    depositDetails,
+    totalAmount,
     address,
     tokens,
+    ...zero,
   }
 }
 
@@ -202,7 +234,10 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   migrateByUser: bindActionCreators(migrateByUser, dispatch),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailSection)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DetailSection as any)
 
 const LeftRetangle = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2" width="9px">
