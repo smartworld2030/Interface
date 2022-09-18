@@ -45,17 +45,23 @@ type AppRouterProps = IProps &
 
 const info = () =>
   Modal.info({
-    title: `New Investment update.`,
+    title: `Smart world Metaverse`,
     content: (
-      <ul>
-        <li>You can only invest by BNB from now on.</li>
-        <li>35% fee of investment will be saved in the pool.</li>
-        <li>Minimum investment reduced from 100$ to 50$.</li>
-      </ul>
+      <div>
+        <b>The attractive, momentous and moneymaker Metaverse world</b>
+        <hr />
+        <p>
+          Metaverse is a virtual world which creates from the AR and VR
+          technologies composition Shortly, Metaverse means a platform or 3D
+          space where the people appear as the avatar (Avatar is your character
+          which can be an animal, human, or other different appearances in the
+          Metaverse platform and the game space.)  This presence can be for
+          social connections, purchasing from the available markets, meeting or
+          concert attendance on a platform
+        </p>
+      </div>
     ),
-    onOk() {
-      localStorage.setItem('investupdate', 'accepted')
-    },
+    closable: true,
   })
 
 const Titles = {
@@ -92,7 +98,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   const { pathname } = location
 
   const isAccepted = useMemo(
-    () => localStorage.getItem('investupdate') === 'accepted',
+    () => localStorage.getItem('metaverse') === 'accepted',
     []
   )
 
@@ -188,7 +194,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
             <Row justify="between" style={{ width: '100%', margin: 0 }}>
               <Row style={{ width: width / 3 }} justify="start">
                 {Titles[pathname] === 'INVESTMENT02' && (
-                  <Typography.Link onClick={info}>New update!</Typography.Link>
+                  <Typography.Link onClick={info}>Good news!</Typography.Link>
                 )}
               </Row>
               <Row justify="center" style={{ width: width / 3 }}>
