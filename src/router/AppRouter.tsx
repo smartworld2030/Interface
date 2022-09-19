@@ -1,7 +1,6 @@
-import { Modal } from 'antd'
 import Typography from 'antd/lib/typography'
 import Game from 'components/Wallet/Game'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { Col, Container, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
@@ -28,9 +27,8 @@ import {
   stockContract,
 } from '../_actions/wallet.actions'
 import { AppActions, AppState } from '../_types'
+import info from './Modal'
 import ProtectedRoute from './ProtectedRoute'
-
-let SHOWED = false
 
 interface IProps {
   isMobile: boolean
@@ -42,27 +40,6 @@ interface IProps {
 type AppRouterProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
-
-const info = () =>
-  Modal.info({
-    title: `Smart world Metaverse`,
-    content: (
-      <div>
-        <b>The attractive, momentous and moneymaker Metaverse world</b>
-        <hr />
-        <p>
-          Metaverse is a virtual world which creates from the AR and VR
-          technologies composition Shortly, Metaverse means a platform or 3D
-          space where the people appear as the avatar (Avatar is your character
-          which can be an animal, human, or other different appearances in the
-          Metaverse platform and the game space.)  This presence can be for
-          social connections, purchasing from the available markets, meeting or
-          concert attendance on a platform
-        </p>
-      </div>
-    ),
-    closable: true,
-  })
 
 const Titles = {
   '/invest': 'INVESTMENT',
@@ -97,11 +74,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   const location = useLocation()
   const { pathname } = location
 
-  const isAccepted = useMemo(
-    () => localStorage.getItem('metaverse') === 'accepted',
-    []
-  )
-
   useEffect(() => {
     setTimeout(() => {
       console.log('initialization')
@@ -123,13 +95,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       clearInterval(timer)
     }
   }, [active, bankTotalSatoshi, tokenPrices])
-
-  useEffect(() => {
-    if (!SHOWED && !isAccepted && pathname === '/invest02') {
-      SHOWED = true
-      info()
-    }
-  }, [isAccepted, pathname])
 
   useEffect(() => {
     const switcher = () => {
@@ -192,11 +157,11 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         <Row justify="center" align="center">
           <Col>
             <Row justify="between" style={{ width: '100%', margin: 0 }}>
-              <Row style={{ width: width / 3 }} justify="start">
-                {Titles[pathname] === 'INVESTMENT02' && (
+              {Titles[pathname] === 'INVESTMENT02' && (
+                <Row style={{ width: width / 3 }} justify="start">
                   <Typography.Link onClick={info}>Good news!</Typography.Link>
-                )}
-              </Row>
+                </Row>
+              )}
               <Row justify="center" style={{ width: width / 3 }}>
                 <Typography.Title
                   style={{ margin: 0, position: 'relative' }}
@@ -209,24 +174,26 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                   ) : null}
                 </Typography.Title>
               </Row>
-              <Row style={{ width: width / 3 }} justify="end">
-                {Titles[pathname] === 'POOL' && (
+              {Titles[pathname] === 'POOL' && (
+                <Row style={{ width: width / 3 }} justify="end">
                   <Typography.Link
                     href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
                     target="_blank"
                   >
                     Liquidity Pool
                   </Typography.Link>
-                )}
-                {Titles[pathname] === 'SWAP' && (
+                </Row>
+              )}
+              {Titles[pathname] === 'SWAP' && (
+                <Row style={{ width: width / 3 }} justify="end">
                   <Typography.Link
                     href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
                     target="_blank"
                   >
                     PanckakeSwap
                   </Typography.Link>
-                )}
-              </Row>
+                </Row>
+              )}
             </Row>
           </Col>
           <Col

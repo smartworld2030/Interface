@@ -48,14 +48,6 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
 
   return (
     <Row direction="row" style={{ height: '100%' }}>
-      <Col md={1}>
-        <Row
-          direction={isMobile ? 'row' : 'column'}
-          justify="around"
-          align="center"
-          style={{ height: '100%' }}
-        ></Row>
-      </Col>
       <Col md={10}>
         <Row
           direction={isMobile ? 'row' : 'column'}
