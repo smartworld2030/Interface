@@ -1,26 +1,27 @@
-import React, { useEffect, useState, Fragment, useMemo } from 'react'
-import { Button, Typography } from 'antd'
-import Input from 'antd/lib/input'
-import { ArrowDownOutlined } from '@ant-design/icons'
+import { RightCircleOutlined } from '@ant-design/icons'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Input, Typography } from 'antd'
+import { CircleInput } from 'components/Layout/svgs/CircleInput'
+import { DepositButton } from 'components/Layout/svgs/DepositButton'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import { Col, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-grid-system'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { AppActions, AppState } from '../../../_types'
+import useList from 'Unblock'
+import { transferBNB, transferSTTS } from '_actions/smartworld.action'
+import Colors from '../../../Theme/Colors'
+import { requestSwap } from '../../../_actions/swap.actions'
 import { swapContract } from '../../../_actions/wallet.actions'
 import {
-  truncate,
-  formaterNumber,
-  formatToString,
   convertNumbers2English,
   deadline,
+  formaterNumber,
+  formatToString,
+  truncate,
 } from '../../../_helpers/api'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { BigNumber } from '@ethersproject/bignumber'
-import { requestSwap } from '../../../_actions/swap.actions'
-import Colors from '../../../Theme/Colors'
-import { transferBNB, transferSTTS } from '_actions/smartworld.action'
-import useList from 'Unblock'
+import { AppActions, AppState } from '../../../_types'
 
 interface IProps {}
 
@@ -199,39 +200,59 @@ const BnbSwap: React.FC<BnbSwapProps> = ({
       requestSwap('safeBnbSwap', [input1.big, deadline(3)])
     }
   }
+  const width = 120
   return (
     <Row
-      direction="column"
       justify="around"
+      align="center"
       style={{ minHeight: 240 }}
       gutterWidth={4}
     >
       {inputs.map((token, index) => (
         <Fragment key={token.method}>
-          <Col xs={12}>
-            <Input
-              onChange={({ target }) => inputHandler(target.value, index)}
-              value={index ? input2.value : input1.value}
-              suffix={token.name}
-              addonAfter={
-                !index && (
-                  <span
-                    style={{ color: Colors.green }}
-                    onClick={() => maxHandler(token.name, index)}
-                    className="input-max-button"
-                  >
-                    MAX
-                  </span>
-                )
-              }
+          <Row
+            justify="center"
+            align="center"
+            direction="column"
+            style={{
+              position: 'relative',
+              touchAction: 'none',
+              width: width,
+              height: width,
+            }}
+          >
+            <Row
+              justify="around"
+              direction="column"
+              style={{
+                width: width * 0.65,
+                height: width / 2,
+                fontSize: 10,
+                fontWeight: 'bold',
+                margin: 'auto',
+                zIndex: 20,
+              }}
+            >
+              <Input
+                onChange={({ target }) => inputHandler(target.value, index)}
+                value={index ? input2.value : input1.value}
+                placeholder={token.name}
+                className="deposit-input"
+              />
+            </Row>
+            <CircleInput
+              width={width}
+              token={token.name}
+              onMax={!index ? () => maxHandler(token.name, index) : undefined}
+              percent={0}
+              disabled
             />
-          </Col>
+          </Row>
           {!index && (
-            <Col xs={12}>
-              <Button onClick={() => tokenChanger(token)}>
-                <ArrowDownOutlined />
-              </Button>
-            </Col>
+            <RightCircleOutlined
+              style={{ fontSize: 20, color: Colors.green }}
+              onClick={() => tokenChanger(token)}
+            />
           )}
         </Fragment>
       ))}
@@ -248,19 +269,18 @@ const BnbSwap: React.FC<BnbSwapProps> = ({
         </Row>
       </Col>
       <Row justify="center">
-        <Col xs={6}>
-          <Button
-            onClick={swapButtonHandler}
-            disabled={
-              result.slippage > 50 ||
-              input2.value === '0' ||
-              input1.value === '0' ||
-              !!!input1.value
-            }
-          >
-            Swap {inputs[0].name} for {inputs[1].name}
-          </Button>
-        </Col>
+        <DepositButton
+          width={65}
+          onClick={swapButtonHandler}
+          disable={
+            result.slippage > 50 ||
+            input2.value === '0' ||
+            input1.value === '0' ||
+            !!!input1.value
+          }
+        >
+          Swap {inputs[0].name} for {inputs[1].name}
+        </DepositButton>
       </Row>
     </Row>
   )

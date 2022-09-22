@@ -1,18 +1,16 @@
+import { Header } from 'components/Header'
 import { FlexDiv } from 'components/Layout/divs/Divs'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Header } from './components/Header'
-import AppRouter from './router/AppRouter'
-import DepositTable from './router/DepositTable'
+import AppRouter from 'router/AppRouter'
 
-const Globe = lazy(() => import('./components/Globe/Globe'))
+const Globe = lazy(() => import('components/Globe/Globe'))
 
 let setTime: NodeJS.Timeout
 
 type AppProps = {}
 
 const App: React.FC<AppProps> = () => {
-  const [{ globeHeight, multi }, setGlobeHeight] = useState({
+  const [{ globeHeight }, setGlobeHeight] = useState({
     globeHeight: 200,
     multi: 0.6,
   })
@@ -48,17 +46,6 @@ const App: React.FC<AppProps> = () => {
 
   const isMobile = useMemo(() => (appWidth > 768 ? false : true), [appWidth])
 
-  const { pathname } = useLocation()
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (multi === 0.6 && pathname === '/nft')
-        setGlobeHeight({ globeHeight: appHeight, multi: 1 })
-      if (multi === 1 && pathname !== '/nft')
-        setGlobeHeight({ globeHeight: appHeight * 0.6, multi: 0.6 })
-    }, 1000)
-  }, [pathname, multi, appHeight])
-
   return (
     <>
       <Header width={appWidth} />
@@ -77,9 +64,7 @@ const App: React.FC<AppProps> = () => {
           </FlexDiv>
         }
       >
-        <Globe height={globeHeight} width={appWidth} showDetail={showDetail}>
-          <DepositTable clickHandler={setShowDetail} />
-        </Globe>
+        <Globe height={globeHeight} width={appWidth} showDetail={showDetail} />
       </Suspense>
       <AppRouter
         isMobile={isMobile}

@@ -1,10 +1,10 @@
+import Spin from 'antd/lib/spin'
 import React from 'react'
+import { Col, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
-import { Row, Col } from 'react-grid-system'
 import { AppState } from '../../../_types'
 import BnbSwap from './BnbSwap'
 import { PriceValue } from './PriceValue'
-import Spin from 'antd/lib/spin'
 
 interface IProps {
   isMobile: boolean
@@ -52,7 +52,7 @@ const Swap: React.FC<SwapProps> = ({
               )}
           </Row>
         </Col>
-        <Col xs={12} md={4}>
+        <Col xs={12} md={6}>
           <BnbSwap />
         </Col>
       </Row>

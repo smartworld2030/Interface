@@ -1,5 +1,7 @@
 import Typography from 'antd/lib/typography'
 import Game from 'components/Wallet/Game'
+import Land from 'components/Wallet/Land'
+import NFT from 'components/Wallet/NFT'
 import React, { useEffect } from 'react'
 import { Col, Container, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
@@ -12,7 +14,6 @@ import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriang
 import Info from '../components/Wallet/Info'
 import Investment from '../components/Wallet/Invest'
 import Investment02 from '../components/Wallet/Invest02'
-import Pool from '../components/Wallet/Pool'
 import Swap from '../components/Wallet/Swap'
 import { accountTokenBalances } from '../_actions/account.actions'
 import { bankTotalSatoshi, tokenPrices } from '../_actions/bank.actions'
@@ -23,7 +24,6 @@ import { stockInformation } from '../_actions/stock.actions'
 import {
   initialization,
   invest02Contract,
-  poolContract,
   stockContract,
 } from '../_actions/wallet.actions'
 import { AppActions, AppState } from '../_types'
@@ -45,9 +45,9 @@ const Titles = {
   '/invest': 'INVESTMENT',
   '/invest02': 'INVESTMENT02',
   '/info': 'INFORMATION',
-  '/pool': 'POOL',
+  '/land': 'SMART LAND',
   '/swap': 'SWAP',
-  '/nft': 'NFT',
+  '/nft': 'NFT MARKET',
   '/game': 'GAME',
 }
 
@@ -99,8 +99,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   useEffect(() => {
     const switcher = () => {
       switch (pathname.toLocaleLowerCase()) {
-        case '/pool':
-          if (poolContract) poolInformation()
+        case '/land':
           break
         // case '/invest':
         //   if (investContract) investInformation()
@@ -144,130 +143,120 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   })
 
   return (
-    pathname !== '/nft' && (
-      <Container
-        fluid
-        style={{
-          width,
-          height,
-          transition: 'all 1s',
-          background: `url(${require('../assets/c.jpg').default})`,
-        }}
-      >
-        <Row justify="center" align="center">
-          <Col>
-            <Row justify="between" style={{ width: '100%', margin: 0 }}>
+    <Container
+      fluid
+      style={{
+        width,
+        height,
+        transition: 'all 1s',
+        background: `url(${require('../assets/c.jpg').default})`,
+      }}
+    >
+      <Row justify="center" align="center">
+        <Col>
+          <Row justify="between" style={{ width: '100%', margin: 0 }}>
+            <Row style={{ width: width / 3 }} justify="start">
               {Titles[pathname] === 'INVESTMENT02' && (
-                <Row style={{ width: width / 3 }} justify="start">
-                  <Typography.Link onClick={info}>Good news!</Typography.Link>
-                </Row>
-              )}
-              <Row justify="center" style={{ width: width / 3 }}>
-                <Typography.Title
-                  style={{ margin: 0, position: 'relative' }}
-                  level={5}
-                >
-                  {Titles[pathname]}
-                  {Titles[pathname] === 'INVESTMENT' ||
-                  Titles[pathname] === 'POOL' ? (
-                    <ExclamationTriangle onClick={detailHandler} />
-                  ) : null}
-                </Typography.Title>
-              </Row>
-              {Titles[pathname] === 'POOL' && (
-                <Row style={{ width: width / 3 }} justify="end">
-                  <Typography.Link
-                    href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-                    target="_blank"
-                  >
-                    Liquidity Pool
-                  </Typography.Link>
-                </Row>
-              )}
-              {Titles[pathname] === 'SWAP' && (
-                <Row style={{ width: width / 3 }} justify="end">
-                  <Typography.Link
-                    href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-                    target="_blank"
-                  >
-                    PanckakeSwap
-                  </Typography.Link>
-                </Row>
+                <Typography.Link onClick={info}>Good news!</Typography.Link>
               )}
             </Row>
-          </Col>
-          <Col
-            xs={12}
-            style={{
-              position: 'relative',
-              height: height - 20,
-              padding: 0,
-            }}
-          >
-            {transitions((style, item, _, key) => (
-              <AbsoluteBody
-                height={isMobile ? undefined : 300}
-                width={width - 32}
+            <Row justify="center" style={{ width: width / 3 }}>
+              <Typography.Title
+                style={{ margin: 0, position: 'relative' }}
+                level={5}
               >
-                <animated.div key={key} style={style}>
-                  <Switch location={item}>
-                    <Route exact path="/invest">
-                      <ProtectedRoute
-                        isMobile={isMobile}
-                        height={height}
-                        needLogin
-                      >
-                        <Investment isMobile={isMobile} />
-                      </ProtectedRoute>
-                    </Route>
-                    <Route exact path="/invest02">
-                      <ProtectedRoute
-                        isMobile={isMobile}
-                        height={height}
-                        needLogin
-                      >
-                        <Investment02 isMobile={isMobile} />
-                      </ProtectedRoute>
-                    </Route>
-                    <Route exact path={['/pool', '/freeze']}>
-                      <ProtectedRoute isMobile={isMobile} height={height}>
-                        <Pool isMobile={isMobile} />
-                      </ProtectedRoute>
-                    </Route>
-                    <Route exact path="/nft" />
-                    <Route exact path="/game">
-                      <ProtectedRoute isMobile={isMobile} height={height}>
-                        <Game isMobile={isMobile} width={width} />
-                      </ProtectedRoute>
-                    </Route>
-                    <Route exact path="/info">
-                      <Info isMobile={isMobile} />
-                    </Route>
-                    <Route exact path="/swap">
-                      <ProtectedRoute isMobile={isMobile} height={height}>
-                        <Swap isMobile={isMobile} />
-                      </ProtectedRoute>
-                    </Route>
-                    <Route path="/">
-                      <Redirect to="/invest02" />
-                    </Route>
-                  </Switch>
-                </animated.div>
-              </AbsoluteBody>
-            ))}
-          </Col>
-        </Row>
-      </Container>
-    )
+                {Titles[pathname]}
+                {Titles[pathname] === 'INVESTMENT' ||
+                Titles[pathname] === 'POOL' ? (
+                  <ExclamationTriangle onClick={detailHandler} />
+                ) : null}
+              </Typography.Title>
+            </Row>
+            {Titles[pathname] === 'POOL' && (
+              <Row style={{ width: width / 3 }} justify="end">
+                <Typography.Link
+                  href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+                  target="_blank"
+                >
+                  Liquidity Pool
+                </Typography.Link>
+              </Row>
+            )}
+            <Row style={{ width: width / 3 }} justify="end">
+              {Titles[pathname] === 'SWAP' && (
+                <Typography.Link
+                  href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
+                  target="_blank"
+                >
+                  PanckakeSwap
+                </Typography.Link>
+              )}
+            </Row>
+          </Row>
+        </Col>
+        <Col
+          xs={12}
+          style={{
+            position: 'relative',
+            height: height - 20,
+            padding: 0,
+          }}
+        >
+          {transitions((style, item, _, key) => (
+            <AbsoluteBody
+              height={isMobile ? undefined : 300}
+              width={width - 32}
+            >
+              <animated.div key={key} style={style}>
+                <Switch location={item}>
+                  <Route exact path="/invest">
+                    <ProtectedRoute
+                      isMobile={isMobile}
+                      height={height}
+                      needLogin
+                    >
+                      <Investment isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path="/invest02">
+                    <ProtectedRoute
+                      isMobile={isMobile}
+                      height={height}
+                      needLogin
+                    >
+                      <Investment02 isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path={['/pool', '/land', '/freeze']}>
+                    <Land isMobile={isMobile} />
+                  </Route>
+                  <Route exact path="/nft">
+                    <NFT isMobile={isMobile} />
+                  </Route>
+                  <Route exact path="/game">
+                    <ProtectedRoute isMobile={isMobile} height={height}>
+                      <Game isMobile={isMobile} width={width} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route exact path="/info">
+                    <Info isMobile={isMobile} />
+                  </Route>
+                  <Route exact path="/swap">
+                    <ProtectedRoute isMobile={isMobile} height={height}>
+                      <Swap isMobile={isMobile} />
+                    </ProtectedRoute>
+                  </Route>
+                  <Route path="/">
+                    <Redirect to="/invest02" />
+                  </Route>
+                </Switch>
+              </animated.div>
+            </AbsoluteBody>
+          ))}
+        </Col>
+      </Row>
+    </Container>
   )
-}
-
-interface tester {
-  isMobile: boolean
-}
-
-export const NFT: React.FC<tester> = () => {
-  return null
 }
 
 const mapStateToProps = (state: AppState) => {

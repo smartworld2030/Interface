@@ -1,8 +1,8 @@
-import { InvestLogo } from './InvestLogo'
-import { GameLogo } from './GameLogo'
-import { SwapLogo } from './SwapLogo'
-import { SttLogo } from './SttLogo'
 import Colors from '../../Theme/Colors'
+import { GameLogo } from './GameLogo'
+import { InvestLogo } from './InvestLogo'
+import { SttLogo } from './SttLogo'
+import { SwapLogo } from './SwapLogo'
 
 export const sizeCalculator = (width: number) => {
   const half = width / 2
@@ -34,11 +34,13 @@ export const sizeCalculator = (width: number) => {
       positionX: half - eighth,
       positionY: secondHeight - 29,
       size: 20,
-      link: '/pool',
+      link: '/swap',
       text: '',
       textPos: secondHeight - 55,
       number: 4,
-      icon: <SttLogo width={40} x={half - eighth - 20} y={secondHeight - 70} />,
+      icon: (
+        <SwapLogo width={40} x={half - eighth - 20} y={secondHeight - 69} />
+      ),
     },
     {
       positionX: half - (width < 600 ? 45 : 50),
@@ -60,16 +62,12 @@ export const sizeCalculator = (width: number) => {
       positionX: half + (width < 600 ? 45 : 50),
       positionY: height - 10,
       size: 35,
-      link: '/swap',
+      link: '/land',
       text: '',
       textPos: height - 66,
       number: 2,
       icon: (
-        <SwapLogo
-          width={75}
-          x={half + (width < 600 ? 8 : 13)}
-          y={height - 81}
-        />
+        <SttLogo width={75} x={half + (width < 600 ? 8 : 13)} y={height - 81} />
       ),
     },
     {

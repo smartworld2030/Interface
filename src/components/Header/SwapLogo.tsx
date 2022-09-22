@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { SVGProps } from 'react'
 
-interface SwapLogoProps {
+interface SwapLogoProps extends SVGProps<SVGSVGElement> {
   width: number
   x: number
   y: number
