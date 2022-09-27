@@ -1,23 +1,23 @@
+import { Transaction } from 'ethers'
+import { isAddress, parseEther } from 'ethers/lib/utils'
 import { Dispatch } from 'redux'
-import { errorHandler, warningHandler, successHandler } from '../_helpers/alert'
-import { invest02Contract, invest03Contract, provider } from './wallet.actions'
+import info from '../_contracts/info'
+import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
+import { bytesFormater, formaterNumber } from '../_helpers/api'
+import { AppActions, AppState } from '../_types'
 import {
-  INVEST02_TRANSACTION_MINED,
-  INVEST02_METHOD_REQUEST,
-  INVEST02_METHOD_FAILURE,
-  INVEST02_METHOD_SUCCESS,
-  INVEST02_ACCOUNT_REQUEST,
   INVEST02_ACCOUNT_FAILURE,
+  INVEST02_ACCOUNT_REQUEST,
   INVEST02_ACCOUNT_SUCCESS,
   INVEST02_MESSAGES,
+  INVEST02_METHOD_FAILURE,
+  INVEST02_METHOD_REQUEST,
+  INVEST02_METHOD_SUCCESS,
+  INVEST02_TRANSACTION_MINED,
   INVEST02_TRANSACTION_READY,
 } from '../_types/invest02.types'
-import { formaterNumber, bytesFormater } from '../_helpers/api'
-import { AppActions, AppState } from '../_types'
-import { Transaction } from 'ethers'
-import info from '../_contracts/info'
 import { accountTokenBalances } from './account.actions'
-import { parseEther, isAddress } from 'ethers/lib/utils'
+import { invest02Contract, invest03Contract, provider } from './wallet.actions'
 
 export const removeError = () => (dispatch: Dispatch<AppActions>) =>
   dispatch({ type: INVEST02_MESSAGES, payload: { error: '' } })
@@ -89,25 +89,24 @@ export const invest02Information =
     const fee = await invest03Contract.FEE()
     const minimum = await invest03Contract.MINIMUM_INVEST()
 
-    const oldAccountInfo: any = await readInvest02(
-      'users',
-      ['totalAmount'],
-      [address]
-    )
-
     const accountInfo: any = await readInvest03(
       'users',
       ['totalAmount'],
       [address]
     )
-    const needMigrate =
-      accountInfo.totalAmount === 0 && oldAccountInfo.totalAmount > 0
 
-    if (accountInfo.totalAmount > 0 || needMigrate) {
+    const latestWithdraw = 1664272437
+
+    if (accountInfo.totalAmount > 0) {
       const items = [
         {
+          name: 'calculateHourly',
+          tokens: ['hourly'],
+          args: [address, latestWithdraw],
+        },
+        {
           name: 'calculateInterest',
-          tokens: ['hourly', 'referral'],
+          tokens: ['referral'],
           args: [address],
         },
         {
@@ -117,7 +116,7 @@ export const invest02Information =
         },
         {
           name: 'users',
-          tokens: ['totalAmount', 'refPercent', 'latestWithdraw'],
+          tokens: ['totalAmount', 'refPercent'],
           args: [address],
         },
         {
@@ -129,9 +128,7 @@ export const invest02Information =
 
       Promise.all(
         items.map((item) =>
-          needMigrate
-            ? readInvest02Items(item.name, item.tokens, item.args)
-            : readInvest03Items(item.name, item.tokens, item.args)
+          readInvest03Items(item.name, item.tokens, item.args)
         )
       )
         .then((data: any) => {
@@ -145,17 +142,11 @@ export const invest02Information =
             const deps = Array.from(Array(account.deposits))
             Promise.all(
               deps.map((_, i) =>
-                needMigrate
-                  ? readInvest02Items(
-                      'userDepositDetails',
-                      ['period', 'reward', 'endTime', 'amount', 'startTime'],
-                      [address, i]
-                    )
-                  : readInvest03Items(
-                      'userDepositDetails',
-                      ['period', 'reward', 'endTime', 'amount', 'startTime'],
-                      [address, i]
-                    )
+                readInvest03Items(
+                  'userDepositDetails',
+                  ['period', 'reward', 'endTime', 'amount', 'startTime'],
+                  [address, i]
+                )
               )
             ).then((deposits: any) => {
               account.depositDetails = []
@@ -168,11 +159,11 @@ export const invest02Information =
                     })
                 )
               )
+              account.latestWithdraw = latestWithdraw
               dispatch({
                 type: INVEST02_ACCOUNT_SUCCESS,
                 payload: {
                   account,
-                  needMigrate,
                   fee: formaterNumber(fee, 3),
                   minimum: formaterNumber(minimum, 8),
                 },
@@ -182,11 +173,11 @@ export const invest02Information =
         })
         .catch((err) => {
           errorHandler(err)
+          console.log(err)
           dispatch({
             type: INVEST02_ACCOUNT_FAILURE,
             payload: {
               error: err,
-              needMigrate,
               fee: formaterNumber(fee, 3),
               minimum: formaterNumber(minimum, 8),
             },
@@ -197,7 +188,6 @@ export const invest02Information =
         type: INVEST02_ACCOUNT_FAILURE,
         payload: {
           error: '',
-          needMigrate,
           fee: formaterNumber(fee, 3),
           minimum: formaterNumber(minimum, 8),
         },
@@ -210,37 +200,45 @@ export const readInvest02Items = async (method: any, items: any[], args: any) =>
     invest02Contract[method](...args)
       .then((res) => {
         const array: any[] = []
-        items.map((item: string) =>
-          items.length > 1 || item === 'totalAmount'
+        items.forEach((item: string) => {
+          console.log(item, res)
+          items.length > 1 || item === 'totalAmount' || item === 'referral'
             ? array.push({ item, balance: formaterNumber(res[item], item) })
             : array.push({
                 item,
                 balance: item === 'isBlocked' ? res : bytesFormater(res),
               })
-        )
+        })
         resolve(array)
       })
       .catch((err) => reject(err))
   )
 
-export const readInvest03Items = async (method: any, items: any[], args: any) =>
-  new Promise((resolve, reject) =>
+export const readInvest03Items = async (
+  method: any,
+  items: any[],
+  args: any
+) => {
+  return new Promise((resolve, reject) =>
     invest03Contract[method](...args)
       .then((res) => {
         const array: any[] = []
-        items.map((item: string) =>
-          items.length > 1 || item === 'totalAmount'
+        items.forEach((item: string) => {
+          items.length > 1 || item === 'totalAmount' || item === 'referral'
             ? array.push({ item, balance: formaterNumber(res[item], item) })
             : array.push({
                 item,
                 balance: item === 'isBlocked' ? res : bytesFormater(res),
               })
-        )
+        })
         resolve(array)
       })
-      .catch((err) => reject(err))
+      .catch((err) => {
+        console.log(err)
+        reject(err)
+      })
   )
-
+}
 export const readInvest02 = async (method: any, items: any[], args: any) =>
   new Promise((resolve, reject) =>
     invest02Contract[method](...args)

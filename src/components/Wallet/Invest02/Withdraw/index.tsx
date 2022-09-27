@@ -4,10 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import Colors from '../../../../Theme/Colors'
-import {
-  migrateAndWithdraw,
-  withdrawInterest,
-} from '../../../../_actions/invest02.actions'
+import { withdrawInterest } from '../../../../_actions/invest02.actions'
 import { formaterNumber } from '../../../../_helpers/api'
 import { AppActions, AppState } from '../../../../_types'
 
@@ -25,12 +22,10 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
   referral,
   hourly,
   isMobile,
-  needMigrate,
   withdrawInterest,
-  migrateAndWithdraw,
 }) => {
   const withdraw = () => {
-    needMigrate ? migrateAndWithdraw() : withdrawInterest()
+    withdrawInterest()
   }
 
   const half = width / 2
@@ -188,7 +183,6 @@ const mapStateToProps = (state: AppState) => {
   const { chainId } = state.wallet
   const { error, tokens, address } = state.account
   const {
-    needMigrate,
     account: { hourly, referral, isBlocked, latestWithdraw },
   } = state.invest02
   const zero = isBlocked ? { hourly: 0, referral: 0, latestWithdraw: 0 } : {}
@@ -201,7 +195,6 @@ const mapStateToProps = (state: AppState) => {
     hourly,
     referral,
     isBlocked,
-    needMigrate,
     latestWithdraw,
     ...zero,
   }
@@ -209,7 +202,6 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   withdrawInterest: bindActionCreators(withdrawInterest, dispatch),
-  migrateAndWithdraw: bindActionCreators(migrateAndWithdraw, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WithdrawSection)

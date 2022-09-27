@@ -1,5 +1,3 @@
-import Button from 'antd/lib/button'
-import Typography from 'antd/lib/typography'
 import copy from 'copy-to-clipboard'
 import React, { useState } from 'react'
 import { Col, Row } from 'react-grid-system'
@@ -29,7 +27,6 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
   refPercent,
   depositDetails,
   totalAmount,
-  needMigrate,
   migrateByUser,
 }) => {
   const [selected, setSeleted] = useState(-1)
@@ -112,32 +109,11 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
           </Col>
           <Col xs={12} width="100%">
             <Row align="center" justify="around">
-              {needMigrate ? (
-                <Button
-                  shape="circle"
-                  type="default"
-                  className="migrate-button"
-                  style={{
-                    height: 100,
-                    width: 100,
-                    borderColor: Colors.green,
-                  }}
-                  onClick={() => migrateByUser()}
-                >
-                  <Typography.Text
-                    strong
-                    style={{ fontSize: '1rem', color: Colors.green }}
-                  >
-                    Migrate
-                  </Typography.Text>
-                </Button>
-              ) : (
-                <ReferralButton
-                  width={90}
-                  onClick={copyHandler}
-                  disable={totalAmount === 0}
-                />
-              )}
+              <ReferralButton
+                width={90}
+                onClick={copyHandler}
+                disable={totalAmount === 0}
+              />
             </Row>
           </Col>
           <Col xs={12} width="100%">
@@ -196,7 +172,6 @@ export const DetailSection: React.FC<ReferralSectionProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { address, tokens } = state.account
   const {
-    needMigrate,
     account: {
       referral,
       hourly,
@@ -218,7 +193,6 @@ const mapStateToProps = (state: AppState) => {
     : {}
 
   return {
-    needMigrate,
     referral,
     hourly,
     refPercent,

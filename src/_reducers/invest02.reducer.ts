@@ -1,18 +1,16 @@
 import {
-  Invest02ActionTypes,
   DefaultInvest02State,
-  INVEST02_MESSAGES,
-  INVEST02_TRANSACTION_READY,
-} from '../_types/invest02.types'
-import {
-  INVEST02_RESET,
-  INVEST02_METHOD_REQUEST,
-  INVEST02_METHOD_SUCCESS,
-  INVEST02_METHOD_FAILURE,
+  Invest02ActionTypes,
+  INVEST02_ACCOUNT_FAILURE,
   INVEST02_ACCOUNT_REQUEST,
   INVEST02_ACCOUNT_SUCCESS,
-  INVEST02_ACCOUNT_FAILURE,
+  INVEST02_MESSAGES,
+  INVEST02_METHOD_FAILURE,
+  INVEST02_METHOD_REQUEST,
+  INVEST02_METHOD_SUCCESS,
+  INVEST02_RESET,
   INVEST02_TRANSACTION_MINED,
+  INVEST02_TRANSACTION_READY,
 } from '../_types/invest02.types'
 
 const account = {
@@ -36,7 +34,6 @@ const invest02ReducerDefaultState: DefaultInvest02State = {
   fee: 5,
   minimum: 50,
   error: '',
-  needMigrate: false,
   account,
 }
 
