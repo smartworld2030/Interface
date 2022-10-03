@@ -42,6 +42,7 @@ const Globe: React.FC<IProps> = ({
   showDetail,
   landsOwners,
   width,
+  pathname,
   ownedLands,
   mint,
 }) => {
@@ -145,7 +146,7 @@ const Globe: React.FC<IProps> = ({
         </div>
       ) : (
         <>
-          <SideBar />
+          {pathname === '/land' && <SideBar />}
           <BottomDetails showDetail={showDetail} />
         </>
       )}

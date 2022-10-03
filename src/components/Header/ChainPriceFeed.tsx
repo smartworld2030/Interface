@@ -1,8 +1,8 @@
 import React from 'react'
-import { truncate } from '../../_helpers/api'
 import Marquee from 'react-fast-marquee'
-import { AppState } from '../../_types'
 import { connect } from 'react-redux'
+import { truncate } from '../../_helpers/api'
+import { AppState } from '../../_types'
 
 interface ChainPriceFeedProps {}
 
@@ -12,7 +12,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({
   prices,
   dollar,
   total,
-  STTS,
+  totalSupply,
 }) => {
   const calcBTC = (value) => value / prices.BTCB
 
@@ -49,16 +49,8 @@ export const ChainPriceFeed: React.FC<IProps> = ({
             {50}
             <span>$</span>
           </p>
-          {/* Smart World TVL:
-          <p className="price-value">
-            {calcBtcPrice(total)}
-            <span>$</span>
-          </p>
-          Smart World Staked STTS:
-          <p className="price-value">
-            {STTS?.toLocaleString(undefined, { maximumSignificantDigits: 7 })}
-            <span>STTS</span>
-          </p> */}
+          Smart Land:
+          <p className="price-value">{10000 - totalSupply}</p>
         </div>
       </div>
     </Marquee>
@@ -72,7 +64,9 @@ const mapStateToProps = (state: AppState) => {
     total,
     tokens: { STTS },
   } = state.bank
+  const { totalSupply } = state.land
   return {
+    totalSupply,
     total,
     tokens,
     prices,

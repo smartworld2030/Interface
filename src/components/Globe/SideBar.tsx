@@ -37,6 +37,7 @@ const SideBar: React.FC<SideBarProps> = () => {
           borderLeft: 'none',
           transition: open ? 'none' : 'all 1s ease-in-out 0.5s',
           borderColor: open ? 'transparent' : Colors.green,
+          padding: '2px 0',
           paddingLeft: 5,
           width: 20,
         }}

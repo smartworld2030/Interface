@@ -23,6 +23,7 @@ const GlobeWithTile = ({
   globeEl,
   onHover,
   pushTile,
+  landsIds,
   resetTile,
   resetLand,
   selectLand,
@@ -30,6 +31,13 @@ const GlobeWithTile = ({
   tilesLoading,
   ...rest
 }) => {
+  // useEffect(() => {
+  //   console.log(landsIds)
+  //   landsIds.forEach((id) => {
+  //     material.uniforms.u_sold.value = id
+  //   })
+  // }, [landsIds])
+
   const pointData = useMemo(() => {
     if (!tilesData.length) return undefined
     const radius = 100.1,
@@ -74,42 +82,35 @@ const GlobeWithTile = ({
     return new ShaderMaterial({
       side: DoubleSide,
       uniforms: {
-        time: { value: 1.0 },
+        u_time: { value: 1.0 },
         u_hovered: { value: 0 },
-        u_clicked: { value: 0 },
+        u_sold: { value: 0 },
       },
       vertexShader: `
-            uniform float u_hovered;
-            uniform float u_clicked;
-            uniform float time;
-            attribute vec3 color;
-            attribute float tileId;
-            varying vec3 vRndId;
-            void main() {
-              vRndId = color;
-              if(time > 0.0) {
-                if(tileId == u_hovered) {
-                  vRndId = vec3(1.0, 0.0, 2.0);
-                }
-                if(tileId == u_clicked) {
-                  vRndId = vec3(0.0, 1.0, 2.0);
-                }
-              }
-    
-              if(u_hovered == tileId) {
-                vRndId = vec3(1.0, 0.0, 0.0);
-              }
-              if(u_clicked == tileId) {
-                vRndId = vec3(0.0, 0.0, 0.0);
-              }
-              vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-              gl_Position = projectionMatrix * modelViewPosition;
-          }`,
+        uniform float u_hovered;
+        uniform float u_sold;
+        uniform float u_time;
+        attribute vec3 color;
+        attribute float tileId;
+        varying vec4 vRndId;
+        void main() {
+          vRndId = vec4(color, 1.0);
+
+          if(u_hovered == tileId) {
+            vRndId = vec4(1.0, 0.0, 0.0, 0.5);
+          }
+          if(u_sold == tileId) {
+            vRndId = vec4(color, 0.5);
+          }
+
+          vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * modelViewPosition;
+      }`,
       fragmentShader: `
-            varying vec3 vRndId;
-            void main() {         
-              gl_FragColor = vec4(vRndId, 1);
-          }`,
+        varying vec4 vRndId;
+        void main() {         
+          gl_FragColor = vRndId;
+      }`,
     })
   }, [])
 
@@ -186,6 +187,7 @@ const mapStateToProps = (state: AppState) => {
   const clickedTile = Number(query.tile) || 0
 
   return {
+    landsIds: state.land.landsIds,
     tilesLoading: state.land.tilesLoading,
     tilesData: state.land.tilesData,
     clickedTile,

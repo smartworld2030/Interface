@@ -25,7 +25,6 @@ import { stockInformation } from '../_actions/stock.actions'
 import {
   initialization,
   invest02Contract,
-  landContract,
   stockContract,
 } from '../_actions/wallet.actions'
 import { AppActions, AppState } from '../_types'
@@ -94,25 +93,17 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       timer = setInterval(() => {
         tokenPrices()
         bankTotalSatoshi()
+        landInformation()
       }, priceDelay * 1000)
     }
     return () => {
       clearInterval(timer)
     }
-  }, [active, bankTotalSatoshi, tokenPrices])
+  }, [active, bankTotalSatoshi, landInformation, tokenPrices])
 
   useEffect(() => {
     const switcher = () => {
       switch (pathname.toLocaleLowerCase()) {
-        case '/land':
-          if (landContract) landInformation()
-          break
-        case '/nft':
-          if (landContract) landInformation()
-          break
-        // case '/invest':
-        //   if (investContract) investInformation()
-        //   break
         case '/invest02':
           if (invest02Contract) invest02Information()
           break
@@ -138,7 +129,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   }, [
     pathname,
     address,
-    landInformation,
     poolInformation,
     investInformation,
     invest02Information,
@@ -263,7 +253,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
                     </ProtectedRoute>
                   </Route>
                   <Route path="/">
-                    <Redirect to="/invest02" />
+                    <Redirect to="/land" />
                   </Route>
                 </Switch>
               </animated.div>
