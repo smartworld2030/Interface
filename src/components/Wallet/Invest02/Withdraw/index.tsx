@@ -82,14 +82,14 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
                     id="remains"
                     attributeName="stroke-dasharray"
                     values={`${pastRadius} ${c - pastRadius};${c} 0`}
-                    dur={secRemain}
+                    dur={secRemain || 0}
                   />
                   <animate
                     id="hourly"
                     begin="remains.end"
                     attributeName="stroke-dasharray"
                     values={`0 ${c};${c} 0`}
-                    dur={period}
+                    dur={period || 0}
                     repeatCount="indefinite"
                   />
                 </>

@@ -1,29 +1,35 @@
 import styled from '@emotion/styled'
 import React, { useState } from 'react'
-import { sizeCalculator } from './Links'
-import { HeadCircle } from './HeadCircle'
-import { useLocation } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { AppState } from '_types'
 import Colors from '../../Theme/Colors'
 import ChainPriceFeed from './ChainPriceFeed'
+import { HeadCircle } from './HeadCircle'
+import { sizeCalculator } from './Links'
 
-const StyledSvg = styled.svg`
+const StyledSvg = styled.svg<{ top: number }>`
   position: absolute;
-  top: 0;
+  top: ${({ top }) => top}px;
   left: 0;
   z-index: 10;
+  transition: top 0.5s ease-out;
 `
 
 interface HeaderProps {
   width: number
 }
+type IProps = HeaderProps & ReturnType<typeof mapStateToProps>
 
-export const Header: React.FC<HeaderProps> = ({ width }) => {
+const Header: React.FC<IProps> = ({ width, pathname, clickedTile }) => {
   const { half, quarter, height, linkArray } = sizeCalculator(width)
   const [, setActive] = useState('/invest')
-  const { pathname } = useLocation()
 
   return (
-    <StyledSvg height={height + 10} width={width}>
+    <StyledSvg
+      top={pathname === '/land' && clickedTile ? -height : 0}
+      height={height + 10}
+      width={width}
+    >
       <defs>
         <filter id="greyscale">
           <feColorMatrix
@@ -65,3 +71,17 @@ export const Header: React.FC<HeaderProps> = ({ width }) => {
     </StyledSvg>
   )
 }
+
+const mapStateToProps = (state: AppState) => {
+  const {
+    location: { pathname, query },
+  } = state.router
+  const clickedTile = Number(query.tile) || 0
+
+  return {
+    pathname,
+    clickedTile,
+  }
+}
+
+export default connect(mapStateToProps)(Header)

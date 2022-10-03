@@ -23,13 +23,19 @@ export const StyledButton = styled(
 interface TokenButtonProps extends ButtonProps {
   radius?: number
   color?: string
+  borderColor?: string
+  fontSize?: number
 }
 
 export const TokenButton = styled(
-  ({ radius, color, ...props }: TokenButtonProps) => <Button {...props} />
+  ({ radius, fontSize, borderColor, color, ...props }: TokenButtonProps) => (
+    <Button {...props} />
+  )
 )`
   background: #2e2e2e;
   border: 1px solid grey;
+  font-size: ${({ fontSize }) => fontSize + 'px'};
+  border-color: ${({ borderColor }) => borderColor};
   width: ${({ radius }) => radius + 'px'};
   height: ${({ radius }) => radius + 'px'};
   color: ${({ color }) => (color ? color : Colors.green)};

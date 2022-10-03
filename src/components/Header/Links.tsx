@@ -1,7 +1,7 @@
-import Colors from '../../Theme/Colors'
+import Colors from 'Theme/Colors'
 import { GameLogo } from './GameLogo'
 import { InvestLogo } from './InvestLogo'
-import { SttLogo } from './SttLogo'
+import { StlLogo } from './StlLogo'
 import { SwapLogo } from './SwapLogo'
 
 export const sizeCalculator = (width: number) => {
@@ -67,7 +67,32 @@ export const sizeCalculator = (width: number) => {
       textPos: height - 66,
       number: 2,
       icon: (
-        <SttLogo width={75} x={half + (width < 600 ? 8 : 13)} y={height - 81} />
+        <>
+          <svg viewBox={`-70 -15 ${half} ${height}`}>
+            <circle
+              r="7"
+              stroke="white"
+              fill={Colors.red}
+              cx={half / 2}
+              cy={height / 2}
+            />
+            <text
+              x="50%"
+              y="50%"
+              fill="white"
+              fontSize="4"
+              textAnchor="middle"
+              dominantBaseline="middle"
+            >
+              New
+            </text>
+          </svg>
+          <StlLogo
+            width={75}
+            x={half + (width < 600 ? 8 : 13)}
+            y={height - 81}
+          />
+        </>
       ),
     },
     {
@@ -79,28 +104,7 @@ export const sizeCalculator = (width: number) => {
       textPos: secondHeight - 55,
       number: 3,
       icon: (
-        <>
-          <>
-            <circle
-              r="7"
-              stroke="white"
-              fill={Colors.red}
-              cx={half + eighth - 15}
-              cy={secondHeight - 65}
-            />
-            <text
-              x={half + eighth - 15}
-              y={secondHeight - 65}
-              fill="white"
-              fontSize="4"
-              textAnchor="middle"
-              dominantBaseline="middle"
-            >
-              New
-            </text>
-          </>
-          <GameLogo width={42} x={half + eighth - 21} y={secondHeight - 70} />
-        </>
+        <GameLogo width={42} x={half + eighth - 21} y={secondHeight - 70} />
       ),
     },
     {

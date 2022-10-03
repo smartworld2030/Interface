@@ -1,7 +1,7 @@
-import Colors from '../../../Theme/Colors'
 import styled from '@emotion/styled'
 import Row from 'antd/lib/row'
 import { HTMLAttributes } from 'react'
+import Colors from '../../../Theme/Colors'
 
 interface StyledFlexDivProps {
   hoverColor?: string
@@ -27,6 +27,7 @@ export const StyledFlexDiv = styled(
 interface AbsoluteDivProps extends HTMLAttributes<HTMLDivElement> {
   height?: number
   width?: number
+  minheight?: number
   background?: string
   zIndex?: number
   top?: number
@@ -38,7 +39,7 @@ export const AbsoluteBody = styled(
   )
 )`
   height: ${({ height }) => (height ? height + 'px' : '')};
-  min-height: 300px;
+  min-height: ${({ minheight }) => (minheight ? minheight + 'px' : '300px')};
   text-align: center;
   position: absolute;
   width: ${({ width }) => (width ? width + 'px' : '100%')};

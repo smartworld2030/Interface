@@ -1,15 +1,15 @@
+import { ConnectedRouter } from 'connected-react-router'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
 import './index.less'
-import { store } from './_store/store.config'
+import { history, store } from './_store/store.config'
 
 ReactDOM.render(
   <Provider store={store as any}>
-    <Router>
+    <ConnectedRouter history={history}>
       <App />
-    </Router>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 )

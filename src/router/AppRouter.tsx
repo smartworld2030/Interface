@@ -9,6 +9,7 @@ import { Redirect, Route, Switch, useLocation } from 'react-router-dom'
 import { animated, useTransition } from 'react-spring'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
+import { landInformation } from '_actions/land.actions'
 import { AbsoluteBody } from '../components/Layout/divs/Divs'
 import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
 import Info from '../components/Wallet/Info'
@@ -24,6 +25,7 @@ import { stockInformation } from '../_actions/stock.actions'
 import {
   initialization,
   invest02Contract,
+  landContract,
   stockContract,
 } from '../_actions/wallet.actions'
 import { AppActions, AppState } from '../_types'
@@ -66,6 +68,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   init,
   tokenPrices,
   poolInformation,
+  landInformation,
   bankTotalSatoshi,
   stockInformation,
   investInformation,
@@ -79,7 +82,9 @@ export const AppRouter: React.FC<AppRouterProps> = ({
       console.log('initialization')
       init()
     }, 1000)
-  }, [init])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     clearInterval(timer)
@@ -100,6 +105,10 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     const switcher = () => {
       switch (pathname.toLocaleLowerCase()) {
         case '/land':
+          if (landContract) landInformation()
+          break
+        case '/nft':
+          if (landContract) landInformation()
           break
         // case '/invest':
         //   if (investContract) investInformation()
@@ -129,6 +138,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   }, [
     pathname,
     address,
+    landInformation,
     poolInformation,
     investInformation,
     invest02Information,
@@ -204,8 +214,14 @@ export const AppRouter: React.FC<AppRouterProps> = ({
         >
           {transitions((style, item, _, key) => (
             <AbsoluteBody
-              height={isMobile ? undefined : 300}
+              height={
+                isMobile ? undefined : pathname === '/land' ? height * 0.2 : 300
+              }
               width={width - 32}
+              minheight={pathname === '/land' ? height * 0.2 : 300}
+              style={{
+                marginTop: pathname === '/land' ? '10px' : undefined,
+              }}
             >
               <animated.div key={key} style={style}>
                 <Switch location={item}>
@@ -272,6 +288,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   tokenPrices: bindActionCreators(tokenPrices, dispatch),
   bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),
+  landInformation: bindActionCreators(landInformation, dispatch),
   stockInformation: bindActionCreators(stockInformation, dispatch),
   investInformation: bindActionCreators(investInformation, dispatch),
   invest02Information: bindActionCreators(invest02Information, dispatch),

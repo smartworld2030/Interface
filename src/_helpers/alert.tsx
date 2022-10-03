@@ -1,10 +1,10 @@
-import React from 'react'
+import Button from 'antd/lib/button'
 import notification from 'antd/lib/notification'
+import React from 'react'
 import { store } from '../_store/store.config'
 import { SHOW_SNACKBAR } from '../_types/snackbar.types'
 import chainList from './chainList'
 import { shorter } from './constants'
-import Button from 'antd/lib/button'
 
 export const errorHandler = (err: any, type?: any, link?: string): void => {
   let error = errorCompiler(err)
@@ -33,14 +33,23 @@ export const warningHandler = (err: any, type?: any, link?: string): void => {
   })
 }
 
-const errorCompiler = (err: string | any) =>
-  err
-    ? typeof err === 'string'
-      ? err.replace(/<[^>]+>/g, '')
-      : typeof err === 'object'
-      ? err?.data?.message.split('::')[1]
-      : 'Message Not Found!'
-    : 'Message Not Found!'
+const errorCompiler = (err: string | any) => {
+  if (typeof err === 'string') return err.replace(/<[^>]+>/g, '')
+  if (typeof err === 'object') {
+    if (err.data) {
+      if (err.data.message) return err.data.message.split('::')[1]
+      return err.data.replace(/<[^>]+>/g, '')
+    }
+    if (err.message) return err.message.replace(/<[^>]+>/g, '')
+    if (err.error) return err.error.replace(/<[^>]+>/g, '')
+    if (err.response) return err.response.replace(/<[^>]+>/g, '')
+    if (err.error) return err.error.replace(/<[^>]+>/g, '')
+    if (err.message) return err.message.replace(/<[^>]+>/g, '')
+
+    if (err) return err.replace(/<[^>]+>/g, '')
+  }
+  return 'Unknown Error'
+}
 
 export const snackBarMaker = (
   message: string,

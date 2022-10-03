@@ -1,9 +1,9 @@
 import React from 'react'
 import { Row } from 'react-grid-system'
 import { connect } from 'react-redux'
+import { ThunkDispatch } from 'redux-thunk'
 import Colors from '../../../../Theme/Colors'
 import { formaterNumber, roundDecimals } from '../../../../_helpers/api'
-import { ThunkDispatch } from 'redux-thunk'
 import { AppActions, AppState } from '../../../../_types'
 
 interface IProps {
@@ -67,14 +67,14 @@ const WithdrawSection: React.FC<WithdrawCircleProps> = ({
                 id="remains"
                 attributeName="stroke-dasharray"
                 values={`${pastRadius} ${c - pastRadius};${c} 0`}
-                dur={secRemain}
+                dur={secRemain || 0}
               />
               <animate
                 id="hourly"
                 begin="remains.end"
                 attributeName="stroke-dasharray"
                 values={`0 ${c};${c} 0`}
-                dur={period}
+                dur={period || 0}
                 repeatCount="indefinite"
               />
             </>

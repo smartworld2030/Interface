@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import Colors from '../../../Theme/Colors'
-import Typography from 'antd/lib/typography'
-import { AppState } from '../../../_types'
-import { ethereum, truncate } from '../../../_helpers/api'
-import info from '../../../_contracts/info'
-import { Col, Row } from 'react-grid-system'
-import invest03 from '../../../_contracts/invest03'
-import { copyAddress, tooShorter } from '../../../_helpers/constants'
 import { CopyOutlined } from '@ant-design/icons'
+import Typography from 'antd/lib/typography'
+import React, { useEffect, useState } from 'react'
+import { Col, Row } from 'react-grid-system'
+import { connect } from 'react-redux'
+import Colors from 'Theme/Colors'
+import info from '_contracts/info'
+import invest03 from '_contracts/invest03'
+import land from '_contracts/land'
+import { ethereum, truncate } from '_helpers/api'
+import { copyAddress, tooShorter } from '_helpers/constants'
+import { AppState } from '_types'
 
 const { Paragraph, Link } = Typography
 
-interface SmartWorldAddressProps {}
+interface SmartWorldAddressProps {
+  smartLand?: boolean
+}
 
 type IProps = SmartWorldAddressProps & ReturnType<typeof mapStateToProps>
 
@@ -38,7 +41,12 @@ export const requestAddToken = ({ address, symbol, decimals, image }) =>
       })
   })
 
-const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
+const SmartWorldAddress: React.FC<IProps> = ({
+  smartLand,
+  chainId,
+  address,
+  tokens,
+}) => {
   const [account, setAccount] = useState('0x...')
 
   useEffect(() => {
@@ -73,31 +81,58 @@ const SmartWorldAddress: React.FC<IProps> = ({ chainId, address, tokens }) => {
               {account}
             </Paragraph>
           </Link>
-          <Link
-            onClick={() =>
-              copyAddress(info[chainId].STTS, 'STTS address Copied!')
-            }
-          >
-            <Paragraph>
-              {tooShorter(info[chainId]?.STTS)}{' '}
-              <CopyOutlined color={Colors.green} />
-              <RightEmptyRetangle />
-            </Paragraph>
-          </Link>
+          {smartLand ? (
+            <Link
+              onClick={() =>
+                copyAddress(land.address[chainId], 'STL address Copied!')
+              }
+            >
+              <Paragraph>
+                {tooShorter(land.address[chainId])}{' '}
+                <CopyOutlined color={Colors.green} />
+                <RightEmptyRetangle />
+              </Paragraph>
+            </Link>
+          ) : (
+            <Link
+              onClick={() =>
+                copyAddress(info[chainId].STTS, 'STTS address Copied!')
+              }
+            >
+              <Paragraph>
+                {tooShorter(info[chainId]?.STTS)}{' '}
+                <CopyOutlined color={Colors.green} />
+                <RightEmptyRetangle />
+              </Paragraph>
+            </Link>
+          )}
         </Row>
       </Col>
       <Col xs={11} style={{ margin: 'auto' }}>
         <Row justify="between">
-          <Link
-            href={'https://bscscan.com/address/' + invest03.address[56]}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Paragraph>
-              <LeftRetangle />
-              Smart World
-            </Paragraph>
-          </Link>
+          {smartLand ? (
+            <Link
+              href={'https://bscscan.com/address/' + land.address[56]}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Paragraph>
+                <LeftRetangle />
+                Smart Land
+              </Paragraph>
+            </Link>
+          ) : (
+            <Link
+              href={'https://bscscan.com/address/' + invest03.address[56]}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Paragraph>
+                <LeftRetangle />
+                Smart World
+              </Paragraph>
+            </Link>
+          )}
           <Link
             target="_blank"
             rel="noopener noreferrer"

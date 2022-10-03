@@ -1,13 +1,14 @@
 import { CallHistoryMethodAction, RouterState } from 'connected-react-router'
 import { DefaultUserState, UserActionTypes } from './account.types'
-import { DefaultBankState, BankActionTypes } from './bank.types'
-import { SnackActionTypes } from './snackbar.types'
-import { DefaultWalletState, WalletActionTypes } from './wallet.types'
-import { InvestActionTypes, DefaultInvestState } from './invest.types'
-import { Invest02ActionTypes, DefaultInvest02State } from './invest02.types'
-import { SwapActionTypes, DefaultSwapState } from './swap.types'
+import { BankActionTypes, DefaultBankState } from './bank.types'
+import { DefaultInvestState, InvestActionTypes } from './invest.types'
+import { DefaultInvest02State, Invest02ActionTypes } from './invest02.types'
+import { DefaultLandState, LandActionTypes } from './land.types'
 import { DefaultPoolState, PoolActionTypes } from './pool.types'
+import { SnackActionTypes } from './snackbar.types'
 import { DefaultStockState, StockActionTypes } from './stock.types'
+import { DefaultSwapState, SwapActionTypes } from './swap.types'
+import { DefaultWalletState, WalletActionTypes } from './wallet.types'
 
 export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never
@@ -29,6 +30,7 @@ export const FAILURE = {
 } as const
 
 export type AppActions =
+  | LandActionTypes
   | InvestActionTypes
   | Invest02ActionTypes
   | PoolActionTypes
@@ -41,14 +43,8 @@ export type AppActions =
   | SwapActionTypes
   | CallHistoryMethodAction
 
-export interface DefaultListState {
-  address: string
-  '97': { [key: string]: number }
-  '56': { [key: string]: number }
-}
-
 export type AppState = {
-  list: DefaultListState
+  land: DefaultLandState
   bank: DefaultBankState
   router: RouterState
   account: DefaultUserState

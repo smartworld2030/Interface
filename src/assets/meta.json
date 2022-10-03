@@ -1,0 +1,16 @@
+{
+  "Base": {
+    "Grass": 6507,
+    "Snow": 1633,
+    "Water": 1354,
+    "Sand": 506
+  },
+  "Resource": {
+    "Tree": 5186,
+    "Charcoal": 4165,
+    "Iron": 2626,
+    "Gold": 1757,
+    "Crystal": 1319,
+    "Diamond": 507
+  }
+}

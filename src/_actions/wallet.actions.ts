@@ -1,40 +1,41 @@
-import { Dispatch } from 'redux'
-import {
-  WALLET_FAILURE,
-  WALLET_REQUEST,
-  WALLET_ACTIVATED,
-  WALLET_WAITING_MESSAGE,
-  ONBOARDING_REQUEST,
-  CHAIN_CHANGE_REQUEST,
-  CHAIN_CHANGE_SUCCESS,
-  CHAIN_CHANGE_FAILURE,
-  ContractObject,
-  PriceContract,
-} from '../_types/wallet.types'
-import { AppActions, AppState } from '../_types'
-import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
-import { supportedChain, tooShorter } from '../_helpers/constants'
-import { ethereum } from '../_helpers/api'
-import chainList from '../_helpers/chainList'
 import { Contract, providers } from 'ethers'
-import { onBoard } from '../_helpers/api'
-import erc20 from '../_contracts/erc20'
+import { Dispatch } from 'redux'
+import land from '_contracts/land'
+import stock from '_contracts/stock'
+import { SmartGameStock } from '_types/SmartGameStock'
+import { SmartLand } from '_types/SmartLand'
 import bank from '../_contracts/bank'
+import erc20 from '../_contracts/erc20'
 import invest from '../_contracts/invest'
 import invest02 from '../_contracts/invest02'
 import invest03 from '../_contracts/invest03'
 import pool from '../_contracts/pool'
-import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
-import { accountTokenBalances } from './account.actions'
-import tokenPrice from '../_contracts/tokenPrice'
 import swap from '../_contracts/swap'
-import { ISmartWorld } from '../_types/ISmartWorld'
+import tokenPrice from '../_contracts/tokenPrice'
+import { errorHandler, successHandler, warningHandler } from '../_helpers/alert'
+import { ethereum, onBoard } from '../_helpers/api'
+import chainList from '../_helpers/chainList'
+import { supportedChain, tooShorter } from '../_helpers/constants'
+import { AppActions, AppState } from '../_types'
+import { ACCOUNT_LOGGEDIN, ACCOUNT_LOGOUT } from '../_types/account.types'
 import { ISmartInvest } from '../_types/ISmartInvest'
 import { ISmartInvest02 } from '../_types/ISmartInvest02'
-import { ISmartSwap } from '../_types/ISmartSwap'
 import { ISmartPool02 } from '../_types/ISmartPool'
-import stock from '_contracts/stock'
-import { SmartGameStock } from '_types/SmartGameStock'
+import { ISmartSwap } from '../_types/ISmartSwap'
+import { ISmartWorld } from '../_types/ISmartWorld'
+import {
+  CHAIN_CHANGE_FAILURE,
+  CHAIN_CHANGE_REQUEST,
+  CHAIN_CHANGE_SUCCESS,
+  ContractObject,
+  ONBOARDING_REQUEST,
+  PriceContract,
+  WALLET_ACTIVATED,
+  WALLET_FAILURE,
+  WALLET_REQUEST,
+  WALLET_WAITING_MESSAGE,
+} from '../_types/wallet.types'
+import { accountTokenBalances } from './account.actions'
 
 let timer: NodeJS.Timeout
 let interval: NodeJS.Timeout
@@ -50,6 +51,7 @@ export let bankContract: ISmartWorld
 export let swapContract: ISmartSwap
 export let poolContract: ISmartPool02
 export let stockContract: SmartGameStock
+export let landContract: SmartLand
 
 export const initialization =
   () => (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
@@ -102,6 +104,11 @@ export const initialization =
               invest.abi,
               signer
             ) as ISmartInvest
+            landContract = new Contract(
+              land.address[chainId],
+              land.abi,
+              signer
+            ) as SmartLand
             invest02Contract = new Contract(
               invest02.address[chainId],
               invest02.abi,

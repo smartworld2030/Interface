@@ -1,12 +1,12 @@
 import React from 'react'
 
-interface SttLogoProps {
+interface StlLogoProps {
   width: number
   x: number
   y: number
 }
 
-export const SttLogo: React.FC<SttLogoProps> = ({ width, ...rest }) => {
+export const StlLogo: React.FC<StlLogoProps> = ({ width, ...rest }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -95,18 +95,18 @@ export const invest02Information =
       [address]
     )
 
-    const latestWithdraw = 1664272437
+    // const latestWithdraw = 1664272437
 
     if (accountInfo.totalAmount > 0) {
       const items = [
-        {
-          name: 'calculateHourly',
-          tokens: ['hourly'],
-          args: [address, latestWithdraw],
-        },
+        // {
+        //   name: 'calculateHourly',
+        //   tokens: ['hourly'],
+        //   args: [address, latestWithdraw],
+        // },
         {
           name: 'calculateInterest',
-          tokens: ['referral'],
+          tokens: ['referral', 'hourly'],
           args: [address],
         },
         {
@@ -159,7 +159,7 @@ export const invest02Information =
                     })
                 )
               )
-              account.latestWithdraw = latestWithdraw
+              // account.latestWithdraw = latestWithdraw
               dispatch({
                 type: INVEST02_ACCOUNT_SUCCESS,
                 payload: {

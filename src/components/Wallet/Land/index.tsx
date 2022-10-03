@@ -1,67 +1,107 @@
-import React from 'react'
+import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
+import Spin from 'antd/lib/spin'
+import { TokenButton } from 'components/Layout/buttons/Buttons'
+import React, { useCallback } from 'react'
 import { Col, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
-import { AppState } from '../../../_types'
+import { bindActionCreators } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { pushTile } from '_actions/land.actions'
+import { AppActions, AppState } from '_types'
+import DetailSection from './refSection'
 
-interface IProps {
+interface InvestmentProps {
   isMobile: boolean
 }
 
-type InfoProps = IProps & ReturnType<typeof mapStateToProps>
+type IProps = InvestmentProps &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
-const Land: React.FC<InfoProps> = () => {
+const Investment02: React.FC<IProps> = ({
+  isMobile,
+  error,
+  clickedTile,
+  invest02Loading,
+  pushTile,
+}) => {
+  const clickHandler = useCallback(
+    (tileId: number) => {
+      pushTile(tileId)
+    },
+    [pushTile]
+  )
+
   return (
-    <Row justify="around" align="center" direction="column">
+    <Spin
+      style={{
+        textAlign: 'center',
+        height: 100,
+        width: '100%',
+      }}
+      spinning={invest02Loading}
+      tip={error ? error : 'Waiting...'}
+    >
       <Row
-        justify="around"
-        align="center"
-        style={{ minHeight: 100, margin: '0 10px' }}
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          width: isMobile ? '100%' : '60%',
+          margin: 'auto',
+          padding: '10px 0',
+          fontSize: 20,
+        }}
       >
-        <Col>
-          Metaverse means a platform or 3D space where people appear as their
-          avatars (an avatar is your character, which can be an animal, human,
-          or other different appearances in the Metaverse platform and the game
-          space). This presence can be for social connections, purchasing from
-          the available markets, or attending meetings or concerts on a
-          platform. Consider having multiple avatars in the street where you own
-          land, which is the same as having a shop on a busy street. The Smart
-          World Metaverse has been based on some essential elements such as
-          entertainment, communications, user interaction, and play to earn. The
-          smart world Metaverse is inspired by the great "Minecraft" game, which
-          includes 10 thousand unique Metaverse land pieces. Each land piece
-          will be sold at a fixed price on the initial auction. Afterward, the
-          rest of the land prices will be different depending on their features.
-          The users who buy the lands beforehand will be the most precious ones
-          with low prices. You will be entitled to 25% of the sold land cost if
-          you introduce a new buyer. The lands include some attributes like
-          seasons, the construction sector, and promotional banners. They may
-          also be gold, diamond, or coal mines or have timber export potential.
-          The landlords can sell their assets (coal, gold, wood) to those who
-          need construction on their land. Some lands have a promotional banner.
-          Their holders can either propagandize their own business, rent out the
-          banner or their plot to applicants, and BNB charges the rent fee.
-          After 25 percent of the land is sold, the selling process will be
-          started in the Smart World exclusive marketplace and the Pancake Swap
-          NFT market. The Smart World Metaverse game is based on the land user’s
-          construction for purposes such as presentation services offices,
-          publicity, and selling products agencies. Growing the construction on
-          the land will increase the Smart World visitors, so naturally, the
-          land price will be increased a thousandfold.
+        <Col xs={2}>
+          {clickedTile ? (
+            <TokenButton
+              radius={50}
+              type="primary"
+              shape="circle"
+              fontSize={25}
+              disabled={clickedTile === 1}
+              onClick={() => clickHandler(clickedTile - 1)}
+            >
+              <CaretLeftOutlined />
+            </TokenButton>
+          ) : null}
+        </Col>
+        <Col xs={8}>
+          <DetailSection />
+        </Col>
+        <Col xs={2}>
+          {clickedTile ? (
+            <TokenButton
+              radius={50}
+              fontSize={25}
+              type="primary"
+              shape="circle"
+              disabled={clickedTile === 10000}
+              onClick={() => clickHandler(clickedTile + 1)}
+            >
+              <CaretRightOutlined />
+            </TokenButton>
+          ) : null}
         </Col>
       </Row>
-    </Row>
+    </Spin>
   )
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { tokens, error, address } = state.account
-  const { chainId } = state.wallet
+  const { error, invest02Loading } = state.invest02
+  const clickedTile = Number(state.router.location.query.tile) || 0
+
   return {
-    chainId,
-    address,
-    tokens,
+    invest02Loading,
     error,
+    clickedTile,
   }
 }
 
-export default connect(mapStateToProps)(Land)
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
+  pushTile: bindActionCreators(pushTile, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Investment02)
