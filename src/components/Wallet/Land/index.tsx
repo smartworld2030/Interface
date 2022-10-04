@@ -56,14 +56,14 @@ const Investment02: React.FC<IProps> = ({
         <Col xs={2}>
           {clickedTile ? (
             <TokenButton
-              radius={50}
+              radius={45}
               type="primary"
               shape="circle"
-              fontSize={25}
+              fontSize={20}
               disabled={clickedTile === 1}
               onClick={() => clickHandler(clickedTile - 1)}
             >
-              <CaretLeftOutlined />
+              <CaretLeftOutlined style={{ marginRight: 3 }} />
             </TokenButton>
           ) : null}
         </Col>
@@ -73,14 +73,14 @@ const Investment02: React.FC<IProps> = ({
         <Col xs={2}>
           {clickedTile ? (
             <TokenButton
-              radius={50}
-              fontSize={25}
+              radius={45}
+              fontSize={20}
               type="primary"
               shape="circle"
               disabled={clickedTile === 10000}
               onClick={() => clickHandler(clickedTile + 1)}
             >
-              <CaretRightOutlined />
+              <CaretRightOutlined style={{ marginLeft: 3 }} />
             </TokenButton>
           ) : null}
         </Col>

@@ -16,7 +16,6 @@ import Investment02 from '../components/Wallet/Invest02'
 import Swap from '../components/Wallet/Swap'
 import { accountTokenBalances } from '../_actions/account.actions'
 import { tokenPrices } from '../_actions/bank.actions'
-import { investInformation } from '../_actions/invest.actions'
 import { invest02Information } from '../_actions/invest02.actions'
 import { poolInformation } from '../_actions/pool.actions'
 import { stockInformation } from '../_actions/stock.actions'
@@ -58,7 +57,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   poolInformation,
   landInformation,
   stockInformation,
-  investInformation,
   invest02Information,
 }) => {
   const location = useLocation()
@@ -118,7 +116,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     pathname,
     address,
     poolInformation,
-    investInformation,
     invest02Information,
     stockInformation,
     landInformation,
@@ -232,7 +229,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   poolInformation: bindActionCreators(poolInformation, dispatch),
   landInformation: bindActionCreators(landInformation, dispatch),
   stockInformation: bindActionCreators(stockInformation, dispatch),
-  investInformation: bindActionCreators(investInformation, dispatch),
   invest02Information: bindActionCreators(invest02Information, dispatch),
   accountTokenBalances: bindActionCreators(accountTokenBalances, dispatch),
 })

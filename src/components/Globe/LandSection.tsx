@@ -203,6 +203,7 @@ const LandSection: React.FC<IProps> = ({
           <Row justify="around">
             {Object.entries(resources).map(
               ([key, percent]) =>
+                key !== 'length' &&
                 key !== 'Buildable' && (
                   <Col xs={3} md={3} key={key}>
                     <Progress

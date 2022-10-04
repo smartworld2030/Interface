@@ -3,7 +3,10 @@ import info from './Modal'
 
 import { Row } from 'react-grid-system'
 import { connect } from 'react-redux'
-import { AppState } from '_types'
+import { bindActionCreators } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { pushTile } from '_actions/land.actions'
+import { AppActions, AppState } from '_types'
 import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
 
 const Titles = {
@@ -21,12 +24,15 @@ interface RouteHeaderProps {
   detailHandler: () => void
 }
 
-type IProps = RouteHeaderProps & ReturnType<typeof mapStateToProps>
+type IProps = RouteHeaderProps &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>
 
 const RouteHeader: React.FC<IProps> = ({
   pathname,
   width,
   detailHandler,
+  pushTile,
   totalSupply,
 }) => {
   return (
@@ -64,7 +70,11 @@ const RouteHeader: React.FC<IProps> = ({
           </Typography.Link>
         )}
         {pathname === '/land' && (
-          <Typography.Link>{10000 - totalSupply}/10000</Typography.Link>
+          <Typography.Link
+            onClick={() => pushTile(Math.floor(Math.random() * 10000) + 1)}
+          >
+            {10000 - totalSupply}/10000
+          </Typography.Link>
         )}
       </Row>
     </Row>
@@ -77,5 +87,8 @@ const mapStateToProps = (state: AppState) => {
     totalSupply: state.bank.totalSupply,
   }
 }
+const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
+  pushTile: bindActionCreators(pushTile, dispatch),
+})
 
-export default connect(mapStateToProps)(RouteHeader)
+export default connect(mapStateToProps, mapDispatchToProps)(RouteHeader)
