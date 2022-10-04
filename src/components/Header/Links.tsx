@@ -1,6 +1,8 @@
 import Colors from 'Theme/Colors'
 import { GameLogo } from './GameLogo'
 import { InvestLogo } from './InvestLogo'
+import { SmartInfo } from './SmartInfo'
+import { SmartNFT } from './SmartNFT'
 import { StlLogo } from './StlLogo'
 import { SwapLogo } from './SwapLogo'
 
@@ -25,10 +27,12 @@ export const sizeCalculator = (width: number) => {
       positionY: fristHeight - 54,
       size: 15,
       link: '/info',
-      text: 'Info',
+      text: '',
       textPos: fristHeight - 69,
       number: 0,
-      icon: <div></div>,
+      icon: (
+        <SmartInfo width={25} x={half - quarter - 12} y={fristHeight - 81} />
+      ),
     },
     {
       positionX: half - eighth,
@@ -112,10 +116,12 @@ export const sizeCalculator = (width: number) => {
       positionY: fristHeight - 54,
       size: 15,
       link: '/nft',
-      text: 'NFT',
+      text: '',
       number: 0,
       textPos: fristHeight - 69,
-      icon: <div></div>,
+      icon: (
+        <SmartNFT width={25} x={half + quarter - 12} y={fristHeight - 81} />
+      ),
     },
   ]
   return { half, quarter, linkArray, eighth, height, querylimiter }

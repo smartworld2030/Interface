@@ -1,4 +1,5 @@
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons'
+import { Typography } from 'antd'
 import allMeta from 'assets/meta.json'
 import { useState } from 'react'
 import Colors from 'Theme/Colors'
@@ -47,7 +48,7 @@ const SideBar: React.FC<SideBarProps> = () => {
       <div
         style={{
           width: 125,
-          height: 260,
+          height: 275,
           display: 'flex',
           padding: '10px',
           fontWeight: 'bold',
@@ -91,6 +92,14 @@ const SideBar: React.FC<SideBarProps> = () => {
             ))}
           </div>
         ))}
+        <Typography.Link
+          href="https://testnets.opensea.io/collection/smartland"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textAlign: 'center' }}
+        >
+          OpenSea
+        </Typography.Link>
       </div>
     </div>
   )

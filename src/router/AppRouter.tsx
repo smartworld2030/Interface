@@ -1,4 +1,3 @@
-import Typography from 'antd/lib/typography'
 import Game from 'components/Wallet/Game'
 import Land from 'components/Wallet/Land'
 import NFT from 'components/Wallet/NFT'
@@ -11,13 +10,12 @@ import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { landInformation } from '_actions/land.actions'
 import { AbsoluteBody } from '../components/Layout/divs/Divs'
-import { ExclamationTriangle } from '../components/Layout/svgs/ExclamationTriangle'
 import Info from '../components/Wallet/Info'
 import Investment from '../components/Wallet/Invest'
 import Investment02 from '../components/Wallet/Invest02'
 import Swap from '../components/Wallet/Swap'
 import { accountTokenBalances } from '../_actions/account.actions'
-import { bankTotalSatoshi, tokenPrices } from '../_actions/bank.actions'
+import { tokenPrices } from '../_actions/bank.actions'
 import { investInformation } from '../_actions/invest.actions'
 import { invest02Information } from '../_actions/invest02.actions'
 import { poolInformation } from '../_actions/pool.actions'
@@ -25,11 +23,12 @@ import { stockInformation } from '../_actions/stock.actions'
 import {
   initialization,
   invest02Contract,
+  landContract,
   stockContract,
 } from '../_actions/wallet.actions'
 import { AppActions, AppState } from '../_types'
-import info from './Modal'
 import ProtectedRoute from './ProtectedRoute'
+import RouteHeader from './RouteHeader'
 
 interface IProps {
   isMobile: boolean
@@ -41,16 +40,6 @@ interface IProps {
 type AppRouterProps = IProps &
   ReturnType<typeof mapStateToProps> &
   ReturnType<typeof mapDispatchToProps>
-
-const Titles = {
-  '/invest': 'INVESTMENT',
-  '/invest02': 'INVESTMENT02',
-  '/info': 'INFORMATION',
-  '/land': 'SMART LAND',
-  '/swap': 'SWAP',
-  '/nft': 'NFT MARKET',
-  '/game': 'GAME',
-}
 
 const priceDelay = 10
 const detailsDelay = 30
@@ -68,7 +57,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({
   tokenPrices,
   poolInformation,
   landInformation,
-  bankTotalSatoshi,
   stockInformation,
   investInformation,
   invest02Information,
@@ -89,21 +77,21 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     clearInterval(timer)
     if (active) {
       tokenPrices()
-      bankTotalSatoshi()
       timer = setInterval(() => {
         tokenPrices()
-        bankTotalSatoshi()
-        landInformation()
       }, priceDelay * 1000)
     }
     return () => {
       clearInterval(timer)
     }
-  }, [active, bankTotalSatoshi, landInformation, tokenPrices])
+  }, [active, landInformation, tokenPrices])
 
   useEffect(() => {
     const switcher = () => {
       switch (pathname.toLocaleLowerCase()) {
+        case '/land':
+          if (landContract) landInformation()
+          break
         case '/invest02':
           if (invest02Contract) invest02Information()
           break
@@ -133,6 +121,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     investInformation,
     invest02Information,
     stockInformation,
+    landInformation,
   ])
 
   const transitions = useTransition(location, {
@@ -154,45 +143,7 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     >
       <Row justify="center" align="center">
         <Col>
-          <Row justify="between" style={{ width: '100%', margin: 0 }}>
-            <Row style={{ width: width / 3 }} justify="start">
-              {Titles[pathname] === 'INVESTMENT02' && (
-                <Typography.Link onClick={info}>Good news!</Typography.Link>
-              )}
-            </Row>
-            <Row justify="center" style={{ width: width / 3 }}>
-              <Typography.Title
-                style={{ margin: 0, position: 'relative' }}
-                level={5}
-              >
-                {Titles[pathname]}
-                {Titles[pathname] === 'INVESTMENT' ||
-                Titles[pathname] === 'POOL' ? (
-                  <ExclamationTriangle onClick={detailHandler} />
-                ) : null}
-              </Typography.Title>
-            </Row>
-            {Titles[pathname] === 'POOL' && (
-              <Row style={{ width: width / 3 }} justify="end">
-                <Typography.Link
-                  href="https://pancakeswap.finance/add/BNB/0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-                  target="_blank"
-                >
-                  Liquidity Pool
-                </Typography.Link>
-              </Row>
-            )}
-            <Row style={{ width: width / 3 }} justify="end">
-              {Titles[pathname] === 'SWAP' && (
-                <Typography.Link
-                  href="https://pancakeswap.finance/swap?exactField=input&exactAmount=1&outputCurrency=0x88469567A9e6b2daE2d8ea7D8C77872d9A0d43EC"
-                  target="_blank"
-                >
-                  PanckakeSwap
-                </Typography.Link>
-              )}
-            </Row>
-          </Row>
+          <RouteHeader width={width} detailHandler={detailHandler} />
         </Col>
         <Col
           xs={12}
@@ -268,15 +219,16 @@ export const AppRouter: React.FC<AppRouterProps> = ({
 const mapStateToProps = (state: AppState) => {
   const { active } = state.wallet
   const { address } = state.account
+  const { totalSupply } = state.bank
   return {
     active,
     address,
+    totalSupply,
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({
   init: bindActionCreators(initialization, dispatch),
   tokenPrices: bindActionCreators(tokenPrices, dispatch),
-  bankTotalSatoshi: bindActionCreators(bankTotalSatoshi, dispatch),
   poolInformation: bindActionCreators(poolInformation, dispatch),
   landInformation: bindActionCreators(landInformation, dispatch),
   stockInformation: bindActionCreators(stockInformation, dispatch),

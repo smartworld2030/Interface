@@ -1,15 +1,15 @@
 import {
   BankActionTypes,
+  BANK_SATOSHI_BALANCE_FAILURE,
+  BANK_SATOSHI_BALANCE_REQUEST,
+  BANK_SATOSHI_BALANCE_SUCCESS,
+  BANK_TOKEN_BALANCE_FAILURE,
+  BANK_TOKEN_BALANCE_REQUEST,
+  BANK_TOKEN_BALANCE_SUCCESS,
   DefaultBankState,
   TOKEN_PRICE_FAILURE,
   TOKEN_PRICE_REQUEST,
   TOKEN_PRICE_SUCCESS,
-  BANK_TOKEN_BALANCE_REQUEST,
-  BANK_TOKEN_BALANCE_SUCCESS,
-  BANK_TOKEN_BALANCE_FAILURE,
-  BANK_SATOSHI_BALANCE_REQUEST,
-  BANK_SATOSHI_BALANCE_SUCCESS,
-  BANK_SATOSHI_BALANCE_FAILURE,
 } from '../_types/bank.types'
 
 const balances = { BTCB: 0, STT: 0, STTS: 0, BNB: 0 }
@@ -19,6 +19,7 @@ const dollar = { BTC: 0 }
 const initialState: DefaultBankState = {
   bankLoading: false,
   tokens: balances,
+  totalSupply: 0,
   total: '',
   prices,
   dollar,
@@ -63,6 +64,7 @@ export function bankReducer(
         prices: { ...state.prices, ...action.payload.prices },
         dollar: { ...state.dollar, ...action.payload.dollar },
         tokens: { ...state.tokens, ...action.payload.tokens },
+        totalSupply: action.payload.totalSupply,
       }
     case TOKEN_PRICE_FAILURE:
       return { ...state, bankLoading: false }

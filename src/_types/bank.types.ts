@@ -20,6 +20,7 @@ export interface DefaultBankState {
   tokens: TokenBalances
   prices: TokenPrices
   dollar: DoloarPrices
+  totalSupply: number
   total: string
   satoshi?: TokenBalances
   error?: string
@@ -52,6 +53,7 @@ export type TokenPriceSuccessAction = {
     prices: TokenPrices
     dollar: DoloarPrices
     tokens: TokenBalances
+    totalSupply: number
   }
 }
 

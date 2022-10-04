@@ -1,26 +1,27 @@
 import { Dispatch } from 'react'
-import { AppActions, AppState } from '../_types'
+import erc20 from '../_contracts/erc20'
 import { errorHandler } from '../_helpers/alert'
-import { bytesFormater, formaterNumber, formatToString } from '../_helpers/api'
+import { bytesFormater, formaterNumber } from '../_helpers/api'
+import { AppActions, AppState } from '../_types'
 import {
+  BANK_TOKEN_BALANCE_FAILURE,
   BANK_TOKEN_BALANCE_REQUEST,
   BANK_TOKEN_BALANCE_SUCCESS,
-  BANK_TOKEN_BALANCE_FAILURE,
-  BANK_SATOSHI_BALANCE_REQUEST,
-  BANK_SATOSHI_BALANCE_SUCCESS,
-  BANK_SATOSHI_BALANCE_FAILURE,
+  SatoshiPrice,
   STT_PRICE_FAILURE,
   STT_PRICE_REQUEST,
   STT_PRICE_SUCCESS,
+  TOKEN_PRICE_FAILURE,
   TOKEN_PRICE_REQUEST,
   TOKEN_PRICE_SUCCESS,
-  TOKEN_PRICE_FAILURE,
-  SatoshiPrice,
 } from '../_types/bank.types'
 import { ContractNames } from '../_types/wallet.types'
-import { bankContract, priceContract, tokenContract } from './wallet.actions'
-import { TokenBalances } from '../_types/account.types'
-import erc20 from '../_contracts/erc20'
+import {
+  bankContract,
+  landContract,
+  priceContract,
+  tokenContract,
+} from './wallet.actions'
 
 export const requestBank = async (
   method: any,
@@ -78,27 +79,6 @@ export const bankTokenBalances =
       .catch((err) => errorHandler(err, BANK_TOKEN_BALANCE_FAILURE))
   }
 
-export const bankTotalSatoshi = () => (dispatch: Dispatch<AppActions>) => {
-  dispatch({ type: BANK_SATOSHI_BALANCE_REQUEST })
-  requestBank('totalSatoshi')
-    .then((res) => {
-      const data = {} as TokenBalances
-      Object.keys(res).forEach((key) => {
-        if (key.length > 1) data[key] = formaterNumber(res[key])
-      })
-      const satoshi = Object.keys(data).reduce(
-        (items, item) => items + data[item],
-        0
-      )
-      const total = formatToString(satoshi)
-      dispatch({
-        type: BANK_SATOSHI_BALANCE_SUCCESS,
-        payload: { satoshi: data, total },
-      })
-    })
-    .catch((err) => errorHandler(err, BANK_SATOSHI_BALANCE_FAILURE))
-}
-
 export const sttPrice = () => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: STT_PRICE_REQUEST })
   requestBank('sttPrice')
@@ -114,6 +94,7 @@ export const sttPrice = () => (dispatch: Dispatch<AppActions>) => {
 export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: TOKEN_PRICE_REQUEST })
   const tokens = ['BTC', 'BNB', 'STTS', 'STT']
+
   Promise.all(
     tokens.map((token) => {
       if (token === 'STT') {
@@ -152,6 +133,7 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
       const latestPrice = await priceContract.latestAnswer()
       const BTC = formaterNumber(latestPrice, 8)
       const STTS = formaterNumber(sttsBalance, 8)
+      const totalSupply = (await landContract.totalSupply()).toNumber()
 
       dispatch({
         type: TOKEN_PRICE_SUCCESS,
@@ -159,6 +141,7 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
           prices,
           dollar: { BTC },
           tokens: { STTS },
+          totalSupply,
         },
       })
     })

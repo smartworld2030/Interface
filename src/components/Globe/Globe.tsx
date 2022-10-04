@@ -31,13 +31,6 @@ const GlobeWithTile = ({
   tilesLoading,
   ...rest
 }) => {
-  // useEffect(() => {
-  //   console.log(landsIds)
-  //   landsIds.forEach((id) => {
-  //     material.uniforms.u_sold.value = id
-  //   })
-  // }, [landsIds])
-
   const pointData = useMemo(() => {
     if (!tilesData.length) return undefined
     const radius = 100.1,
@@ -84,12 +77,12 @@ const GlobeWithTile = ({
       uniforms: {
         u_time: { value: 1.0 },
         u_hovered: { value: 0 },
-        u_sold: { value: 0 },
+        u_sold: { value: [] },
       },
       vertexShader: `
         uniform float u_hovered;
-        uniform float u_sold;
         uniform float u_time;
+        
         attribute vec3 color;
         attribute float tileId;
         varying vec4 vRndId;
@@ -98,9 +91,6 @@ const GlobeWithTile = ({
 
           if(u_hovered == tileId) {
             vRndId = vec4(1.0, 0.0, 0.0, 0.5);
-          }
-          if(u_sold == tileId) {
-            vRndId = vec4(color, 0.5);
           }
 
           vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);

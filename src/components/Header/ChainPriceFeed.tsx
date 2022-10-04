@@ -11,7 +11,6 @@ type IProps = ChainPriceFeedProps & ReturnType<typeof mapStateToProps>
 export const ChainPriceFeed: React.FC<IProps> = ({
   prices,
   dollar,
-  total,
   totalSupply,
 }) => {
   const calcBTC = (value) => value / prices.BTCB
@@ -25,7 +24,7 @@ export const ChainPriceFeed: React.FC<IProps> = ({
       token === 'STTS' ? 4 : cut
     )
 
-  return prices && total ? (
+  return prices ? (
     <Marquee gradient={false}>
       <div style={{ display: 'inline-flex', padding: '0 10', fontSize: 13 }}>
         <div>
@@ -61,13 +60,11 @@ const mapStateToProps = (state: AppState) => {
   const {
     prices,
     dollar,
-    total,
     tokens: { STTS },
+    totalSupply,
   } = state.bank
-  const { totalSupply } = state.land
   return {
     totalSupply,
-    total,
     tokens,
     prices,
     dollar,
