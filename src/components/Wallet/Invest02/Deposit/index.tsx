@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { Row, Col } from 'react-grid-system'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Col, Row } from 'react-grid-system'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { removeError } from '../../../../_actions/invest.actions'
-import { AppActions, AppState } from '../../../../_types'
 import {
   convertNumbers2English,
   percentToValue,
-  truncate,
   valueToPercent,
 } from '../../../../_helpers/api'
+import { AppActions, AppState } from '../../../../_types'
 import DepositCircle from '../../../Layout/svgs/DepositCircle'
 import TokenCircle from '../../../Layout/svgs/TokenCircle'
 import DepositInfo from './DepositInfo'
@@ -26,12 +25,8 @@ export const tokenNames = ['STTS', 'BNB', 'BTCB']
 
 export const DepositSection: React.FC<DepositSectionProps> = ({
   isMobile,
-  minimum,
   tokens,
-  prices,
-  dollar,
   error,
-  fee,
   removeError,
 }) => {
   const [token, setToken] = useState('BNB')
@@ -42,25 +37,6 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
       setValue(undefined)
     }
   }, [token])
-
-  const feeDollar = useMemo(() => (minimum * (fee + 1)) / 100, [fee, minimum])
-
-  const minimumDollar = useCallback(
-    (p: number) =>
-      Math.ceil(minimum + feeDollar) / ((p / 10 ** 8) * dollar.BTC),
-    [feeDollar, minimum, dollar.BTC]
-  )
-
-  const minimumAmount = useCallback(
-    (t: string) => {
-      return truncate(
-        minimumDollar(prices[t]).toString(),
-        t === 'STTS' ? 1 : 4,
-        t !== 'BTCB'
-      )
-    },
-    [minimumDollar, prices]
-  )
 
   const percentHandler = useCallback(
     (per: number) => {
@@ -100,7 +76,7 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
             token={'BNB'}
             active={token === 'BNB'}
             disabled={token !== 'BNB'}
-            info={minimumAmount('BNB')}
+            info={''}
           />
         </Row>
       </Col>
@@ -126,17 +102,12 @@ export const DepositSection: React.FC<DepositSectionProps> = ({
 }
 const mapStateToProps = (state: AppState) => {
   const { tokens, address, loggedIn } = state.account
-  const { error, minimum, fee } = state.invest02
-  const { prices, dollar } = state.bank
+  const { error } = state.invest02
   return {
     address,
     loggedIn,
-    minimum,
-    prices,
-    dollar,
     tokens,
     error,
-    fee,
   }
 }
 const mapDispatchToProps = (dispatch: ThunkDispatch<any, any, AppActions>) => ({

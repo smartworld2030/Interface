@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { push } from 'connected-react-router'
-import { Transaction } from 'ethers'
+import { Bytes, Transaction } from 'ethers'
 import { Dispatch } from 'redux'
 import land from '_contracts/land'
 import { errorHandler, successHandler, warningHandler } from '_helpers/alert'
@@ -23,7 +23,7 @@ import {
   TILES_DATA_SUCCESS,
 } from '_types/land.types'
 import { accountTokenBalances } from './account.actions'
-import { landContract, provider } from './wallet.actions'
+import { landContract, multiContract, provider } from './wallet.actions'
 
 let controller = new AbortController()
 
@@ -146,26 +146,43 @@ export const landInformation =
 
     try {
       const landPrice = (await landContract.LAND_PRICE()).toString()
-      // get all sold land ids
+      //   // get all sold land ids
       const totalSupply = (await landContract.totalSupply()).toNumber()
-      const landsIds = []
-      for (let i = 0; i < totalSupply; i++) {
-        const landId = (await landContract.tokenByIndex(i)).toNumber()
-        landsIds.push(landId)
-      }
+      //   const landsIds = []
+
+      // using multicall to get all token ids
+      const tokenCalls = Array.from({ length: totalSupply }, (_, i) => [
+        landContract.address,
+        landContract.interface.encodeFunctionData('tokenByIndex', [i]),
+      ])
+
+      const results = await multiContract.aggregate(tokenCalls)
+
+      // make arrayof tokenId as number from results
+      const landsIds: string[] = results?.returnData.map((id: Bytes) =>
+        Number(id)
+      )
 
       // get all land owners
-      const landsOwners = {}
+      const ownerCalls = landsIds.map((id) => [
+        landContract.address,
+        landContract.interface.encodeFunctionData('ownerOf', [id]),
+      ])
+
+      const ownerResults = await multiContract.aggregate(ownerCalls)
+
+      // if owner is the same as address, add to owned lands
       const ownedLands = []
+      const landsOwners: string[] = landsIds.map((id, i) => {
+        const owner = landContract.interface.decodeFunctionResult(
+          'ownerOf',
+          ownerResults.returnData[i]
+        )[0]
 
-      for (let i = 0; i < landsIds.length; i++) {
-        const owner = await landContract.ownerOf(landsIds[i])
-        if (owner === address) ownedLands.push(landsIds[i])
+        if (owner === address) ownedLands.push(id)
+        return owner
+      })
 
-        landsOwners[landsIds[i]] = owner
-      }
-
-      // push to redux
       const landInformation = {
         landsIds,
         landsOwners,

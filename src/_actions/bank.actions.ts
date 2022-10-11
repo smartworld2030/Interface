@@ -16,12 +16,7 @@ import {
   TOKEN_PRICE_SUCCESS,
 } from '../_types/bank.types'
 import { ContractNames } from '../_types/wallet.types'
-import {
-  bankContract,
-  landContract,
-  priceContract,
-  tokenContract,
-} from './wallet.actions'
+import { bankContract, landContract, tokenContract } from './wallet.actions'
 
 export const requestBank = async (
   method: any,
@@ -127,20 +122,13 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
             [item.token]: item.price,
           }
       }, {})
-      const sttsBalance = await tokenContract.STTS.balanceOf(
-        tokenContract.STT.address
-      )
-      const latestPrice = await priceContract.latestAnswer()
-      const BTC = formaterNumber(latestPrice, 8)
-      const STTS = formaterNumber(sttsBalance, 8)
+
       const totalSupply = (await landContract.totalSupply()).toNumber()
 
       dispatch({
         type: TOKEN_PRICE_SUCCESS,
         payload: {
           prices,
-          dollar: { BTC },
-          tokens: { STTS },
           totalSupply,
         },
       })

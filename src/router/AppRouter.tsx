@@ -82,12 +82,15 @@ export const AppRouter: React.FC<AppRouterProps> = ({
     return () => {
       clearInterval(timer)
     }
-  }, [active, landInformation, tokenPrices])
+  }, [active, tokenPrices])
 
   useEffect(() => {
     const switcher = () => {
       switch (pathname.toLocaleLowerCase()) {
         case '/land':
+          if (landContract) landInformation()
+          break
+        case '/nft':
           if (landContract) landInformation()
           break
         case '/invest02':

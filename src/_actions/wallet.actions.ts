@@ -9,6 +9,7 @@ import erc20 from '../_contracts/erc20'
 import invest from '../_contracts/invest'
 import invest02 from '../_contracts/invest02'
 import invest03 from '../_contracts/invest03'
+import multi from '../_contracts/multi'
 import pool from '../_contracts/pool'
 import swap from '../_contracts/swap'
 import tokenPrice from '../_contracts/tokenPrice'
@@ -52,6 +53,7 @@ export let swapContract: ISmartSwap
 export let poolContract: ISmartPool02
 export let stockContract: SmartGameStock
 export let landContract: SmartLand
+export let multiContract: any
 
 export const initialization =
   () => (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
@@ -109,6 +111,11 @@ export const initialization =
               land.abi,
               signer
             ) as SmartLand
+            multiContract = new Contract(
+              multi.address[chainId],
+              multi.abi,
+              provider
+            ) as any
             invest02Contract = new Contract(
               invest02.address[chainId],
               invest02.abi,

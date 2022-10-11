@@ -51,8 +51,8 @@ export type TokenPriceSuccessAction = {
   type: typeof TOKEN_PRICE_SUCCESS
   payload: {
     prices: TokenPrices
-    dollar: DoloarPrices
-    tokens: TokenBalances
+    dollar?: DoloarPrices
+    tokens?: TokenBalances
     totalSupply: number
   }
 }
