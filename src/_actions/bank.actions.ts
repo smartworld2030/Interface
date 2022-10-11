@@ -1,7 +1,7 @@
 import { Dispatch } from 'react'
 import erc20 from '../_contracts/erc20'
 import { errorHandler } from '../_helpers/alert'
-import { bytesFormater, formaterNumber } from '../_helpers/api'
+import { formaterNumber } from '../_helpers/api'
 import { AppActions, AppState } from '../_types'
 import {
   BANK_TOKEN_BALANCE_FAILURE,
@@ -16,7 +16,12 @@ import {
   TOKEN_PRICE_SUCCESS,
 } from '../_types/bank.types'
 import { ContractNames } from '../_types/wallet.types'
-import { bankContract, landContract, tokenContract } from './wallet.actions'
+import {
+  bankContract,
+  landContract,
+  priceContract,
+  tokenContract,
+} from './wallet.actions'
 
 export const requestBank = async (
   method: any,
@@ -88,17 +93,10 @@ export const sttPrice = () => (dispatch: Dispatch<AppActions>) => {
 
 export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
   dispatch({ type: TOKEN_PRICE_REQUEST })
-  const tokens = ['BTC', 'BNB', 'STTS', 'STT']
+  const tokens = ['BTC', 'BNB', 'STTS']
 
   Promise.all(
     tokens.map((token) => {
-      if (token === 'STT') {
-        return new Promise((resolve) =>
-          requestBank('sttPrice').then((res) =>
-            resolve({ token, price: bytesFormater(res) })
-          )
-        )
-      }
       const tokenName = token.toLowerCase() as 'btc' | 'bnb' | 'stts'
       const decimals = (10 ** erc20.decimals[token]).toString()
       return new Promise((resolve) =>
@@ -123,12 +121,15 @@ export const tokenPrices = () => (dispatch: Dispatch<AppActions>) => {
           }
       }, {})
 
+      const latestPrice = await priceContract.latestAnswer()
+      const BTC = formaterNumber(latestPrice, 8)
       const totalSupply = (await landContract.totalSupply()).toNumber()
 
       dispatch({
         type: TOKEN_PRICE_SUCCESS,
         payload: {
           prices,
+          dollar: { BTC },
           totalSupply,
         },
       })
