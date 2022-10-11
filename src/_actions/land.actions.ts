@@ -159,7 +159,7 @@ export const landInformation =
       const results = await multiContract.aggregate(tokenCalls)
 
       // make arrayof tokenId as number from results
-      const landsIds: string[] = results?.returnData.map((id: Bytes) =>
+      const landsIds: number[] = results.returnData.map((id: Bytes) =>
         Number(id)
       )
 
@@ -173,15 +173,18 @@ export const landInformation =
 
       // if owner is the same as address, add to owned lands
       const ownedLands = []
-      const landsOwners: string[] = landsIds.map((id, i) => {
-        const owner = landContract.interface.decodeFunctionResult(
-          'ownerOf',
-          ownerResults.returnData[i]
-        )[0]
+      const landsOwners: { [key: string]: string } = landsIds.reduce(
+        (acc, id, i) => {
+          const owner = landContract.interface.decodeFunctionResult(
+            'ownerOf',
+            ownerResults.returnData[i]
+          )[0]
 
-        if (owner === address) ownedLands.push(id)
-        return owner
-      })
+          if (owner === address) ownedLands.push(id)
+          return { ...acc, [id]: owner }
+        },
+        {}
+      )
 
       const landInformation = {
         landsIds,
