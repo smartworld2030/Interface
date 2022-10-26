@@ -13,14 +13,15 @@ import {
   fetchLandData,
   fetchTiles,
   mint,
-  resetTile,
+  resetTile
 } from '_actions/land.actions'
 import { tooShorter } from '_helpers/constants'
 import { AppActions, AppState } from '_types'
 import BottomDetails from './BottomDetails'
 import GlobeWithTile from './Globe'
 import LandSection from './LandSection'
-import SideBar from './SideBar'
+import LeftSideBar from './LeftSideBar'
+import RightSideBar from './RightSideBar'
 
 interface GlobeProps {
   height: number
@@ -146,7 +147,8 @@ const Globe: React.FC<IProps> = ({
         </div>
       ) : (
         <>
-          {pathname === '/land' && <SideBar />}
+          {pathname === '/land' && <LeftSideBar />}
+          {pathname === '/land' && <RightSideBar />}
           <BottomDetails showDetail={showDetail} />
         </>
       )}

@@ -4,9 +4,9 @@ import allMeta from 'assets/meta.json'
 import { useState } from 'react'
 import Colors from 'Theme/Colors'
 
-interface SideBarProps {}
+interface LeftSideBarProps {}
 
-const SideBar: React.FC<SideBarProps> = () => {
+const LeftSideBar: React.FC<LeftSideBarProps> = () => {
   const [open, setOpen] = useState(false)
 
   const calcPercent = (value: number) => {
@@ -105,4 +105,4 @@ const SideBar: React.FC<SideBarProps> = () => {
   )
 }
 
-export default SideBar
+export default LeftSideBar

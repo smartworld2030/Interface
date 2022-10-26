@@ -39,7 +39,9 @@ const RouteHeader: React.FC<IProps> = ({
     <Row justify="between" style={{ width: '100%', margin: 0 }}>
       <Row style={{ width: width / 3 }} justify="start">
         {Titles[pathname] === 'INVESTMENT02' && (
-          <Typography.Link onClick={info}>Good news!</Typography.Link>
+          <Typography.Link onClick={info} style={{ fontWeight: 'bold' }}>
+            NEWS!
+          </Typography.Link>
         )}
       </Row>
       <Row justify="center" style={{ width: width / 3 }}>
